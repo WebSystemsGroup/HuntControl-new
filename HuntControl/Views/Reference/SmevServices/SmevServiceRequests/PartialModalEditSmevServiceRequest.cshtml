@@ -1,0 +1,77 @@
+﻿@model HuntControl.Domain.Concrete.spr_smev_request
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<script src="~/Content/plugins/bootstrap-select/dist/js/bootstrap-select.min.js" type="text/javascript"></script>
+<script>
+
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+    });
+    var init = new Switchery(document.querySelector('#request_active'));
+
+</script>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myLargeModalLabel">Изменение запроса СМЭВ</h4>
+        </div>
+        <div class="modal-body">
+
+            @using (Ajax.BeginForm("SubmitSmevServiceRequestSave", "Reference", Model, new AjaxOptions { UpdateTargetId = "smevServiceRequestsTableContainer", OnSuccess = "$('#myModal').modal('hide');" }, new { @id = "EditSmevServiceRequestForm", @class = "form-horizontal" }))
+            {
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <div class="form-group form-group-sm">
+                            <label class="col-md-4 control-label">Наименование запроса</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.request_name, new { @class = "form-control", @placeholder = "Введите наименование", @required = "required" })
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label class="col-md-4 control-label">Тип отсчета дней</label>
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.spr_services_sub_week_id, ViewBag.ServiceSubWeeks as SelectList, new Dictionary<string, object> { { "class", "selectpicker" }, { "data-style", "btn-white btn-sm" } })
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label class="col-md-4 control-label">Количество дней на выполнение запроса</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.count_day_execution, new { @class = "form-control", @required = "required" })
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label class="col-md-4 control-label">Тип запроса</label>
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.spr_smev_type_request_id, ViewBag.SmevTypeRequests as SelectList, new Dictionary<string, object> { { "class", "selectpicker" }, { "data-style", "btn-white btn-sm" } })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group form-group-sm">
+                                    <label class="col-md-4 control-label">Активность</label>
+                                    <div class="col-md-8">
+                                        @Html.CheckBoxFor(model => model.request_active, new { @class = "js-switch extra-small", @type = "checkbox", @data_switchery = "true", @data_plugin = "switchery", @data_color = "#5fbeaa" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label class="col-md-4 control-label">Комментарии</label>
+                            <div class="col-md-8">
+                                @Html.TextAreaFor(model => model.commentt, new { @class = "form-control", @placeholder = "Комментарии" })
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel waves-effect waves-light" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Отмена</button>
+            <button type="submit" form="EditSmevServiceRequestForm" class="btn btn-success waves-effect waves-light"> Сохранить <i class="fa fa-check m-l-5"></i></button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewBag.Title = "Справочник сезонов";
+}
+@Html.MvcSiteMap().SiteMapPath()
+
+<div id="seasonsContainer" class="col-md-5">
+    @Html.Action("TableHuntingSeasons", "Reference")
+</div>
+
+<div id="seasonOpensContainer" class="col-md-7 style="display: none;">
+    <div id="seasonOpenPlaceholder" class="alert alert-warning" style="padding-top: 20px;margin-top: 35px;">
+        <h4>Выберите сезон</h4>
+    </div>
+</div>

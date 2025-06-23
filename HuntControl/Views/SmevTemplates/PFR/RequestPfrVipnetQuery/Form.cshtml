@@ -1,0 +1,194 @@
+﻿@model WebAIS.StoreProcedure.SModel.case_customer_root_get_smev
+
+<div class="modal-card-head wrap-flex">
+    <nav class="breadcrumb m-b-0">
+        <div class="container">
+            <div class="row-flex">
+                <div class="col-flex"><div class="breadcrumb-item complete">Запрос</div></div>
+                <div class="col-flex"><div class="breadcrumb-item active">Данные</div></div>
+                <div class="col-flex"><div class="breadcrumb-item">Ответ</div></div>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="modal-card-body">
+    <div class="dash" data-tabs="">
+        <div class="dash-content">
+            <div class="row-flex">
+                <div class="form-vertical col-flex is-12">
+                    <div class="form-content smev-request p-t-0" style="display: block;">
+                        <form>
+                            <input name="data_services_id" type="hidden" class="data_services_id" />
+                            <div class="form-content p-t-0">
+                                <div class="row-flex">
+                                    <div class="col-flex is-offset-2 is-3">
+                                        <label for="inn">Отделение ПФР</label>
+                                    </div>
+                                    <div class="col-flex is-4">
+                                        <div class="form-control">
+                                            <select class="select2" id="pfr_id" name="pfr_id">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-flex is-offset-1 is-2">
+                                        <a href="#" class="pfr-all-select active">Выделить все</a>
+                                    </div>
+                                </div>
+                                <div class="row-flex">
+                                    <div class="col-flex is-12">
+                                        <table class="table table-chosen smev-doc-files" data-input-name="attachments">
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="form-content smev-response" style="display:none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-card-foot">
+    <div class="content-footer__action row-flex-right">
+        <button type="button" class="btn btn-danger attach-smev-response" style="display: none;">
+            <span>Прикрепить к услуге</span>
+            <span class="icon">
+                <i class="ion ion-ios-upload-outline"></i>
+            </span>
+        </button>
+        <button type="button" class="btn btn-danger is-form-send smev-send-data" data-url-smev="Smev_RequestPfrVipnetQuery">
+            <span>Далее</span>
+            <span class="icon">
+                <i class="ion ion-ios-arrow-forward"></i>
+            </span>
+        </button>
+    </div>
+</div>
+
+<script>
+    flag = true;
+    getFileSmevDocument();
+    Dictionary('pfr_id');
+    if (typeof ('#modal_smev_card_content') != 'undefined') {
+        $('input[data-inputmask]').inputmask();
+    };
+
+    /* ловушка полей ввода даты и времени */
+    if (typeof ('#modal_smev_card_content') != 'undefined') {
+        $.datetimepicker.setLocale('ru');
+        $.each($('[data-input-datetimepicker]'), function () {
+            var $this = $(this);
+            var options = $this.data('input-datetimepicker-options');
+            var avalible_time = $this.data('input-datetimepicker-time');
+
+            if (typeof avalible_time != 'undefined') {
+                options['allowTimes'] = avalible_time.split(',');
+            }
+
+            $this.datetimepicker(options);
+        });
+    };
+    function _checkVipNetform() {
+        var bl = false;
+        var $form = $('#modal_smev_card_content').find('form');
+        var $sl = $form.find('.smev-doc-files tr.active');
+        if (typeof ('#modal_smev_card_content') != 'undefined') {
+            if ($sl.length > 0 && $sl.val() != 'undefined') {
+                bl = true;
+            }
+            else {
+                bl = false;
+                return false;
+            }
+        };
+        return bl;
+    };
+    function Dictionary(input_name) {
+        var input = $("#" + input_name);
+        $.ajax({
+            url: '/Smev/Smev_GetPfr',
+            type: 'POST',
+            success: function (items) {
+                if (items != 'undefined') {
+                    input.empty();
+                    input.select2({
+                        data: items,
+                        theme: "classic",
+                        language: "ru"
+                    });
+                }
+            }
+        });
+    };
+    function getFileSmevDocument() {
+        var _table = $(".smev-doc-files");
+        _table.empty();
+        $.ajax({
+            url: 'jsonTableDocumentSmev',
+            data: { id: $("#tab-services").find(".r-tabs-state-custom-active").data("serviceId") },
+            type: 'POST',
+            success: function (items) {
+                if (items.length > 0) {
+                    var j = 0;
+                    items.forEach(function (item, i, arr) {
+                        var option = '<tr class="active">' +
+                            '<td>' + ++j + '</td>' +
+                            '<td class="smev-td"><p class="file_name">' + item.out_file_name + '</p><p class="name">' + item.out_name + '</p></td>' +
+                            '<td>' + (item.out_file_size / 1024).toFixed(2) + ' кБ</td>' +
+                            '<td class="p-t-5 p-b-5">' +
+                            '<button type="button" style="font-size: 24px;line-height: 24px;" data-toggle="modal" data-type="' + item.out_file_ext + '" data-target="#modal_pic" data-pic="' + item.out_id + '"><i class="ion ion-eye"></i></button>' +
+                            '</td>' +
+                            '<td class="checkbox">' +
+                                     '  <label><input type="checkbox" name="attachments" checked value="' + item.out_id + '"><span><i class="ion ion-ios-checkmark-empty"></i></span></label>' +
+                            '</td>' +
+                            '</tr>';
+                        _table.append(option);
+                    });
+                    $('.select2DOC').niceSelect();
+                }
+                else {
+                    var option = '<tr><td> Документы отсутствуют. Отсканируйте или загрузите документы перед выполнением СМЭВ запроса. </td></tr>';
+                    _table.append(option);
+                }
+            }
+        });
+    };
+    if (typeof ('#modal_smev_card_content') != 'undefined') {
+        $.validate({
+            lang: 'ru',
+            modules: 'date, security',
+            borderColorOnError: '#e44d32',
+            dateFormat: 'dd-mm-yyyy'
+        });
+    };
+    $('.pfr-all-select').on('click', function (e) {
+        var $this = $(this);
+        var $tr = $('#modal_smev .smev-doc-files tr')
+        $this.toggleClass('active');
+        if($this.hasClass('active')){
+            console.log('all');
+            $tr.removeClass('active').addClass('active');
+            $tr.find(':checkbox').prop('checked', true);
+        }
+        else {
+            console.log('no all');
+            $tr.removeClass('active');
+            $tr.find(':checkbox').prop('checked', false);
+        }
+    });
+
+    $('.smev-send-data').on('click', function (e) {
+        if ($('#modal_smev_card_content').find('form').isValid() && flag && _checkVipNetform()) {
+            event.stopPropagation();
+            var btn = $(this);
+            var url = $(this).data('urlSmev');
+            smevSendData(url, btn);
+        }
+        else {
+            $('#modal_smev_card_content').effect("shake", 500);
+            return false;
+        }
+    });
+</script>

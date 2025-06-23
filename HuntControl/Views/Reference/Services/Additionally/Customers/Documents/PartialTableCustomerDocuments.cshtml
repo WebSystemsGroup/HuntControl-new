@@ -1,0 +1,84 @@
+﻿@model HuntControl.WebUI.Models.ServiceViewModel
+<div class="panel">
+    <div class="panel-body p-0 table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr class="text-nowrap">
+                <th class="number-row p-l-20-important">№</th>
+                <th>@Html.DisplayNameFor(model => model.CustomerDocumentList.First().spr_documents_id)</th>
+                <th>@Html.DisplayNameFor(model => model.CustomerDocumentList.First().document_needs)</th>
+                <th>@Html.DisplayNameFor(model => model.CustomerDocumentList.First().document_type)</th>
+                <th>@Html.DisplayNameFor(model => model.CustomerDocumentList.First().document_count)</th>
+                <th class="text-right p-r-20-important">
+                    Действия
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.CustomerDocumentList)
+            {
+                <tr data-customer-document-id="@item.id">
+                    <td class="number-row p-l-20-important">
+                        @((Model.PageInfo.CurrentPage - 1)*Model.PageInfo.ItemsPerPage + ++Model.PageInfo.NumberRow)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(i => item.spr_documents.document_name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(i => item.document_needs)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(i => item.document_type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(i => item.document_count)
+                    </td>
+                    <td class="actions">
+                        @if (User.IsInRole("superadmin"))
+                        {
+                            <button class="on-default edit-row link" title="Изменение"><i class="ion-edit"></i></button>
+                            <button class="on-default remove-row link"><i class="ion-trash-b"></i></button>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="dataTables_info" id="datatable_info" role="status" aria-live="polite">Показаны @((Model.PageInfo.CurrentPage*Model.PageInfo.ItemsPerPage > Model.PageInfo.TotalItems) ? Model.PageInfo.TotalItems : Model.PageInfo.CurrentPage*Model.PageInfo.ItemsPerPage) из @Model.PageInfo.TotalItems записей</div>
+            </div>
+            <div class="col-sm-6">
+                <div class="dataTables_paginate paging_simple_numbers" id="datatable-editable_paginate">
+                    @Html.PageLinks(Model.PageInfo, x => Ajax.ActionLink(x.NameLink, "PartialTableSubServiceCustomers", "Reference", new {page = x.CurrentPage}, new AjaxOptions {UpdateTargetId = "providersContainer" }))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#customerDocumentsContainer table td button.edit-row').on('click', function () {
+        var customerDocumentId = $(this).closest('tr').data('customerDocumentId');
+        $('#customerDocumentsContainer table tr').removeClass('warning');
+
+        $(this).closest('tr').addClass('warning');
+        $.ajax({
+            type: 'POST',
+            async: false,
+            url: 'PartialEditCustomerDocument',
+            data: { customerDocumentId: customerDocumentId },
+            success: function (data) {
+                $('#collapseEditCustomerDocument').html(data);
+            }
+        });
+        $('#collapseEditCustomerDocument').collapse('show');
+    });
+
+    $('#customerDocumentsContainer table td button.remove-row').on('click', function () {
+        var customerDocumentId = $(this).closest('tr').data('customerDocumentId');
+        removeData('@Url.Action("SubmitCustomerDocumentDelete", "Reference")', { customerDocumentId: customerDocumentId }, function (data) { $('#customerDocumentsContainer').html(data); });
+    });
+</script>
+

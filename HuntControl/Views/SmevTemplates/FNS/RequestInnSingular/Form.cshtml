@@ -1,0 +1,137 @@
+﻿@model HuntControl.WebUI.Models.SmevRequestFormModel
+<link href="~/Content/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css">
+<link href="~/Content/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
+<link href="~/Content/plugins/multiselect/css/multi-select.css" rel="stylesheet" type="text/css">
+<link href="~/Content/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" rel="stylesheet">
+<link href="~/Content/plugins/switchery/dist/switchery.min.css" rel="stylesheet">
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<script src="~/Content/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+<script src="~/Content/plugins/switchery/dist/switchery.min.js"></script>
+<script src="~/Content/plugins/bootstrap-select/dist/js/bootstrap-select.min.js" type="text/javascript"></script>
+
+<script src="~/Content/plugins/select2/js/select2.min.js" type="text/javascript"></script>
+<script src="~/Content/plugins/multiselect/js/jquery.multi-select.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+        $('input[data-type=date]').datepicker({ format: 'dd.mm.yyyy', autoclose: true, language: 'ru' });
+    });
+</script>
+<form class="form-horizontal" id="innSingularForm">
+    @Html.Hidden("dataServicesId", ViewBag.ServiceId as object)
+    <h3 class="panel-title">Документ, удостоверяющий личность</h3>
+    <hr class="m-t-0">
+    <div class="row m-b-20">
+        <div class="col-lg-9 col-lg-offset-1">
+            <div class="form-group">
+                <div class="col-sm-12">
+                    @Html.DropDownList("DocumentType", new List<SelectListItem> { new SelectListItem { Text = "Паспорт гражданина Российской Федерации", Value = "21" }, new SelectListItem { Text = "Свидетельство о рождении", Value = "3" } }, new Dictionary<string, object> { { "class", "selectpicker" }, { "data-style", "btn-white" }, { "data-form", "applicant" } })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-3">
+                    <label>Серия</label>
+                    @Html.TextBox("DocumentSerial", Model.DocumentSerial, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__ __" }, { "data-type", "DocumentSeriesNumber" } })
+                </div>
+                <div class="col-sm-3">
+                    <label>Номер</label>
+                    @Html.TextBox("DocumentNumber", Model.DocumentNumber, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "______" }, { "data-type", "DocumentSeriesNumber" } })
+                </div>
+                <div class="col-sm-3">
+                    <label>Дата Выдачи</label>
+                    <div class="input-group">
+                        @Html.TextBox("DocumentDate", Model.DocumentIssueDate, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" } })
+                        <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <label class="nowrap">Код подразделения</label>
+                    @Html.TextBox("DocumentIssuerCode", Model.DocumentCode, new Dictionary<string, object> { { "class", "form-control" }, { "data-type", "DocumentIssuerCode" } })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <label>Кем Выдан</label>
+                    @Html.TextBox("DocumentIssuer", Model.DocumentIssuePlace, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите кем выдан документ" } })
+                </div>
+            </div>
+        </div>
+    </div>
+    <h3 class="panel-title">Персональные данные</h3>
+    <hr class="m-t-0">
+    <div class="row m-b-20">
+        <div class="col-lg-9 col-lg-offset-1">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>Фамилия</label>
+                        @Html.TextBox("Fio.LastName", Model.CustomerName.Split(' ').Length > 0 ? Model.CustomerName.Split(' ')[0] : "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Фамилия" }, { "required", "required" } })
+                    </div>
+                    <div class="col-md-4">
+                        <label>Имя</label>
+                        @Html.TextBox("Fio.FirstName", Model.CustomerName.Split(' ').Length > 1 ? Model.CustomerName.Split(' ')[1] : "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Имя" }, { "required", "required" } })
+                    </div>
+                    <div class="col-md-4">
+                        <label>Отчество</label>
+                        @Html.TextBox("Fio.SecondName", Model.CustomerName.Split(' ').Length > 2 ? Model.CustomerName.Split(' ')[2] : "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Отчество" }, { "required", "required" } })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>Дата рождения</label>
+                        <div class="input-group">
+                            @Html.TextBox("BirthDate", Model.DocumentBirthDate, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" }, { "required", "required" } })
+                            <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-8">
+                        <label>Место рождения</label>
+                        <div class="input-group">
+                            @Html.TextBox("BirthPlace", Model.DocumentBirthPlace, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите место рождения" } })
+                            <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-map-marker"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+<div class="actions clearfix text-right">
+    <button type="button" id="nextSmevRequestDataSend" class="btn btn-default waves-effect waves-light btn-block-xs m-l-5"> Далее <i class="ion-chevron-right m-l-5"></i></button>
+</div>
+<script>
+    $(function () {
+        $('input[data-type=date]').inputmask({
+            mask: '99.99.9999',
+            clearIncomplete: true
+        });
+        $('input[data-type=DocumentSerial]').inputmask({
+            mask: '999999',
+            clearIncomplete: true
+        });
+        $('input[data-type=DocumentNumber]').inputmask({
+            mask: '99 99',
+            clearIncomplete: true
+        });
+        $('input[data-type=DocumentIssuerCode]').inputmask({
+            mask: '999-999',
+            clearIncomplete: true
+        });
+    });
+    $('button#nextSmevRequestDataSend').click(function () {
+        var Form = $('#innSingularForm');
+        if (!Form.valid()) {
+            Form.addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                $(this).removeClass('shake animated');
+            });
+        }
+        else {
+            smevSendData('@Url.Action("Smev_RequestInnSingular", "Smev")', Form.serialize());
+        }
+    });
+</script>

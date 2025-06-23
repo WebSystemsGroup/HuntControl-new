@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mvcSiteMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0"
+            xsi:schemaLocation="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0 MvcSiteMapSchema.xsd">
+  <mvcSiteMapNode title="Главная" controller="Home" action="Index" iconClass="ti-home">
+
+    <mvcSiteMapNode title="Карта" class="submenu" controller="Home" action="Map" iconClass="ti-map-alt" />
+    <mvcSiteMapNode title="Новое обращение" controller="Case" action="NewCase" iconClass="ti-file"/>
+    <mvcSiteMapNode title="Все обращения"  controller="Case" action="Cases" iconClass="ti-view-list-alt" />
+    
+    <mvcSiteMapNode title="Архив обращений"  controller="Case" action="CaseArchive" iconClass="ti-archive" />
+    
+    <mvcSiteMapNode title="Физические лица"  class="submenu" controller="ApplicantPage" action="Main" iconClass="ti-id-badge"/>
+	<mvcSiteMapNode title="История изменений" roles="superadmin, admin" class="submenu" controller="HistoryChanges" action="Index" iconClass="ti-write"/>
+    <mvcSiteMapNode title="Нарушения"  controller="Violation" action="Main" iconClass="fa fa-exclamation-triangle" />
+    <!--<mvcSiteMapNode title="ФГИС ДО"  class="submenu" controller="Processing" action="ErrorProcessing" iconClass="ti-envelope" isBadge="true"/>-->
+    <mvcSiteMapNode title="Сезон охоты"  class="submenu" controller="Season" action="Main" iconClass="ti-target"/>
+    <mvcSiteMapNode title="Отчёты"  iconClass="ti-receipt">
+
+      <mvcSiteMapNode title="Охотничий билет"  class="menu-title text-muted" groupIndex ="1"/>
+      <mvcSiteMapNode title="Реестр выданных охотбилетов по дате"  controller="Report" action="ReportHuntingLicIssuedReestr"/>
+      <mvcSiteMapNode title="Реестр выданных охотбилетов по номеру"  controller="Report" action="ReportHuntingLicIssuedReestrByNumber"/>
+      <mvcSiteMapNode title="Реестр аннулированных охотбилетов"  controller="Report" action="ReportHuntingLicCancelledReestr"/>
+
+
+      <mvcSiteMapNode title="Разрешение на охоту"  class="menu-title text-muted" groupIndex ="2"/>
+      <mvcSiteMapNode title="Реестр выданных разрешений на охоту"  controller="Report" action="ReportHuntingLicPerm"/>
+      <mvcSiteMapNode title="Реестр невозвращенных разрешений"  controller="Report" action="ReportHuntingLicNotPermBackReestr"/>
+      <mvcSiteMapNode title="Общий отчет по разрешениям в разрезе охотугодий"  controller="Report" action="ReportTotalHuntingFarm"/>
+      <mvcSiteMapNode title="Общий отчет по разрешениям в разрезе групп" controller="Report" action="ReportTotalHuntingGroup"/>
+ 
+      <mvcSiteMapNode title="Нарушения"  class="menu-title text-muted" groupIndex ="3"/>
+      <mvcSiteMapNode title="Реестр нарушений"  controller="Report" action="ReportDataCustomerViolationsReestr"/>
+      <mvcSiteMapNode title="Количество нарушений по охотугодьям"  controller="Report" action="ReportCountViolationsHuntingFarm"/>
+      <mvcSiteMapNode title="Количество нарушений по сотрудникам"  controller="Report" action="ReportCountViolationsEmployees"/>
+      <mvcSiteMapNode title="Количество нарушений по статьям"  controller="Report" action="ReportCountViolations"/>
+
+      <mvcSiteMapNode title="Услуги"  class="menu-title text-muted" groupIndex ="4"/>
+      <mvcSiteMapNode title="Реестр по количеству услуг"  controller="Report" action="ReportReestrCountService"/>
+    </mvcSiteMapNode>
+    <mvcSiteMapNode title="Справочники" roles="superadmin, admin" controller="Reference" action="Main" iconClass="ti-agenda">
+      <mvcSiteMapNode title="Охотугодья" controller="Reference" action="HuntingFarms"/>
+      <mvcSiteMapNode title="Животные" controller="Reference" action="Animals" />
+      <mvcSiteMapNode title="Сезон охоты" controller="Reference" action="HuntingSeasons" />
+      <mvcSiteMapNode title="Юр. лица" controller="Reference" action="LegalPersons"/>
+      <mvcSiteMapNode title="Органы власти" controller="Reference" action="Organizations" />
+      <mvcSiteMapNode title="ФССП" controller="Reference" action="Bailiffs" />
+      <mvcSiteMapNode title="Нарушения" controller="Reference" action="Violations" />
+      <mvcSiteMapNode title="Услуги" controller="Reference" action="Services" />
+      <mvcSiteMapNode title="Типы услуг" controller="Reference" action="ServiceTypes" />
+      <mvcSiteMapNode title="Сервисы СМЭВ" controller="Reference" action="SmevServices" />
+      <mvcSiteMapNode title="Документы уд. личность" controller="Reference" action="DocumentIdentities" />
+      <mvcSiteMapNode title="Сотрудники" controller="Reference" action="Employees" />
+      <mvcSiteMapNode title="Аккаунты для мобильных приложений" controller="Reference" action="Accounts" roles="superadmin" />
+      <mvcSiteMapNode title="Вид охоты" controller="Reference" action="HuntingTypes" visibility="SiteMapPathhelper,!*" />
+      <mvcSiteMapNode title="Банки" controller="Reference" action="Banks" />
+      <mvcSiteMapNode title="Календарь" controller="Reference" action="Calendar" />
+		<mvcSiteMapNode title="Цифровые регламенты" controller="Reference" action="Digital_regulations"/>
+    </mvcSiteMapNode>
+
+    <mvcSiteMapNode title="Обращение"  class="submenu" controller="Case" action="Main"  visibility="SiteMapPathHelper,!*" />
+    <mvcSiteMapNode title="Настройки"  class="submenu" controller="System" action="Settings"  visibility="SiteMapPathHelper,!*" />
+    <mvcSiteMapNode title="Обратная связь" controller="FeedBack" action="Index"  visibility="SiteMapPathHelper,!*" />
+    <mvcSiteMapNode title="История изменений" controller="System" action="ChangeLogs" visibility="SiteMapPathHelper,!*"/>
+
+    <mvcSiteMapNode title="Система"  class="submenu"  visibility="SiteMapPathHelper,!*" >
+      <mvcSiteMapNode title="Пользователи" controller="System" action="Users"/>
+      <mvcSiteMapNode title="Смена периода" controller="System" action="ClosePeriod" />
+      <mvcSiteMapNode title="Пред. расчет" controller="System" action="PreviewCalc" />
+      <mvcSiteMapNode title="Настройки" controller="System" action="TypesCalculations" />
+      <mvcSiteMapNode title="Ошибки" controller="System" action="Errors" />
+    </mvcSiteMapNode> 
+  </mvcSiteMapNode>
+</mvcSiteMap>

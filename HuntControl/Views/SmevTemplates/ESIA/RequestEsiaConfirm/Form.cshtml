@@ -1,0 +1,185 @@
+﻿@model WebAIS.StoreProcedure.SModel.case_customer_root_get_smev
+
+<div class="modal-card-head wrap-flex">
+    <nav class="breadcrumb m-b-0">
+        <div class="container">
+            <div class="row-flex">
+                <div class="col-flex"><div class="breadcrumb-item complete">Запрос</div></div>
+                <div class="col-flex"><div class="breadcrumb-item active">Данные</div></div>
+                <div class="col-flex"><div class="breadcrumb-item">Ответ</div></div>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="modal-card-body">
+    <div class="dash" data-tabs="">
+        <div class="dash-content">
+            <div class="row-flex">
+                <div class="col-flex is-12">
+                    <div class="form-content smev-request" style="display: block;">
+                        <form>
+                            <input name="data_services_id" type="hidden" class="data_services_id" />
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="LastName">Фамилия</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input capitalize" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="LastName" name="fio.LastName" placeholder="Фамилия" type="text" value="@Model.out_customer_name.Split(' ')[0]">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="FirstName">Имя</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input capitalize" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="FirstName" name="fio.FirstName" placeholder="Имя" type="text" value="@(Model.out_customer_name.Split(' ').Length >= 2 ? Model.out_customer_name.Split(' ')[1]:"")">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="SecondName">Отчество</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input capitalize" data-val="true" data-val-length="" data-validation-allowing="-" id="SecondName" name="fio.SecondName" placeholder="Отчество" type="text" value="@(Model.out_customer_name.Split(' ').Length >= 3 ? Model.out_customer_name.Split(' ')[2]:"")">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="inn">
+                                        Тип документа
+                                    </label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <select class="select" name="identityType">
+                                            <option value="RfPassport" selected>Паспорт гражданина РФ</option>
+                                            <option value="FidDoc">Документ иностранного гражданина</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="FirstName">Номер</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" name="docNumber" placeholder="" type="text" value="@Model.out_document_number" data-inputmask="'mask': '999999'">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="FirstName">Серия</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" name="docSeries" placeholder="" type="text" value="@Model.out_document_serial" data-inputmask="'mask': '9999'">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex nomargin-bottom">
+                                <h2 class="col-flex is-offset-5 form-title">Контактные данные</h2>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="SecondName">Номер телефона</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-validation-allowing="-" name="mobile" placeholder="" type="text" value="@Model.out_customer_tel1" data-inputmask="'mask': '+7(999)9999999'">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="SecondName">E-mail</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-validation-allowing="-" name="email" placeholder="" type="text" value="@Model.out_customer_email">
+                                    </div>
+                                </div>
+                            </div>
+                             
+                        </form>
+                    </div>
+                    <div class="form-content smev-response" style="display:none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-card-foot">
+    <div class="content-footer__action row-flex-right">
+        <button type="button" class="btn btn-danger attach-smev-response" style="display: none;">
+            <span>Прикрепить к услуге</span>
+            <span class="icon">
+                <i class="ion ion-ios-upload-outline"></i>
+            </span>
+        </button>
+        <button type="button" class="btn btn-danger is-form-send smev-send-data" data-url-smev="Smev_RequestEsiaConfirm">
+            <span>Далее</span>
+            <span class="icon">
+                <i class="ion ion-ios-arrow-forward"></i>
+            </span>
+        </button>
+    </div>
+</div>
+
+<script>
+    flag = true;
+    if (typeof ('#modal_smev_card_content') != 'undefined') {
+        $('input[data-inputmask]').inputmask();
+    };
+
+    /* ловушка полей ввода даты и времени */
+    if (typeof ('#modal_smev_card_content') != 'undefined') {
+        $.datetimepicker.setLocale('ru');
+        $.each($('[data-input-datetimepicker]'), function () {
+            var $this = $(this);
+            var options = $this.data('input-datetimepicker-options');
+            var avalible_time = $this.data('input-datetimepicker-time');
+
+            if (typeof avalible_time != 'undefined') {
+                options['allowTimes'] = avalible_time.split(',');
+            }
+
+            $this.datetimepicker(options);
+        });
+    };
+
+    // Nice select init
+    if (typeof ('#modal_smev_card_content') != 'undefined') {
+        $.validate({
+            lang: 'ru',
+            modules: 'date, security',
+            borderColorOnError: '#e44d32',
+            dateFormat: 'dd-mm-yyyy'
+        });
+        $('#modal_smev_card_content select').niceSelect();
+    };
+
+    $('.smev-send-data').on('click', function (e) {
+        if ($('#modal_smev_card_content').find('form').isValid() && flag) {
+            event.stopPropagation();
+            var btn = $(this);
+            var url = $(this).data('urlSmev');
+            smevSendData(url, btn);
+        }
+    });
+</script>

@@ -1,0 +1,38 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.MvcSiteMap().SiteMapPath()
+<script src="http://maps.google.com/maps/api/js?key=AIzaSyA1s6Waj0fSFrfuxUJUwuJxNVeZxdp-iQo&sensor=true" type="text/javascript"></script>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card-box m-b-15 p-0">
+            <!-- SIDEBAR USERPIC -->
+            <!-- SIDEBAR MENU -->
+            <div class="profile-usermenu">
+                <ul>
+                    <li class="@((string)ViewContext.RequestContext.RouteData.Values["action"] == "Employees" ? "active" : "" )">@Html.ActionLink("Сотрудники", "Employees", "Reference", null, new { @class = "text-clip-cust"})</li>
+                    <li class="@((string)ViewContext.RequestContext.RouteData.Values["action"] == "LegalPersons" ? "active" : "" )">@Html.ActionLink("Юр. лица", "LegalPersons", "Reference", null, new { @class = "text-clip-cust" })</li>
+                    <li class="@((string)ViewContext.RequestContext.RouteData.Values["action"] == "HuntingFarms" ? "active" : "")">@Html.ActionLink("Охотугодья", "HuntingFarms", "Reference", null, new { @class = "text-clip-cust" })</li>
+                    <li class="@((string)ViewContext.RequestContext.RouteData.Values["action"] == "Animals" ? "active" : "" )">@Html.ActionLink("Животные", "Animals", "Reference", null, new { @class = "text-clip-cust" })</li>
+                    <li class="@((string)ViewContext.RequestContext.RouteData.Values["action"] == "Services" ? "active" : "" )">@Html.ActionLink("Услуги", "Services", "Reference", null, new { @class = "text-clip-cust" })</li>
+                    <li class="@((string)ViewContext.RequestContext.RouteData.Values["action"] == "SmevServices" ? "active" : "" )">@Html.ActionLink("Сервисы СМЭВ", "SmevServices", "Reference", null, new { @class = "text-clip-cust" })</li>
+                    <li class="@((string)ViewContext.RequestContext.RouteData.Values["action"] == "Bailiffs" ? "active" : "" )">@Html.ActionLink("ФССП", "Bailiffs", "Reference", null, new { @class = "text-clip-cust" })</li>
+                    <li class="@((string)ViewContext.RequestContext.RouteData.Values["action"] == "Organizations" ? "active" : "" )">@Html.ActionLink("Органы власти", "Organizations", "Reference", null, new { @class = "text-clip-cust" })</li>
+                    <li class="@((string)ViewContext.RequestContext.RouteData.Values["action"] == "Violations" ? "active" : "" )">@Html.ActionLink("Статьи к нарушениям", "Violations", "Reference", null, new { @class = "text-clip-cust" })</li>
+                    <li class="@((string)ViewContext.RequestContext.RouteData.Values["action"] == "ServiceTypes" ? "active" : "" )">@Html.ActionLink("Типы услуг", "ServiceTypes", "Reference", null, new { @class = "text-clip-cust" })</li>
+                    <li class="@((string)ViewContext.RequestContext.RouteData.Values["action"] == "HuntingTypes" ? "active" : "" )">@Html.ActionLink("Вид охоты", "HuntingTypes", "Reference", null, new { @class = "text-clip-cust" })</li>
+                    <li class="@((string)ViewContext.RequestContext.RouteData.Values["action"] == "DocumentIdentities" ? "active" : "" )">@Html.ActionLink("Документы уд. личность", "DocumentIdentities", "Reference", null, new { @class = "text-clip-cust" })</li>
+                    <li class="@((string)ViewContext.RequestContext.RouteData.Values["action"] == "Banks" ? "active" : "" )">@Html.ActionLink("Банки", "Banks", "Reference", null, new { @class = "text-clip-cust" })</li>
+                    
+                </ul>
+            </div>
+            <!-- END MENU -->
+        </div>
+    </div>
+    <div class="col-md-9">
+        @RenderBody()   
+    </div>
+</div>
+

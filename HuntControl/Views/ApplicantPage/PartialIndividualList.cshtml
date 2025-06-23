@@ -1,0 +1,93 @@
+﻿@using HuntControl.Domain.Concrete 
+@model HuntControl.WebUI.Models.ApplicantPageViewModel
+<div class="card-box p-0 m-b-10">
+    <div class="table-responsive">
+        <div class="m-t-10 m-b-10">
+            <span class="p-l-20-important" style="font-size: 14px;">Результат поиска</span>
+            <span class="font-13 pull-right p-r-20-important"><b>@Model.PageInfo.TotalItems</b> записей</span>
+        </div>
+        <table class="table table-hover m-b-0">
+            <tbody>
+                @foreach (var item in Model.CustomerSelectList)
+                {
+                    <tr data-customer-id="@item.out_id">
+                        <td class="p-l-20-important text-uppercase">
+                            <div>
+                                @* Блок статуса охотничьего билета *@
+                                @if (item.out_hunting_license_status == 1)
+                                {
+                                    <span class="text-white" style="font-size: 10px; background-color: green; padding: 3px 6px;">
+                                        Охотничий билет
+                                    </span>
+                                }
+                                else if (item.out_hunting_license_status == 2)
+                                {
+                                    <span class="text-white" style="font-size: 10px; background-color: indianred; padding: 3px 6px;">
+                                        Билет аннулирован
+                                    </span>
+                                }
+
+                                @* Блок разрешения на охоту *@
+                                @if (item.out_license == true)
+                                {
+                                    <span class="text-white" style="font-size: 10px; margin-left: 5px; background-color: green; padding: 3px 6px;">
+                                        Разрешено
+                                    </span>
+                                }
+                            </div>
+                            <span class="individual-name vertical-middle m-r-15">@Html.DisplayFor(m => item.out_customer_name)</span>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-11 col-lg-11 col-xs-11 col-sm-11">
+                                    <span class="text-muted font-12"><i class="ion-location m-r-5"></i>@Html.DisplayFor(m => item.out_actual_address)</span><br />
+                                    <span class="text-muted font-12"><i class="ion-ios7-telephone m-r-5"></i>@Html.DisplayFor(m => item.out_phone_number1)</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <hr class="m-0">
+    <div class="row p-t-10 p-l-20-important p-r-20-important p-b-10">
+        <div class="col-sm-12">
+            <div class="dataTables_paginate paging_simple_numbers" id="datatable-editable_paginate">
+                @Html.PageLinks(Model.PageInfo, x => Ajax.ActionLink(x.NameLink, "PartialIndividualList", "ApplicantPage", new { page = x.CurrentPage, search = ViewBag.Serach }, new AjaxOptions { UpdateTargetId = "individualListContainer" }))
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('table tr').click(function () {
+            $(this).addClass('active').siblings('.active').removeClass('active');
+            var customerId = $(this).data('customerId');
+            location.hash = customerId;
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("PartialIndividualPage", "ApplicantPage")',
+                data: { customerId: customerId },
+                success: function (data) {
+                    $('#individualPageContainer').html(data);
+                }
+            });
+        });
+
+        $('button[data-tooltip-info]').tooltip({
+            title: function () {
+                var tooltipInfo = $(this).data('tooltipInfo');
+                return "<div class='text-left'><strong>ФИО</strong>: " + tooltipInfo['customer_name'] + "</br>" +
+                    "<strong>Адрес проживания</strong>: " + tooltipInfo['actual_address'] + "</br>" +
+                    "</div>";
+            },
+            html: true,
+            placement: "left"
+        });
+
+        if ('@ViewBag.CustomerId' !== '') {
+            $('table tr[data-customer-id="@ViewBag.CustomerId"]').trigger('click');
+        }
+    });
+
+</script>

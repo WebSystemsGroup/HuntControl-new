@@ -1,0 +1,94 @@
+﻿@model IEnumerable<HuntControl.Domain.Concrete.CaseServicesDocumentFileSelectResult>
+
+@if (Model.Any())
+{
+    <table class="table table-hover">
+        <tbody>
+            @foreach (var item in Model)
+            {
+                if (item.out_file_ext.ToLower() == ".jpg" || item.out_file_ext.ToLower() == ".jpeg" || item.out_file_ext.ToLower() == ".png" || item.out_file_ext.ToLower() == ".pdf")
+                {
+                    <tr>
+                        <td onclick="fileOpen('@item.out_id', '@item.out_file_name', '@item.out_file_ext', '@item.out_data_services_info_id')" title="@item.out_file_name" data-x-file-id="@item.out_id">@item.out_file_name</td>
+                        <td onclick="fileOpen('@item.out_id', '@item.out_file_name', '@item.out_file_ext', '@item.out_data_services_info_id')"><small>@item.out_date_enter.ToShortDateString() <br><span class="text-muted font-12">@item.out_employees_fio</span></small> </td>
+                        <td onclick="fileOpen('@item.out_id', '@item.out_file_name', '@item.out_file_ext', '@item.out_data_services_info_id')">@item.out_file_size кБ</td>
+                        <td onclick="fileOpen('@item.out_id', '@item.out_file_name', '@item.out_file_ext', '@item.out_data_services_info_id')">@item.out_file_ext</td>
+                        <td class="text-right">
+                            <button type="button" class="on-default text-custom link" style="font-size: 22px;line-height: 22px;" onclick="fileDownload('@item.out_id', '@item.out_file_name', '@item.out_file_ext', '@item.out_data_services_info_id')">
+                                <i class="ion-ios7-cloud-download-outline"></i>
+                            </button>
+                            <button type="button" class="on-default remove-row link" style="font-size: 22px;line-height: 22px;" onclick="deleteFile('@item.out_id')">
+                                <i class="ion-ios7-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+
+<script>
+        function refreshDocumentFiles()
+        {
+            var documentId = $("li.r-tabs-state-active").data('documentId');
+                $.ajax({
+            url: '@Url.Action("PartialTableDocumentFiles", "Case")',
+                    type: 'POST',
+                    async: false,
+                    data: { documentId: documentId },
+                    success: function(data) {
+                        $('#documentFilesContainer').html(data);
+                }
+            });
+        };
+
+        $('button[data-rotate]').click(function () {
+            var rotate = $(this).data('rotate');
+            $(this).data('rotate', rotate + 90);
+            $('.img-doc-content>img').css('transform', 'rotate(' + rotate + 'deg)');
+        });
+
+        function fileDownload(fileId, fileName, fileExt, infoId)
+        {
+            location.href = '@Url.Action("SubmitDocumentFileDownload", "Case")/?documentFileId=' + fileId + '&documentFileName=' + fileName + '&documentFileExt=' + fileExt + '&infoId=' + infoId;
+        };
+
+        function deleteFile(fileId)
+        {
+            removeData('@Url.Action("SubmitDocumentFileDelete", "Case")', { documentFileId: fileId }, function(data) { $('ul#documentList li.r-tabs-state-active').click(); });
+        };
+
+        function fileOpen(fileId, fileName, fileExt, infoId)
+        {
+            var target = '#imageModal';
+            $.ajax({
+            url: '@Url.Action("SubmitDocumentFileOpen", "Case")',
+                type: 'POST',
+                data: { documentFileId: fileId, documentFileName: fileName, documentFileExt: fileExt, infoId: infoId },
+                success: function(data) {
+                    if (fileExt.toLowerCase() == '.pdf')
+                    {
+                        var iframe = $('<iframe>');
+                        iframe.css('width', '100%');
+                        iframe.css('height', '52em');
+                        iframe.attr("src", "data:application/pdf;base64," + data);
+                        $(target + ' .modal-body').html(iframe);
+                    }
+                    else
+                    {
+                        $(target + ' .modal-body').html('<div class="img-doc-content card-box p-0"  style="height: 100%;"><img class="d-0" src="data:image/png;base64,' + data + '" style="width: 100%;"/></div>');
+                        $('.img-doc-content').slimScroll({
+                        height: '100%',
+                            position: 'right',
+                            size: "5px",
+                            color: '#98a6ad',
+                            wheelStep: 20
+                        });
+                    }
+                    $(target).modal('show');
+                }
+            });
+        };
+</script>
+

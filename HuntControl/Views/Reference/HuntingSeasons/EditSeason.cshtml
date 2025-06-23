@@ -1,0 +1,45 @@
+﻿@model HuntControl.Domain.Concrete.spr_season
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myLargeModalLabel">Изменение данных сезона</h4>
+        </div>
+        <div class="modal-body">
+            @using (Ajax.BeginForm("SubmitSeasonSave", "Reference", Model, new AjaxOptions { UpdateTargetId = "banksContainer", OnSuccess = "$('#myModal').modal('hide'); successEdit();" }, new { @id = "EditBankForm", @class = "form-horizontal" }))
+            {
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        @Html.LabelFor(model => model.season_name, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.season_name, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.season_name) } })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        @Html.LabelFor(model => model.tariff_, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.tariff_, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.tariff_) } })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        @Html.LabelFor(model => model.charge_, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.charge_, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.charge_) } })
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel waves-effect waves-light" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Отмена</button>
+            <button type="submit" form="EditBankForm" class="btn btn-success waves-effect waves-light"> Сохранить <i class="fa fa-check m-l-5"></i></button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

@@ -1,0 +1,113 @@
+﻿@model HuntControl.Domain.Concrete.HuntingCustomerInfoGetResult
+<div class="card-box" style="padding: 8px 30px;">
+    <div class="row">
+        <div class="pull-left">
+            <img id="individualPhoto" src="~/Content/img/no_photo.png" style="object-fit:cover;" class="rounded-circle thumb-md" alt="friend">
+        </div>
+        <div class="pull-left m-l-15">
+            <span class="font-bold">
+                @(Model.out_customer_name)
+            </span><br />
+            <span class="font-12"><i class="ion-location m-r-5"></i><span class="text-muted">@(Model.out_actual_address)</span></span>
+            <span class="font-12 m-l-15"><i class="ion-ios7-telephone m-r-5"></i> <span class="text-muted">@(Model.out_phone_number1)</span></span>
+            <span class="font-12  m-l-15"> <i class="ion-ios7-email-outline m-r-5"></i> <span class="text-muted">@(Model.out_e_mail)</span></span><br />
+            <span class="font-12 font-bold">Охотничий билет</span><br />
+            <span class="font-12">Серия:<span class="m-l-5 m-r-10">@(Model.out_hunting_lic_serial)</span> Номер:<span class="m-l-5 m-r-10">@(Model.out_hunting_lic_number)</span> Дата:<span class="m-l-5 m-r-10">@(Model.out_hunting_lic_issue_date?.ToShortDateString())</span></span><br />
+        </div> 
+        <div class="pull-right">
+            <button class="btn btn-default btn-sm" id="linkApplicantPage">Страница ФЛ <i class="ion-chevron-right m-l-5"></i></button>
+        </div>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-body">        
+        <div class="tab-pane fade in active" id="customerViolationsTabContainer">
+            @Html.Action("PartialTableViolations", "ApplicantPage", new { customerId = ViewBag.CustomerId })
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetIndividualPhoto", "ApplicantPage")',
+            data: { customerId: '@ViewBag.CustomerId' },
+            success: function (data) {
+                if (data.length > 0)
+                    $('#individualPhoto').attr('src', data)
+            }
+        });
+    });
+
+    $("#linkApplicantPage").click(function () {
+        window.open("@Url.Action("Main","ApplicantPage")#@ViewBag.CustomerId");
+    })
+
+    $('#removeIndividualBtn').click(function () {
+        var paramObject = {
+            url: '@Url.Action("SubmitCustomerDelete", "ApplicantPage")',
+            params: { customerId: '@ViewBag.CustomerId' },
+            onSuccess: function (data) {
+                $('#searchIndividualBtn').trigger('click');
+            }
+        }
+        removeWithComment(paramObject);
+    });
+
+    $('a#editIndividualBtn').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialModalEditCustomer", "ApplicantPage")',
+            data: { customerId: '@ViewBag.CustomerId' },
+            success: function (data) {
+                $('#myModal').html(data);
+                $('#myModal').modal('show');
+            }
+        });
+    });
+
+    $('a#removeIndividualBtn').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("SubmitRemoveIndividual", "ApplicantPage")',
+            data: { customerId: '@ViewBag.CustomerId' },
+            success: function (data) {
+            }
+        });
+    });
+
+    $('a[href="#customerViolationsTabContainer"]').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableViolations", "ApplicantPage")',
+            data: { customerId: '@ViewBag.CustomerId' },
+            success: function (data) {
+                $('#customerViolationsTabContainer').html(data);
+            }
+        });
+    });
+
+    $('a[href="#changeLogsTabContainer"]').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableChangeLogs", "ApplicantPage")',
+            data: { customerId: '@ViewBag.CustomerId' },
+            success: function (data) {
+                $('#changeLogsTabContainer').html(data);
+            }
+        });
+    });
+
+    $('a[href="#huntingLicPermsTabContainer"]').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableHuntingLicPerms", "ApplicantPage")',
+            data: { customerId: '@ViewBag.CustomerId' },
+            success: function (data) {
+                $('#huntingLicPermsTabContainer').html(data);
+            }
+        });
+    });
+</script>

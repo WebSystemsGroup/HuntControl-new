@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "Страница физ. лица";
+}
+
+@Html.MvcSiteMap().SiteMapPath()
+
+<div class="card-box p-0">
+    <div class="input-group">
+        <span class="input-group-btn">
+            <button type="button" class="btn waves-effect waves-light btn-link p-l-20-important"><i class="fa fa-search"></i></button>
+        </span>
+        <input type="text" id="searchTextChangeLogs" class="text-dark no-border-input" placeholder="Поиск изменения"><ul class="typeahead dropdown-menu"></ul><ul class="typeahead dropdown-menu"></ul>
+    </div>
+    <hr class="m-0">
+    <div id="HistoryChangeLogListContainer">
+
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('button[data-tooltip-info]').tooltip({
+            title: function () {
+                var tooltipInfo = $(this).data('tooltipInfo');
+                return "<div class='text-left'>" +
+                            "<strong>Таблица</strong>: " + tooltipInfo['table_name_'] + " - " + tooltipInfo['table_name_base_'] + "</br>" +
+                            "<strong>Поле</strong>: " + tooltipInfo['field_name_'] + " - " + tooltipInfo['field_name_base_'] + "</br>" +
+                            "<strong>Старое значение</strong>: " + tooltipInfo['old_value'] + "</br>" +
+                            "<strong>Новое значение</strong>: " + tooltipInfo['new_value'] + "</br>" +
+                            "<strong>Комментарии</strong>: " + tooltipInfo['commentt'] + "</br>" +
+                            "<hr class='m-t-5 m-b-5'>" +
+                            "<strong>Изменил</strong>: " + tooltipInfo['employees_fio'] + "</br>" +
+                            "<strong>Дата изменения</strong>: " + tooltipInfo['date_change'] + "</br>" +
+                       "</div>";
+            },
+            html: true,
+            placement: "left"
+        });
+    });
+    $('#searchTextChangeLogs').change(function () {
+        $.ajax({
+            url: '@Url.Action("Main", "HistoryChanges")',
+            type: 'Post',
+            data: { search: $(this).val() },
+            success: function (data) {
+                $('#HistoryChangeLogListContainer').html(data);
+            }
+        });
+    });
+
+    $('#searchTextChangeLogs').change();
+
+</script>
+

@@ -1,0 +1,48 @@
+﻿@model HuntControl.WebUI.Models.HuntingFarmViewModel
+<form id="WizardHuntingFarmForm">
+    <div class="card-box p-0" id="huntingFarms">
+        <div class="input-group">
+            <span class="input-group-btn">
+                <button type="button" class="btn waves-effect waves-light btn-link p-l-20-important"><i class="fa fa-search"></i></button>
+            </span>
+            <input type="text" class="text-dark no-border-input search" placeholder="Поиск охотугодий"><ul class="typeahead dropdown-menu"></ul><ul class="typeahead dropdown-menu"></ul>
+        </div>
+        <hr class="m-0">
+        <div class="table-responsive">
+            <table class="table m-b-0">
+                <thead>
+                    <tr>
+                        <th class="number-row p-l-20-important">№</th>
+                        <th>@Html.DisplayNameFor(model => model.HuntingFarmList.First().hunting_farm_name)</th>
+                        <th>Количество</th>
+                    </tr>
+                </thead>
+                <tbody class="list">
+                    @foreach (var item in Model.HuntingFarmList)
+                    {
+                        <tr data-hunting-farm-accounting-id="@item.id" class="@(item.is_remove == true ? "danger" : "")">
+                            <td class="number-row p-l-20-important">
+                                @(++Model.PageInfo.NumberRow)
+                            </td>
+                            <td class="name">
+                                @Html.DisplayFor(i => item.hunting_farm_name)
+                            </td>
+                            <td>
+                                @Html.TextBox($"countAnimal[{item.id}]", "0", new { @class = "form-control input-sm required", type = "number" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+
+<script src="~/Content/plugins/list/list.min.js"></script>
+<script>
+    var options = {
+        valueNames: ['name']
+    };
+
+    var userList = new List('huntingFarms', options);
+</script>

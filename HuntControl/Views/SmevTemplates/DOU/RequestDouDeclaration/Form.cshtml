@@ -1,0 +1,1102 @@
+﻿@model WebAIS.StoreProcedure.SModel.case_customer_root_get_smev
+@{ 
+    List<SelectListItem> boolean = new List<SelectListItem>();
+    boolean.Add(new SelectListItem() { Text = "Да", Value = true.ToString() });
+    boolean.Add(new SelectListItem() { Text = "Нет", Value = false.ToString(), Selected = true });
+}
+<div class="modal-card-head wrap-flex">
+    <nav class="breadcrumb m-b-0">
+        <div class="container">
+            <div class="row-flex">
+                <div class="col-flex"><div class="breadcrumb-item complete">Запрос</div></div>
+                <div class="col-flex"><div class="breadcrumb-item active">Данные</div></div>
+                <div class="col-flex"><div class="breadcrumb-item">Ответ</div></div>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="modal-card-body">
+    <div class="form-vertical smev-request" id="smev-dou-tabs">
+        <ul class="tab-horizontal">
+            <li><a href="#smev-dou-tab-1">Данные заявителя</a></li>
+            <li><a href="#smev-dou-tab-2">Данные ребенка</a></li>
+            <li><a href="#smev-dou-tab-3">Выбор ДОУ</a></li>
+            <li><a href="#smev-dou-tab-4">Заявление</a></li>
+            <li onclick="getFileSmevDocument()"><a href="#smev-dou-tab-5">Документы</a></li>
+        </ul>
+        <form id="_douForm">
+            <input name="data_services_id" type="hidden" class="data_services_id" />
+            <div id="smev-dou-tab-1" class="form-content smev-request">
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="inn">Тип заявителя</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <select class="select" id="declarantInfo_StatusId" name="declarantInfo.StatusId" style="display: none;"></select>
+                            <input type="hidden" id="declarantInfo_StatusName" name="declarantInfo.StatusName" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="LastName">Фамилия</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input capitalize" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="declarantInfo_fio_LastName" name="declarantInfo.fio.LastName" placeholder="Фамилия" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Имя</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input capitalize" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="declarantInfo_fio_FirstName" name="declarantInfo.fio.FirstName" placeholder="Имя" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="SecondName">Отчество</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input capitalize" data-val="true" data-val-length="" data-validation-allowing="-" id="declarantInfo_fio_SecondName" name="declarantInfo.fio.SecondName" placeholder="Отчество" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="BirthDate">Дата рождения</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control has-addons">
+                            <input class="input" type="text" name="declarantInfo.BirthDate" id="declarantInfo_BirthDate" value="" placeholder="__.__.____" data-inputmask="'mask': '99.99.9999'"
+                                   data-validation="date" data-validation-format="dd.mm.yyyy"
+                                   data-input-datetimepicker="" data-input-datetimepicker-options='{"timepicker":false,"format":"d.m.Y","scrollMonth":false,"scrollInput":false}' />
+                            <span class="icon" style="top:0px;"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex nomargin-bottom">
+                    <h2 class="col-flex is-offset-5 form-title">Удостоверение личности</h2>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="inn">Тип документа</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <select class="select" id="declarantInfo_IdentityTypeId" name="declarantInfo.IdentityTypeId" style="display: none;"></select>
+                            <input type="hidden" value="Паспорт гражданина РФ" id="declarantInfo_IdentityTypeName" name="declarantInfo.IdentityTypeName" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="LastName">Серия</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="declarantInfo_IdentitySerial" name="declarantInfo.IdentitySerial" placeholder="Серия" type="text" value="" data-inputmask="'mask': '9999'">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="LastName">Номер</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="declarantInfo_IdentityNumber" name="declarantInfo.IdentityNumber" placeholder="Номер" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="LastName">Кем выдан</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="declarantInfo_IdentityPlace" name="declarantInfo.IdentityPlace" placeholder="Кем выдан" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="BirthDate">Дата выдачи</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control has-addons">
+                            <input class="input" type="text" name="declarantInfo.IdentityDate" id="declarantInfo_IdentityDate" value="" placeholder="__.__.____" data-inputmask="'mask': '99.99.9999'"
+                                   data-validation="date" data-validation-format="dd.mm.yyyy"
+                                   data-input-datetimepicker="" data-input-datetimepicker-options='{"timepicker":false,"format":"d.m.Y","scrollMonth":false,"scrollInput":false}' />
+                            <span class="icon" style="top:0px;"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex nomargin-bottom">
+                    <h2 class="col-flex is-offset-5 form-title">Адрес проживания</h2>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Почтовый индекс</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" id="declarantInfo_PostAddress_Index" name="declarantInfo.PostAddress.Index" placeholder="Почтовый индекс" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Область (республика)</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" id="declarantInfo_PostAddress_Region" name="declarantInfo.PostAddress.Region" placeholder="Область (республика)" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Район</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" id="declarantInfo_PostAddress_Area" name="declarantInfo.PostAddress.Area" placeholder="Район" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        @Html.DropDownList("___type", new List<SelectListItem> { new SelectListItem { Text = "Город", Value = "declarantInfo.PostAddress.City" }, new SelectListItem { Text = "Населенный пункт", Value = "declarantInfo.PostAddress.Settlement" } }, new { @class = "select", @id = "___type" })
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="declarantInfo_____type" name="declarantInfo.PostAddress.City" placeholder="Наименование" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Улица</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="declarantInfo_PostAddress_Street" name="declarantInfo.PostAddress.Street" placeholder="Улица" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Дом</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="declarantInfo_PostAddress_House" name="declarantInfo.PostAddress.House" placeholder="Дом" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Корпус</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" id="declarantInfo_PostAddress_Building" name="declarantInfo.PostAddress.Building" placeholder="Корпус" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Квартира</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" id="declarantInfo_PostAddress_Appartment" name="declarantInfo.PostAddress.Appartment" placeholder="Квартира" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex nomargin-bottom">
+                    <h2 class="col-flex is-offset-5 form-title">Контактная информация</h2>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Телефон</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" id="orderInfo_ContactPhone" name="orderInfo.ContactPhone" placeholder="+7(___) _______" type="text" value="" data-inputmask="'mask': '+7(999) 9999999'">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">E-mail</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" id="orderInfo_ContactEmail" name="orderInfo.ContactEmail" placeholder="" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Комментарий</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" id="orderInfo_ContactComment" name="orderInfo.ContactComment" placeholder="" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row-flex nomargin-bottom">
+                    <h2 class="col-flex is-offset-5 form-title">Уведомить о результатах</h2>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="inn">
+                            По E-mail
+                        </label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            @Html.DropDownList("orderInfo.NotificationResultsByEmail", boolean, new { @class = "select", @id = "orderInfo_NotificationResultsByEmail" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="inn">
+                            По телефону
+                        </label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            @Html.DropDownList("orderInfo.NotificationResultsByPhone", boolean, new { @class = "select", @id = "orderInfo_NotificationResultsByPhone" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="inn">
+                            По почте
+                        </label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            @Html.DropDownList("orderInfo.NotificationResultsByPost", boolean, new { @class = "select", @id = "orderInfo_NotificationResultsByPost" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="smev-dou-tab-2" class="form-content smev-request">
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="LastName">Фамилия</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input capitalize" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="childInfo_fio_LastName" name="childInfo.fio.LastName" placeholder="Фамилия" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Имя</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input capitalize" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="childInfo_fio_FirstName" name="childInfo.fio.FirstName" placeholder="Имя" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="SecondName">Отчество</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input capitalize" data-val="true" data-val-length="" data-validation-allowing="-" id="childInfo_fio_SecondName" name="childInfo.fio.SecondName" placeholder="Отчество" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="BirthDate">Дата рождения</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control has-addons">
+                            <input class="input" type="text" name="childInfo.BirthDate" id="childInfo_BirthDate" value="" placeholder="__.__.____" data-inputmask="'mask': '99.99.9999'"
+                                   data-validation="date" data-validation-format="dd.mm.yyyy"
+                                   data-input-datetimepicker="" data-input-datetimepicker-options='{"timepicker":false,"format":"d.m.Y","scrollMonth":false,"scrollInput":false}' />
+                            <span class="icon" style="top:0px;"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex nomargin-bottom">
+                    <h2 class="col-flex is-offset-5 form-title">Удостоверение личности</h2>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="inn">Тип документа</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <select class="select" id="childInfo_IdentityTypeId" name="childInfo.IdentityTypeId" style="display: none;">
+                                <option value="2" selected>Свидетельство о рождении</option>
+                                <option value="1">Иное</option>
+                            </select>
+                            <input type="hidden" value="Свидетельство о рождении" id="childInfo_IdentityTypeName" name="childInfo.IdentityTypeName" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="LastName">Серия</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="childInfo_IdentitySerial" name="childInfo.IdentitySerial" placeholder="Серия" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="LastName">Номер</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="childInfo_IdentityNumber" name="childInfo.IdentityNumber" placeholder="Номер" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="LastName">Кем выдан</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="childInfo_IdentityPlace" name="childInfo.IdentityPlace" placeholder="Кем выдан" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="BirthDate">Дата выдачи</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control has-addons">
+                            <input class="input" type="text" name="childInfo.IdentityDate" id="childInfo_IdentityDate" value="" placeholder="__.__.____" data-inputmask="'mask': '99.99.9999'"
+                                   data-validation="date" data-validation-format="dd.mm.yyyy"
+                                   data-input-datetimepicker="" data-input-datetimepicker-options='{"timepicker":false,"format":"d.m.Y","scrollMonth":false,"scrollInput":false}' />
+                            <span class="icon" style="top:0px;"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex nomargin-bottom">
+                    <h2 class="col-flex is-offset-5 form-title">Адрес проживания <a href="#" onclick="CopyAddressParent()" class="smev-a-button"><i class="ion ion-share fs-14 p-r-5"></i>Адрес родителей</a></h2>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Почтовый индекс</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" id="childInfo_PostAddress_Index" name="childInfo.PostAddress.Index" placeholder="Почтовый индекс" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Область (республика)</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" id="childInfo_PostAddress_Region" name="childInfo.PostAddress.Region" placeholder="Область (республика)" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Район</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" id="childInfo_PostAddress_Area" name="childInfo.PostAddress.Area" placeholder="Район" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        @Html.DropDownList("___type", new List<SelectListItem> { new SelectListItem { Text = "Город", Value = "childInfo.PostAddress.City" }, new SelectListItem { Text = "Населенный пункт", Value = "childInfo.PostAddress.Settlement" } }, new { @class = "select", @id = "___typeC" })
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="childInfo_____type" name="childInfo.PostAddress.City" placeholder="Наименование" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Улица</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="childInfo_PostAddress_Street" name="childInfo.PostAddress.Street" placeholder="Улица" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Дом</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="childInfo_PostAddress_House" name="childInfo.PostAddress.House" placeholder="Дом" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Корпус</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" id="childInfo_PostAddress_Building" name="childInfo.PostAddress.Building" placeholder="Корпус" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Квартира</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" id="childInfo_PostAddress_Appartment" name="childInfo.PostAddress.Appartment" placeholder="Квартира" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="smev-dou-tab-3" class="form-content smev-request">
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="inn">Время прибывание</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <select class="select" id="orderInfo_ArrivalTimeTypeId" name="orderInfo.ArrivalTimeTypeId" style="display: none;"></select>
+                            <input type="hidden" value="Полный день (10,5 - 12 часов)" id="orderInfo_ArrivalTimeTypeName" name="orderInfo.ArrivalTimeTypeName" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="inn">Район / Город</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <select class="select" id="orderInfo_Region" name="orderInfo.Region">
+                                <option value="null">Выберите Район / Город</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="inn">
+                            Потребность по здоровью
+                        </label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <select class="select" id="orderInfo_HealthNeedsId" name="orderInfo.HealthNeedsId">
+                                <option value="null">Выберите Район / Город</option>
+                            </select>
+                            <input type="hidden" id="orderInfo_HealthNeedsName" name="orderInfo.HealthNeedsName" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="inn">Категория льгот</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <select class="select" id="orderInfo_PrivilegeCategoryId" name="orderInfo.PrivilegeCategoryId">
+                                <option value="null">Выберите Потребность по здоровью</option>
+                            </select>
+                            <input type="hidden" id="orderInfo_PrivilegeCategoryName" name="orderInfo.PrivilegeCategoryName" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="WishDateIn">Желаемая дата зачисления</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control has-addons">
+                            <input class="input" type="text" name="orderInfo.WishDateIn" id="orderInfo_WishDateIn" value="" placeholder="__.__.____" data-inputmask="'mask': '99.99.9999'"
+                                   data-validation="date" data-validation-format="dd.mm.yyyy"
+                                   data-input-datetimepicker="" data-input-datetimepicker-options='{"timepicker":false,"format":"d.m.Y","scrollMonth":false,"scrollInput":false}' />
+                            <span class="icon" style="top:0px;"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex nomargin-bottom">
+                    <h2 class="col-flex is-offset-5 form-title">Желаемые ДОУ</h2>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="WishDateIn">1.</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <select class="js-example-basic-multiple" id="multiselect_to1" name="multiselect_to" data-val="true" data-val-length="" data-validation="required" data-validation-allowing="-"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="WishDateIn">2.</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <select class="js-example-basic-multiple" id="multiselect_to2" name="multiselect_to" data-val="true" data-val-length="" data-validation-allowing="-"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="WishDateIn">3.</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <select class="js-example-basic-multiple" id="multiselect_to3" name="multiselect_to" data-val="true" data-val-length="" data-validation-allowing="-"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex nomargin-bottom">
+                    <h2 class="col-flex is-offset-5 form-title">Дополнительно</h2>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="inn">
+                            Предлагать другие ДОУ
+                        </label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            @Html.DropDownList("orderInfo.OfferNearestDou", boolean, new { @class = "select", @id = "orderInfo_OfferNearestDou" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="inn">
+                            Предлагать временное зачисление
+                        </label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            @Html.DropDownList("orderInfo.OfferTemporalInclusion", boolean, new { @class = "select", @id = "orderInfo_OfferTemporalInclusion" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex nomargin-bottom">
+                    <h2 class="col-flex is-offset-5 form-title">Искать в группах</h2>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="inn">
+                            Своего возраста
+                        </label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            @Html.DropDownList("orderInfo.SearchInGroupsOwnAge", boolean, new { @class = "select", @id = "orderInfo_SearchInGroupsOwnAge" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="inn">
+                            Младшего возраста
+                        </label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            @Html.DropDownList("orderInfo.SearchInGroupsUnderAge", boolean, new { @class = "select", @id = "orderInfo_SearchInGroupsUnderAge" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="inn">
+                            Старшего возраста
+                        </label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            @Html.DropDownList("orderInfo.SearchInGroupsUpwardsAge", boolean, new { @class = "select", @id = "orderInfo_SearchInGroupsUpwardsAge" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="smev-dou-tab-4" class="form-content smev-request">
+                <div class="row-flex">
+                    <div class="col-flex is-offset-1 is-4">
+                        <button type="button" onclick="print_DouOrder()" class="file-btn file-info">
+                            <figure class="file-btn__icon"><i class="ion ion-printer"></i></figure>
+                            <span class="file-btn__text">Печать заявления</span>
+                        </button>
+                        <button type="button" class="file-btn file-danger" onclick="_scanDouOrder()">
+                            <figure class="file-btn__icon"><i class="ion ion-images"></i></figure>
+                            <span class="file-btn__text">Сканирование заявления</span>
+                        </button>
+                    </div>
+                    <div class="col-flex is-7" id="_douOrderContent">
+                        
+                    </div>
+                </div>
+            </div>
+            <div id="smev-dou-tab-5" class="form-content smev-request" style="min-height: 250px;">
+                <div class="row-flex">
+                    <div class="col-flex is-12">
+                        <table class="route-table table-prices smev-doc-files">
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="form-content smev-response" style="display:none;"></div>
+</div>
+<div class="modal-card-foot">
+    <div class="content-footer__action row-flex-right">
+        <button type="button" class="btn btn-danger attach-smev-response" style="display: none;">
+            <span>Прикрепить к услуге</span>
+            <span class="icon">
+                <i class="ion ion-ios-upload-outline"></i>
+            </span>
+        </button>
+        <button type="button" class="btn btn-danger is-form-send smev-send-data" data-url-smev="Smev_RequestDouDeclaration">
+            <span>Далее</span>
+            <span class="icon">
+                <i class="ion ion-ios-arrow-forward"></i>
+            </span>
+        </button>
+    </div>
+</div>
+
+<script>
+    flag = true;
+    $(document).ready(function () {
+        $(".js-example-basic-multiple").select2({
+            theme: "classic",
+            language: "ru"
+        });
+        $('#smev-dou-tabs .select').niceSelect();
+        getCustomer($('._glCaseId').val());
+        Dictionary('declarantInfo_IdentityTypeId', 'DouIdentityDocTypes');
+        Dictionary('declarantInfo_StatusId', 'DouDeclarantTypes');
+        Dictionary('orderInfo_ArrivalTimeTypeId', 'DouArrivalTimes');
+        DictionaryDouDistrict('orderInfo_Region');
+        var modal = $('#modal_smev_card_content');
+        modal.find("input:hidden.data_services_id").val($("#tab-services").find(".r-tabs-state-custom-active").data("serviceId"));
+    });
+    function _scanDouOrder() {
+        var info = $("._glCaseId").val();
+        $.get('GetStatementId', { id: info }, function (id) {
+            if (id != 'undefined') {
+                startScan(id, info);
+            }
+        })
+    };
+    function _submitForm() {
+        $('#smev_dou_form').submit();
+    };
+    $(document).on('change', 'select.select2DOC', function (event) {
+        var $select = $(this);
+        var $option = $select.find('option:selected').val();
+        var row = $select.closest('tr');
+        if ($option == '') {
+            row.removeClass('active');
+        } else {
+            row.addClass('active');
+        }
+    });
+    function getFileSmevDocument() {
+        var _table = $('#smev-dou-tab-5').find(".smev-doc-files");
+        _table.empty();
+        $.post(
+            'jsonTableDocumentSmev', {
+                id: $("#tab-services").find(".r-tabs-state-custom-active").data("serviceId")
+            },
+            function (items) {
+                if (items.length > 0) {
+                    var j = 0;
+                    items.forEach(function (item, i, arr) {
+                        var option = '<tr>' +
+                            '<td>' + ++j + '</td>' +
+                            '<td>' + item.out_name + ' </td>' +
+                            '<td>' + (item.out_file_size / 1024).toFixed(2) + ' кБ</td>' +
+                            '<td clss="non-click">' +
+                            '<div class="form-control">' +
+                            '<select type="select" class="select2DOC" name="attachments">' +
+                            '<option value="" selected>Выберите тип</option>' +
+                            '<option value="' + item.out_id + '|1">Паспорт</option>' +
+                            '<option value="' + item.out_id + '|2">Загранпаспорт</option>' +
+                            '<option value="' + item.out_id + '|3">Свидетельство о рождении</option>' +
+                            '<option value="' + item.out_id + '|4">Иной</option>' +
+                            '</select>' +
+                            '</div>' +
+                            '</td>' +
+                            '<td>' +
+                            '<button type="button" data-toggle="modal" data-target="#modal_pic" data-type="' + item.out_file_ext + '" data-pic="' + item.out_id + '"><i class="ion ion-eye"></i> Просмотр</button>' +
+                            '</td>' +
+                            '</tr>';
+                        _table.append(option);
+                    });
+                    $('.select2DOC').niceSelect();
+                }
+                else {
+                    var option = '<tr><td> Документы отсутствуют. Отсканируйте или загрузите документы перед выполнением СМЭВ запроса. </td></tr>';
+                    _table.append(option);
+                }
+            },
+            'json'
+        );
+    };
+    function print_DouOrder() {
+        if ($('#modal_smev_card_content').find('form').isValid() && _checkDOUform()) {
+            var modal = $('#modal_smev_card_content');
+            var serializedata = modal.find('form').serialize();
+            $.ajax({
+                url: '/Smev/Smev_GetDouOrder',
+                type: "POST",
+                data: serializedata,
+                beforeSend: function() {
+                    $.blockUI({
+                        message: '<h1><i class="ion ion-android-globe" style="padding-top: 1.55px;animation: spin 1s infinite linear;"></i> Выполняется запрос, подождите...</h1>',
+                        css: {
+                            border: 'none',
+                            padding: '15px',
+                            backgroundColor: '#000',
+                            '-webkit-border-radius': '10px',
+                            '-moz-border-radius': '10px',
+                            opacity: .5,
+                            color: '#fff'
+                        }
+                    });
+                },
+                success: function (data) {
+                    if (data != "") {
+                        printPDF(data);
+                    }
+                },
+                complete: function () {
+                    $.unblockUI();
+                }
+            });
+        }
+        else {
+            $('#modal_smev_card_content').effect("shake", 500);
+            Lobibox.notify('error', {
+                size: 'mini',
+                position: 'top right',
+                msg: 'Не все данные заполнены',
+                soundPath: '../Content/js/components/noty/sounds/',
+                sound: 'error_sound'
+            });
+            return false;
+        }
+    };
+    if (typeof ('#modal_smev_card_content') != 'undefined') {
+        $('input[data-inputmask]').inputmask();
+        $.datetimepicker.setLocale('ru');
+        $.each($('[data-input-datetimepicker]'), function () {
+            var $this = $(this);
+            var options = $this.data('input-datetimepicker-options');
+            var avalible_time = $this.data('input-datetimepicker-time');
+            if (typeof avalible_time != 'undefined') {
+                options['allowTimes'] = avalible_time.split(',');
+            }
+            $this.datetimepicker(options);
+        });
+    };
+    if (typeof ('#_douForm') != 'undefined') {
+        $.validate({
+            form : '#registration',
+            lang: 'ru',
+            modules: 'date, security',
+            borderColorOnError: '#e44d32',
+            dateFormat: 'dd-mm-yyyy',
+            addValidClassOnAll: true,
+            validateHiddenInputs: true
+        });
+    };
+    function getCustomer(id) {
+        $.ajax({
+            url: '/Smev/jsonGetCustomer',
+            type: 'POST',
+            data: { id: id },
+            success: function (items) {
+                if (items.parent != null) {
+                    $('#declarantInfo_fio_LastName').val(items.parent.customer_fio.split(' ')[0]);
+                    $('#declarantInfo_fio_FirstName').val(items.parent.customer_fio.split(' ')[1]);
+                    $('#declarantInfo_fio_SecondName').val(items.parent.customer_fio.split(' ')[2]);
+                    $('#declarantInfo_BirthDate').val(items.parent.document_birth_date_short);
+                    $('#declarantInfo_IdentitySerial').val(items.parent.document_serial);
+                    $('#declarantInfo_IdentityNumber').val(items.parent.document_number);
+                    $('#declarantInfo_IdentityPlace').val(items.parent.document_issue_body);
+                    $('#declarantInfo_IdentityDate').val(items.parent.document_issue_date_short);
+                    $('#orderInfo_ContactPhone').val(items.parent.customer_tel1);
+                    $('#orderInfo_ContactEmail').val(items.parent.customer_email);
+                }
+                else {
+                    Lobibox.notify('error', {
+                        size: 'mini',
+                        position: 'top right',
+                        msg: 'Данные родителя не найдены',
+                        soundPath: '../Content/js/components/noty/sounds/',
+                        sound: 'error_sound'
+                    });
+                }
+                if (items.child != null) {
+                    $('#childInfo_fio_LastName').val(items.child.customer_fio.split(' ')[0]);
+                    $('#childInfo_fio_FirstName').val(items.child.customer_fio.split(' ')[1]);
+                    $('#childInfo_fio_SecondName').val(items.child.customer_fio.split(' ')[2]);
+                    $('#childInfo_BirthDate').val(items.child.document_birth_date_short);
+                    $('#childInfo_IdentitySerial').val(items.child.document_serial);
+                    $('#childInfo_IdentityNumber').val(items.child.document_number);
+                    $('#childInfo_IdentityPlace').val(items.child.document_issue_body);
+                    $('#childInfo_IdentityDate').val(items.child.document_issue_date_short);
+                }
+                else {
+                    Lobibox.notify('error', {
+                        size: 'mini',
+                        position: 'top right',
+                        msg: 'Данные ребенка не найдены',
+                        soundPath: '../Content/js/components/noty/sounds/',
+                        sound: 'error_sound'
+                    });
+                }
+            }
+        });
+    };
+    function Dictionary(input_name, type) {
+        var input = $("#" + input_name);
+        $.ajax({
+            url: '/Smev/Smev_GetDictionary',
+            type: 'POST',
+            data: { type: type },
+            success: function (items) {
+                if (items != 'undefined') {
+                    input.empty();
+                    items.Dictionary.forEach(function (item, i, arr) {
+                        input.append('<option value=' + item.Key + '>' + item.Value + '</option>');
+                    });
+                    input.val(items.DefaultKey).niceSelect('update');
+                    input.change();
+                }
+            }
+        });
+    };
+    function DictionaryDouDistrict(input_name) {
+        var input = $("#" + input_name);
+        $.post(
+        '/Smev/Smev_GetDictionaryDouDistrict',
+        function (items) {
+            if (items != 'undefined') {
+                items.forEach(function (item, i, arr) {
+                    input.append('<option data-key=' + item.Key + '  data-okato=' + item.Okato + ' value=' + item.Value + '>' + item.Value + '</option>');
+                });
+                input.niceSelect('update');
+                input.change();
+            }
+        }), 'json'
+    };
+    function DictionaryDouHealthNeeds(input_name, okato) {
+        var input = $("#" + input_name);
+        $.post(
+        '/Smev/Smev_GetDictionaryDouHealthNeeds',
+        { okato: okato },
+        function (items) {
+            if (items != 'undefined') {
+                input.empty();
+                items.forEach(function (item, i, arr) {
+                    input.append('<option value=' + item.Key + '>' + item.Value + '</option>');
+                });
+                input.niceSelect('update');
+                input.change();
+            }
+        }), 'json'
+    };
+    function DictionaryDouPrivilegeCategory(input_name, okato) {
+        var input = $("#" + input_name);
+        $.post(
+        '/Smev/Smev_GetDictionaryDouPrivilegeCategory',
+        { okato: okato },
+        function (items) {
+            if (items != 'undefined') {
+                input.empty();
+                input.append('<option value="">Нет</option>');
+                items.forEach(function (item, i, arr) {
+                    input.append('<option value=' + item.Key + '>' + item.Value + '</option>');
+                });
+                input.niceSelect('update');
+                input.change();
+            }
+        }), 'json'
+    };
+    function DictionaryDouFilteredUnits(input_name, id) {
+        var input = $("#" + input_name);
+        $.post(
+        '/Smev/Smev_GetDictionaryDouFilteredUnits',
+        { DistrictId: id },
+        function (items) {
+            if (items != 'undefined') {
+                input.empty();
+                input.append('<option value="">...</option>');
+                items.forEach(function (item, i, arr) {
+                    input.append('<option value="' + item.Key + '|' + item.Value +'">' + item.Value + '</option>');
+                });
+                //input.multiSelect('refresh');
+            }
+        }), 'json'
+    };
+    function CopyAddressParent() {
+        $("#childInfo_PostAddress_Index").val($("#declarantInfo_PostAddress_Index").val());
+        $("#childInfo_PostAddress_Region").val($("#declarantInfo_PostAddress_Region").val());
+        $("#childInfo_PostAddress_Area").val($("#declarantInfo_PostAddress_Area").val());
+        $("#childInfo_____type").val($("#declarantInfo_____type").val());
+        $("#childInfo_PostAddress_Street").val($("#declarantInfo_PostAddress_Street").val());
+        $("#childInfo_PostAddress_House").val($("#declarantInfo_PostAddress_House").val());
+        $("#childInfo_PostAddress_Building").val($("#declarantInfo_PostAddress_Building").val());
+        $("#childInfo_PostAddress_Appartment").val($("#declarantInfo_PostAddress_Appartment").val());
+    }
+    function _checkDOUDoc() {
+        var bl = false;
+        var $form = $('#modal_smev_card_content').find('form');
+        var $sl = $form.find('.smev-doc-files tr.active');
+        if (typeof ('#modal_smev_card_content') != 'undefined') {
+            if ($sl.length > 0 && $sl.val() != 'undefined') {
+                bl = true;
+            }
+            else {
+                bl = false;
+            }
+        };
+        return bl;
+    }
+    function _checkDOUform() {
+        var bl = false;
+        var $form = $('#modal_smev_card_content').find('form');
+        if (typeof ('#modal_smev_card_content') != 'undefined') {
+            $.each($('[data-validation]'), function () {
+                var $this = $(this);
+                if ($this.val() != '') {
+                    if ($("#orderInfo_Region").val() != null) {
+                        bl = true;
+                    }
+                    else {
+                        bl = false;
+                    }
+                }
+                else {
+                    bl = false;
+                    return false;
+                }
+            });
+        };
+        return bl;
+    }
+</script>
+<script>
+    $('#smev-dou-tabs').responsiveTabs({
+        startCollapsed: 'accordion'
+    });
+    $("#___type").change(function () {
+        $("#declarantInfo_____type").attr("name", $(this).find("option:selected").val())
+    });
+    $("#___typeC").change(function () {
+        $("#childInfo_____type").attr("name", $(this).find("option:selected").val())
+    });
+    $("#declarantInfo_StatusId").change(function () {
+        $("#declarantInfo_StatusName").val($(this).find("option:selected").text())
+    });
+    $("#declarantInfo_IdentityTypeId").change(function () {
+        $("#declarantInfo_IdentityTypeName").val($(this).find("option:selected").text())
+    });
+    $("#childInfo_IdentityTypeId").change(function () {
+        $("#childInfo_IdentityTypeName").val($(this).find("option:selected").text())
+    });
+    $("#orderInfo_ArrivalTimeTypeId").change(function () {
+        $("#orderInfo_ArrivalTimeTypeName").val($(this).find("option:selected").text())
+    });
+    $("#orderInfo_Region").change(function () {
+        DictionaryDouHealthNeeds('orderInfo_HealthNeedsId',$(this).find("option:selected").data('okato'));
+        DictionaryDouPrivilegeCategory('orderInfo_PrivilegeCategoryId', $(this).find("option:selected").data('okato'));
+        DictionaryDouFilteredUnits('multiselect_to1', $(this).find("option:selected").data('key'));
+        DictionaryDouFilteredUnits('multiselect_to2', $(this).find("option:selected").data('key'));
+        DictionaryDouFilteredUnits('multiselect_to3', $(this).find("option:selected").data('key'));
+    });
+    $("#orderInfo_HealthNeedsId").change(function () {
+        $("#orderInfo_HealthNeedsName").val($(this).find("option:selected").text())
+    });
+    $("#orderInfo_PrivilegeCategoryId").change(function () {
+        $("#orderInfo_PrivilegeCategoryName").val($(this).find("option:selected").text())
+    });
+    $('.smev-send-data').on('click', function (e) {
+        if ($('#modal_smev_card_content').find('form').isValid() && _checkDOUform() && _checkDOUDoc() && flag) {
+            event.stopPropagation();
+            var btn = $(this);
+            var url = $(this).data('urlSmev');
+            smevSendData(url,btn);
+        }
+        else {
+            $('#modal_smev_card_content').effect("shake", 500);
+            return false;
+        }
+    });
+</script>

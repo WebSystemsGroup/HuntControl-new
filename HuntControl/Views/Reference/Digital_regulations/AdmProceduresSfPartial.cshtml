@@ -1,0 +1,39 @@
+﻿@model IEnumerable<WebAIS.Models.KcrModel.admProceduresSFType>
+
+<div class="row justify-content-end">
+    <div class="col-lg-11 accardion-milti-castoner">
+        <div class="accardion-milti-castoner-сontrol">
+            <button type="button" class="btn accardion-milti-castoner-btn-show" data-accardion onclick="showAdccardion(this)">
+                Административные процедуры
+            </button>
+            <i class="fa fa-chevron-left accardion-chevron" aria-hidden="true"></i>
+        </div>
+        <div class="accardion-content-milti-castoner" data-accardion-content style="display: none">
+            <fieldset>
+                <div class="row justify-content-center">                    
+                    @foreach (var procedure in Model)
+                    {
+                        <table class="table border-dark">
+                            <tbody>                                
+                                @if (procedure.admProcedure != null)
+                                {
+                                    <tr>                                        
+                                        <td>Наименование</td>
+                                        <td>@procedure.admProcedure.id</td>
+                                    </tr>
+                                }
+                                @if (procedure.unitsOfMeasurement != null)
+                                {
+                                    <tr>
+                                        <td>Единица измерения срока</td>
+                                        <td>@procedure.unitsOfMeasurement</td>
+                                    </tr>
+                                }                                
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>

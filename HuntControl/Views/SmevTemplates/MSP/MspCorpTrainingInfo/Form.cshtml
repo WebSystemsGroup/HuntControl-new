@@ -1,0 +1,402 @@
+﻿@model WebAIS.StoreProcedure.SModel.case_customer_root_get_smev
+
+<div class="modal-card-head wrap-flex">
+    <nav class="breadcrumb m-b-0">
+        <div class="container">
+            <div class="row-flex">
+                <div class="col-flex"><div class="breadcrumb-item complete">Запрос</div></div>
+                <div class="col-flex"><div class="breadcrumb-item active">Данные</div></div>
+                <div class="col-flex"><div class="breadcrumb-item">Ответ</div></div>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="modal-card-body">
+    <div class="dash" data-tabs="">
+        <div class="dash-content">
+            <div class="row-flex">
+                <div class="col-flex is-12">
+                    <div class="form-content smev-request" style="display: block;">
+                        <form>
+                            <input name="data_services_id" type="hidden" class="data_services_id"/>
+                            <div class="row-flex nomargin-bottom">
+                                <h2 class="col-flex form-title center">Информация о тренингах</h2>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="TrainingName">Наименование тренинга</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input" name="StatementInfo.TrainingName" placeholder="" type="text" value="" data-val="true" data-val-length="" data-validation="required" data-validation-allowing="-">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="LastName">Фамилия</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input capitalize" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="LastName" name="StatementInfo.Fio.LastName" placeholder="Фамилия" type="text" value="@Model.out_customer_name.Split(' ')[0]">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="FirstName">Имя</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input capitalize" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="FirstName" name="StatementInfo.Fio.FirstName" placeholder="Имя" type="text" value="@(Model.out_customer_name.Split(' ').Length >= 2 ? Model.out_customer_name.Split(' ')[1]:"")">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="SecondName">Отчество</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input capitalize" data-val="true" data-val-length="" data-validation-allowing="-" id="SecondName" name="StatementInfo.Fio.SecondName" placeholder="Отчество" type="text" value="@(Model.out_customer_name.Split(' ').Length >= 3 ? Model.out_customer_name.Split(' ')[2]:"")">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="Sex">Пол</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <select class="select" name="StatementInfo.Sex">
+                                            <option value="Male">Мужской</option>
+                                            <option value="Female">Женский</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="Inn">Возраст</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-validation="number" data-validation-allowing="-" id="AgeType" name="StatementInfo.AgeType" placeholder="" type="number" value="">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="Inn">Статус</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-validation="required" data-validation-allowing="-" id="Status" name="StatementInfo.Status" placeholder="" type="text" value="">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="CompanyName">Наименование предприятия</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input" name="StatementInfo.CompanyName" placeholder="" type="text" value="">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="BusinessIdeas">Сфера деятельности</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input" name="StatementInfo.BusinessIdeas" placeholder="" type="text" value="" data-val="true" data-val-length="" data-validation="required" data-validation-allowing="-">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="ApplicationPhoneNumber">Номер телефона</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-validation-allowing="-" name="StatementInfo.ApplicationPhoneNumber" placeholder="" type="text" value="@Model.out_customer_tel1" data-inputmask="'mask': '+7(999)9999999'">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="ApplicationEmail">E-mail</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-validation-allowing="-" name="StatementInfo.ApplicationEmail" placeholder="" type="text" value="@Model.out_customer_email">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="PartyMemberType">Не являюсь участником программы</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <select class="select" name="StatementInfo.PartyMemberType" id="PartyMemberType" style="display: none;" data-dictionary="" data-dictionary-options='{"dictionary":"MspCorpPartyMemberTypes"}'></select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*<div class="row-flex">
+        <div class="col-flex is-offset-2 is-3">
+            <label for="PartyMemberOtherTypeDescription">Комментарий</label>
+        </div>
+        <div class="col-flex is-5">
+            <div class="form-control">
+                <input class="input" name="StatementInfo.PartyMemberOtherTypeDescription" placeholder="" type="text" value="">
+            </div>
+        </div>
+    </div>*@
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="InfoAboutTrainingPrograms">Как Вы узнали о программах обучения?</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <select class="select" name="StatementInfo.InfoAboutTrainingPrograms" id="InfoAboutTrainingPrograms" style="display: none;" data-dictionary="" data-dictionary-options='{"dictionary":"MspCorpInfoAboutTrainingProgramsTypes"}'></select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*<div class="row-flex">
+        <div class="col-flex is-offset-2 is-3">
+            <label for="PartyMemberOtherTypeDescription">Комментарий</label>
+        </div>
+        <div class="col-flex is-5">
+            <div class="form-control">
+                <input class="input" name="StatementInfo.PartyMemberOtherTypeDescription" placeholder="" type="text" value="">
+            </div>
+        </div>
+    </div>*@
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="InfoAboutTrainingPrograms">Какое время предпочтительно для участия в тренинге?</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <select class="select" name="StatementInfo.TrainingTime = null" id="TrainingTime = null" style="display: none;" data-dictionary="" data-dictionary-options='{"dictionary":"MspCorpTrainingTimeTypes"}'></select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            @*<div class="row-flex">
+        <div class="col-flex is-offset-2 is-3">
+            <label for="TrainingTimeOtherTypeDescription">Комментарий</label>
+        </div>
+        <div class="col-flex is-5">
+            <div class="form-control">
+                <input class="input" name="StatementInfo.TrainingTimeOtherTypeDescription" placeholder="" type="text" value="">
+            </div>
+        </div>
+    </div>*@
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="ScheduleTraining">Какое время предпочтительно для участия в тренинге?</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <select class="select" name="StatementInfo.ScheduleTraining" id="ScheduleTraining" style="display: none;" data-dictionary="" data-dictionary-options='{"dictionary":"MspCorpScheduleTrainingTypes"}'></select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="AdditionalTraining">Какой график прохождения обучения Вам удобен?</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control select2-fix">
+                                        <select class="js-example-basic-multiple" multiple="multiple" id="AdditionalTraining" name="StatementInfo.AdditionalTraining" data-dictionary="" data-dictionary-options='{"dictionary":"MspCorpAdditionalTrainingTypes"}'></select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="ProgramInterestingSections">Какие разделы программы интересны для изучения?</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control select2-fix">
+                                        <select class="js-example-basic-multiple" multiple="multiple" id="ProgramInterestingSections" name="StatementInfo.ProgramInterestingSections" data-dictionary="" data-dictionary-options='{"dictionary":"MspCorpProgramInterestingSectionsTypes"}'></select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="StatementType">Суть заявления</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <select class="select" name="StatementType" id="OptionStatementTypeServiceType" style="display: none;">
+                                            <option value="Application1">Заявлениие на предоставление информации</option>
+                                            <option value="Application2">Запись  на тренинг (кроме "Школа предпринимательства")</option>
+                                            <option value="Application3">Запись  на тренинг "Школа предпринимательства"</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="form-content smev-response" style="display:none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-card-foot">
+    <div class="content-footer__action row-flex-right">
+        <button type="button" class="btn btn-danger attach-smev-response" style="display: none;">
+            <span>Прикрепить к услуге</span>
+            <span class="icon">
+                <i class="ion ion-ios-upload-outline"></i>
+            </span>
+        </button>
+        <button type="button" class="btn btn-danger is-form-send smev-send-data" data-url-smev="Smev_MspCorpTrainingInfo">
+            <span>Далее</span>
+            <span class="icon">
+                <i class="ion ion-ios-arrow-forward"></i>
+            </span>
+        </button>
+    </div>
+</div>
+<script>
+    flag = true;
+    $.validate({
+        modules : 'date, security'
+    });
+    $(".js-example-basic-multiple").select2({
+        placeholder: "Поиск...",
+        theme: "classic",
+        tags: true,
+        minimumResultsForSearch: -1,
+        language: "ru",
+        allowClear: true,
+        showSearchBox: false
+    });
+    multipeSelect("OkpdCodes", '/Smev/GetOkpd2');
+    $("#OptionServiceType").select2({
+        theme: "classic",
+        language: "ru",
+        showSearchBox: false
+    });
+    if (typeof ('[data-dictionary]') != 'undefined') {
+        $.each($('[data-dictionary]'), function () {
+            var $this = $(this);
+            var options = $this.data('dictionaryOptions');
+            $.ajax({
+                url: '/Smev/Smev_GetDictionary',
+                type: 'POST',
+                data: { type: options.dictionary },
+                success: function (items) {
+                    if (items != 'undefined') {
+                        $this.empty();
+                        items.Dictionary.forEach(function (item, i, arr) {
+                            $this.append('<option value=' + item.Key + '>' + item.Value + '</option>');
+                        });
+                        $this.niceSelect('update');
+                    }
+                }
+            });
+        });
+    };
+    if (typeof ('#modal_smev_card_content') != 'undefined') {
+        $('input[data-inputmask]').inputmask();
+    };
+    $("#identityType").change(function () {
+        if ($("#identityType option:selected").val() == "RfPassport") {
+            $("#div_documentData_DocEndDate").hide();
+            $("#documentData_DocEndDate").val("");
+        }
+        else {
+            $("#div_documentData_DocEndDate").show();
+        }
+    });
+
+    /* ловушка полей ввода даты и времени */
+    if (typeof ('#modal_smev_card_content') != 'undefined') {
+        $.datetimepicker.setLocale('ru');
+        $.each($('[data-input-datetimepicker]'), function () {
+            var $this = $(this);
+            var options = $this.data('input-datetimepicker-options');
+            var avalible_time = $this.data('input-datetimepicker-time');
+
+            if (typeof avalible_time != 'undefined') {
+                options['allowTimes'] = avalible_time.split(',');
+            }
+
+            $this.datetimepicker(options);
+        });
+    };
+
+    // Nice select init
+    if (typeof ('#modal_smev_card_content') != 'undefined') {
+        $.validate({
+            lang: 'ru',
+            modules: 'date, security',
+            borderColorOnError: '#e44d32',
+            dateFormat: 'dd-mm-yyyy'
+        });
+        $('#modal_smev_card_content .select').niceSelect();
+    };
+    $('.smev-send-data').on('click', function (e) {
+        if ($('#modal_smev_card_content').find('form').isValid() && flag) {
+            event.stopPropagation();
+            var btn = $(this);
+            var url = $(this).data('urlSmev');
+            smevSendData(url, btn);
+        }
+    });
+    function multipeSelect(id, url) {
+        var $select2 = $('#' + id + '.js-example-basic-multiple').select2();
+        $select2.val(null).trigger("change");;
+        $select2.select2({
+            ajax: {
+                url: url,
+                dataType: 'json',
+                type: 'POST',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term,
+                        page: params.page
+                    };
+                },
+                processResults: function (data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            },
+            placeholder: "Поиск...",
+            escapeMarkup: function (markup) { return markup; },
+            minimumInputLength: 3
+        });
+    }
+</script>

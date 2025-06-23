@@ -1,0 +1,181 @@
+﻿@model IEnumerable<HuntControl.Domain.Concrete.ReportCountViolationsEmployees>
+<link href="~/Content/css/print-report.css" rel="stylesheet" />
+<style>
+    @@media print {
+        @@page {
+            size: portrait;
+        }
+
+        .page {
+            height: auto;
+            width: 100%;
+            page-break-after: always;
+        }
+
+        table thead th, table tbody td {
+            font-size: 10px !important;
+            padding: 5px !important;
+        }
+
+        .dl-horizontal dt {
+            min-width: 90px;
+        }
+
+        .dl-horizontal dd {
+            margin-left: 110px;
+        }
+
+        table thead tr th {
+            font-weight: bold;
+        }
+
+        thead {
+            display: table-row-group;
+        }
+
+        tr {
+            page-break-inside: avoid
+        }
+
+        #printable th {
+            text-align: center;
+            padding: 2px; /* Поля вокруг содержимого ячеек */
+            border: 1px solid black; /* Граница вокруг ячеек */
+            /*font-size: 10.0pt;*/
+            font-weight: bold;
+        }
+
+            #printable th span {
+                color: #808080;
+                font-weight: normal;
+            }
+
+        h6 {
+            margin: 10px !important;
+        }
+        /*---*/
+        .report_head {
+            padding-bottom: 5px;
+        }
+
+            .report_head table tbody td {
+                font-size: 12px !important;
+                padding: 3px !important;
+            }
+
+        .org_name {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .report_name {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .head-left {
+            border-right: 1px solid black;
+        }
+
+        .head-center {
+            border-right: 1px solid black;
+        }
+    }
+</style>
+
+<div id="printable">
+    <div class="report_head">
+        <table width="100%">
+            <tr>
+                <td><img src="~/Content/img/docGebLogo.png" align="top" height="70%" /></td>
+                <td width="25%;" class="text-right head-left" valign="top">
+                    <span class="org_name">Министерство природных ресурсов и экологии Республики Дагестан</span>
+                </td>
+                <td width="40%" valign="top" class="head-center">
+                    <div class="report_name">Количество нарушений по сотрудникам</div>
+                    <table>
+                        <tr><td width="20%">Период:</td><td><b>@ViewBag.Period</b></td></tr>
+                        <tr><td>Статья:</td><td><b>@ViewBag.Violation</b></td></tr>
+                    </table>
+                </td>
+                <td width="20%" valign="top">
+                    <table>
+                        <tr><td>Распечатал:</td></tr>
+                        <tr><td>@ViewBag.PrintEmployee</td></tr>
+                        <tr><td>@DateTime.Now.ToShortDateString()</td></tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!-- page 1 start-->
+    <div class="page">
+        <table class="table text-center">
+            <thead>
+                <tr>
+                    <th>№ п/п</th>
+                    <th>@Html.DisplayNameFor(model => model.out_employees_fio)</th>
+                    <th>@Html.DisplayNameFor(model => model.out_un) <br /><span>увед. напр.</span></th>
+                    <th>@Html.DisplayNameFor(model => model.out_ps) <br /><span>прот. сост.</span></th>
+                    <th>@Html.DisplayNameFor(model => model.out_ov) <br /><span>опред. вынесено</span></th>
+                    <th>@Html.DisplayNameFor(model => model.out_pv) <br /><span>пост. вынесено</span></th>
+                    <th>@Html.DisplayNameFor(model => model.out_sho) <br /><span>штраф оплачен</span></th>
+                    <th>@Html.DisplayNameFor(model => model.out_un20) <br /><span>увед. 20.25 напр.</span></th>
+                    <th>@Html.DisplayNameFor(model => model.out_ps20) <br /><span>прот. 20.25 сост.</span></th>
+                    <th>@Html.DisplayNameFor(model => model.out_np) <br /><span>напр. в службу суд. прист.</span></th>
+                    <th>@Html.DisplayNameFor(model => model.out_npp) <br /><span>напр. по подведомств.</span></th>
+                    <th>@Html.DisplayNameFor(model => model.out_prk) <br /><span>прекращено</span></th>
+                    <th>@Html.DisplayNameFor(model => model.out_bs) <br /><span></span></th>
+                    <th>Всего</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @{ int index = 1;}
+                @{int x1; int x2; int x3; int x4; int x5; int x6; int x7; int x8; int x9; int x10; int x11;}
+                @{int tx1; int tx2; int tx3; int tx4; int tx5; int tx6; int tx7; int tx8; int tx9; int tx10; int trez = 0; int tx11; tx1 = tx2 = tx3 = tx4 = tx5 = tx6 = tx7 = tx8 = tx9 = tx10 = tx11 = 0;}
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        @{x1 = item.out_un; x2 = item.out_ps; x3 = item.out_ov; x4 = item.out_pv; x5 = item.out_sho; x6 = item.out_un20; x7 = item.out_ps20; x8 = item.out_np; x9 = item.out_npp; x10 = item.out_prk; x11 = item.out_bs;
+                            int rez = x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + x11;
+                            tx1 += item.out_un; tx2 += item.out_ps; tx3 += item.out_ov; tx4 += item.out_pv; tx5 += item.out_sho; tx6 += item.out_un20; tx7 += item.out_ps20; tx8 += item.out_np; tx9 += item.out_npp; tx10 += item.out_prk; tx11 += item.out_bs;
+                            trez += rez;}
+                        <td>@(index++)</td>
+                        <td class="text-left">@Html.DisplayFor(i => item.out_employees_fio)</td>
+                        <td>@Html.DisplayFor(i => item.out_un)</td>
+                        <td>@Html.DisplayFor(i => item.out_ps)</td>
+                        <td>@Html.DisplayFor(i => item.out_ov)</td>
+                        <td>@Html.DisplayFor(i => item.out_pv)</td>
+                        <td>@Html.DisplayFor(i => item.out_sho)</td>
+                        <td>@Html.DisplayFor(i => item.out_un20)</td>
+                        <td>@Html.DisplayFor(i => item.out_ps20)</td>
+                        <td>@Html.DisplayFor(i => item.out_np)</td>
+                        <td>@Html.DisplayFor(i => item.out_npp)</td>
+                        <td>@Html.DisplayFor(i => item.out_prk)</td>
+                        <td>@Html.DisplayFor(i => item.out_bs)</td>
+                        <td class="text-center" style="font-weight:600">@rez</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr class="text" style="border-top: 2px solid black;">
+                    <th colspan="2" class="number-row">Итого</th>
+                    <th>@tx1</th>
+                    <th>@tx2</th>
+                    <th>@tx3</th>
+                    <th>@tx4</th>
+                    <th>@tx5</th>
+                    <th>@tx6</th>
+                    <th>@tx7</th>
+                    <th>@tx8</th>
+                    <th>@tx9</th>
+                    <th>@tx10</th>
+                    <th>@tx11</th>
+                    <th class="p-r-20-important text-center">@trez</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

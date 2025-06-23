@@ -1,0 +1,35 @@
+﻿@model HuntControl.WebUI.Models.CaseDetailViewModel
+@if (Model.SprServicesSubFileList.Any())
+{
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Документ</th>
+                <th width="40">Тип</th>
+                <th width="60">Размер</th>
+                <th width="80">Дата</th>
+                <th width="120"></th>
+            </tr>
+            @foreach (var item in Model.SprServicesSubFileList)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(model => item.spr_standards_file.file_name)</td>
+                    <td>@Html.DisplayFor(model => item.spr_standards_file.file_ext)</td>
+                    <td>@Html.DisplayFor(model => item.spr_standards_file.file_size) кБ</td>
+                    <td>@Html.DisplayFor(model => item.set_date)</td>
+                    <td style="min-width: 50px;padding-bottom: 0;padding-top: 10px;">
+                        <div style="float:right">
+                            <button class="on-default remove-row link"><i class="ion-ios7-cloud-download-outline font-18"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-warning">
+        <span style="color:#00545c;"><strong><i class="icon-info"></i></strong> Нет файлов.</span>
+    </div>
+}

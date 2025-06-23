@@ -1,0 +1,154 @@
+﻿@model HuntControl.WebUI.Models.ServiceViewModel
+<div class="card-box p-0">
+    <div class="table-responsive">
+        <table class="table m-b-0">
+            <thead>
+                <tr>
+                    <th class="number-row p-l-20-important">№</th>
+                    <th>@Html.DisplayNameFor(model => model.CustomerTariffList.First().count_day_processing)</th>
+                    <th>@Html.DisplayNameFor(model => model.CustomerTariffList.First().count_day_execution)</th>
+                    <th>@Html.DisplayNameFor(model => model.CustomerTariffList.First().count_day_return)</th>
+                    <th>@Html.DisplayNameFor(model => model.CustomerTariffList.First().tariff_)</th>
+                    <th>@Html.DisplayNameFor(model => model.CustomerTariffList.First().charge_)</th>
+                    <th class="text-right p-r-20-important">
+                        <button id="showTariffRemoves" type="button" class="link p-r-0 text-custom"><i class="@(ViewBag.IsRemove ? "ion-ios7-trash" : "ion-ios7-trash-outline") m-l-5" style="font-size: 20px;" data-placement="bottom" data-toggle="tooltip" data-original-title="@(ViewBag.IsRemove ? "Скрыть удаленные" : "Показать удаленные")"></i></button>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CustomerTariffList)
+                {
+                    <tr data-customer-tariff-id="@item.id" class="@(item.is_remove == true ? "danger" : "")">
+                        <td class="number-row p-l-20-important">
+                            @((Model.PageInfo.CurrentPage - 1) * Model.PageInfo.ItemsPerPage + ++Model.PageInfo.NumberRow)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(i => item.count_day_processing)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(i => item.count_day_execution)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(i => item.count_day_return)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(i => item.tariff_)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(i => item.charge_)
+                        </td>
+                        <td class="actions vertical-middle-important">
+                            <button type="button" class="on-default text-custom link" style="font-size: 22px; line-height: 22px;" data-tooltip-info='{"tariff_": @Json.Encode(item.tariff_), "charge_": @Json.Encode(item.charge_), "employees_fio": @Json.Encode(item.employees_fio ?? "-"), "set_date": "@Html.DisplayFor(i => item.set_date)", "employees_fio_modifi": @Json.Encode(item.employees_fio_modifi ?? "-"), "is_remove": "@item.is_remove", "employees_fio_remove": "@item.employees_fio_remove", "date_remove": "@item.date_remove", "commentt_remove": "@item.commentt_remove"}'>
+                                <i class="ion-ios7-information-outline"></i>
+                            </button>
+                            @if (User.IsInRole("superadmin") || User.IsInRole("admin"))
+                            {
+                                if (item.is_remove != true)
+                                {
+                                    <button class="on-default edit-row link" data-placement="top" data-toggle="tooltip" data-original-title="Изменение"><i class="ion-edit"></i></button>
+                                    <button class="on-default remove-row link" data-placement="top" data-toggle="tooltip" data-original-title="Удаление"><i class="ion-trash-b"></i></button>
+                                }
+                                else
+                                {
+                                    <button class="on-default recovery-row link" data-placement="top" data-toggle="tooltip" data-original-title="Восстановление"><i class="fa fa-history"></i></button>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <hr class="m-0">
+    <div class="row p-t-10 p-l-20-important p-r-20-important p-b-10">
+        <div class="col-sm-6">
+            <div class="dataTables_info" id="datatable_info" role="status" aria-live="polite">Показаны @((Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage > Model.PageInfo.TotalItems) ? Model.PageInfo.TotalItems : Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage) из @Model.PageInfo.TotalItems записей</div>
+        </div>
+        <div class="col-sm-6">
+            <div class="dataTables_paginate paging_simple_numbers" id="datatable-editable_paginate">
+                @Html.PageLinks(Model.PageInfo, x => Ajax.ActionLink(x.NameLink, "PartialTableCustomerTariffs", "Reference", new { subServiceCustomerId = ViewBag.SubServiceCustomerId, page = x.CurrentPage }, new AjaxOptions { UpdateTargetId = "customerTariffsContainer" }))
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip({ trigger: 'hover' });
+        $('button[data-tooltip-info]').tooltip({
+            title: function () {
+                var tooltipInfo = $(this).data('tooltipInfo');
+                return "<div class='text-left'>" +
+                    "<strong>Сумма</strong>: " + tooltipInfo['tariff_'] + "</br>" +
+                    "<strong>Сбор</strong>: " + tooltipInfo['charge_'] + "</br>" +
+                    "<hr class='m-t-5 m-b-5'>" +
+                    "<strong>Добавил</strong>: " + tooltipInfo['employees_fio'] + "</br>" +
+                    "<strong>Дата добавления</strong>: " + tooltipInfo['set_date'] + "</br>" +
+                    "<hr class='m-t-5 m-b-5'>" +
+                    "<strong>Изменил</strong>: " + tooltipInfo['employees_fio_modifi'] + "</br>" +
+                    (tooltipInfo['is_remove'] === 'True' ?
+                            "<hr class='m-t-5 m-b-5'>" +
+                            "<strong>Удалил</strong>: " + tooltipInfo['employees_fio_remove'] + "</br>" +
+                            "<strong>Причина удаления</strong>: " + tooltipInfo['commentt_remove'] + "</br>" +
+                            "<strong>Дата удаления</strong>: " + tooltipInfo['date_remove'] + "</br>" : "") +
+                    "</div>";
+            },
+            html: true,
+            placement: "left"
+        });
+    });
+
+    $('#customerTariffsContainer table td button.edit-row').on('click', function () {
+        var customerTariffId = $(this).closest('tr').data('customerTariffId');
+        $('#customerTariffsContainer table tr').removeClass('warning');
+
+        $(this).closest('tr').addClass('warning');
+        $.ajax({
+            type: 'POST',
+            async: false,
+            url: '@Url.Action("PartialEditCustomerTariff", "Reference")',
+            data: { customerTariffId: customerTariffId },
+            success: function (data) {
+                $('#collapseEditCustomerTariff').html(data);
+            }
+        });
+        $('#collapseEditCustomerTariff').collapse('show');
+    });
+
+    $('#showTariffRemoves').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableCustomerTariffs", "Reference")',
+            data: { subServiceCustomerId: '@ViewBag.SubServiceCustomerId', isRemove: '@(!ViewBag.IsRemove)' },
+            success: function (data) {
+                $('#customerTariffsContainer').html(data);
+            }
+        });
+    });
+
+    $('#customerTariffsContainer table td button.recovery-row').click(function () {
+        var customerTariffId = $(this).closest('tr').data('customerTariffId');
+        var paramObject = {
+            url: '@Url.Action("SubmitCustomerTariffRecovery", "Reference")',
+            params: { customerTariffId: customerTariffId },
+            onSuccess: function (data) {
+                $('#customerTariffsContainer').html(data);
+            }
+        }
+        removeRecovery(paramObject);
+    });
+
+    $('#customerTariffsContainer table td button.remove-row').click(function () {
+        var customerTariffId = $(this).closest('tr').data('customerTariffId');
+        var paramObject = {
+            url: '@Url.Action("SubmitCustomerTariffDelete", "Reference")',
+            params: { customerTariffId: customerTariffId },
+            onSuccess: function (data) {
+                $('#customerTariffsContainer').html(data);
+            }
+        }
+        removeWithComment(paramObject);
+    });
+</script>
+
+

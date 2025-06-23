@@ -1,0 +1,320 @@
+﻿@model HuntControl.Domain.Concrete.HuntingCustomerInfoGetResultDto
+
+<div class="card-box" style="padding: 8px 20px;">
+    <div class="row">
+        <div class="pull-left">
+            <img id="individualPhoto" src="~/Content/img/no_photo.png" style="object-fit:cover;" class="rounded-circle thumb-md" alt="friend">
+        </div>
+        <div class="pull-left m-l-15">
+            <span class="font-bold">
+                @(Model.CustomerInfo.out_customer_name)
+            </span><br />
+            <span class="font-12"><i class="ion-location m-r-5"></i><span class="text-muted">@(Model.CustomerInfo.out_actual_address), </span></span>
+            <span class="font-12 m-l-5"><i class="ion-ios7-telephone m-r-5"></i> <span class="text-muted">@(Model.CustomerInfo.out_phone_number1)</span></span>
+        </div>
+
+        <div class="btn-group pull-right individual-action-btns">
+            <button type="button" class="on-default edit-row link" data-toggle="dropdown" aria-expanded="true" title="Действия"><i class="ion-navicon-round"></i></button>
+            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                <li><a href="#" id="editIndividualBtn"><i class="ion-edit m-r-5 text-custom"></i> Изменить</a></li>
+                <li><a href="#" id="removeIndividualBtn"><i class="ion-trash-b m-r-5 text-danger"></i> Удалить</a></li>
+            </ul>
+        </div>
+        @using (Ajax.BeginForm("SubmitCustomerEditSave", "ApplicantPage", null, null, new { @id = "EditCustomerForm", @class = "form-horizontal" }))
+        {
+            @Html.HiddenFor(model => model.id)
+            @Html.HiddenFor(model => model.file_ext)<br /><br /><br />
+            <h3 class="panel-title"><b>Документ удостоверяющий личность</b></h3>
+            <hr class="m-t-0">
+            <div class="row m-b-20">
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3">
+                                <label class="r-l-10 small">Серия</label> <br />
+                                <div style="color:black">@(Model.Customer.doc_serial?.ToString() ?? "-")</div>
+                            </div>
+                            <div class="col-sm-6 col-md-3">
+                                <label class="r-l-10 small">Номер</label><br />
+                                <div style="color:black">@(Model.Customer.doc_number?.ToString() ?? "-")</div>
+                            </div>
+                            <div class="col-sm-6 col-md-3">
+                                <label class="r-l-10 small">Дата выдачи</label>
+                                <div class="input-group" style="color:black">
+                                    @(Model.Customer.doc_issue_date?.ToString("dd.MM.yyyy") ?? "-")
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-3">
+                                <label class="r-l-10 small">Код подразделения</label><br />
+                                <div style="color:black">@(Model.Customer.doc_code?.ToString() ?? "-")</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="r-l-10 small">Кем выдан</label><br />
+                        <div style="color:black">@(Model.Customer.doc_issue_body?.ToString() ?? "-")</div>
+                    </div>
+                </div>
+            </div>
+            <h3 class="panel-title"><b>Персональные данные</b></h3>
+            <hr class="m-t-0">
+            <div class="row m-b-20">
+                <div class="col-md-10 col-md-offset-1">
+                    <div id="collapseWebCam" class="panel-collapse collapse" aria-expanded="false">
+                        <div class="row">
+                            <div class="col-md-4">
+                            </div>
+                            <div class="col-md-5">
+                                <div id="my_camera"></div>
+                                <div id="results" style="display:none">
+                                </div>
+                                <button type="button" class="btn btn-success waves-effect waves-light btn-sm" onClick="save_photo()">Сфотографировать <i class="glyphicon glyphicon-camera"></i></button>
+                                <button type="button" class="btn btn-inverse waves-effect waves-light btn-sm m-r-15" id="webCamBtnHide" onclick="$('#collapseWebCam').collapse('hide');">Закрыть <i class="fa fa-times m-r-5"></i></button>
+                            </div>
+                            <div class="col-md-3"></div>
+                        </div>
+                    </div>
+                    @*<div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-11">
+                                @Html.Label("uploadImage", "Фотография", new Dictionary<string, object> { })
+                                <input id="uploadFile" type="file">
+                            </div>
+                            <div class="col-sm-1">
+                                <label>&nbsp;</label>
+                                <button type="button" class="btn btn-inverse waves-effect waves-light" id="webCamBtnShow"><i class="glyphicon glyphicon-camera"></i></button>
+                            </div>
+                        </div>
+                    </div>*@
+
+
+                <div class="form-group">
+                    <label class="r-l-10 small">ФИО</label><br />
+                    <div style="color:black">@(Model.Customer.customer_name?.ToString() ?? "-")</div>
+                </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-4">
+                                <label class="r-l-10 small">Дата рождения</label>
+                                <div class="input-group" style="color:black">
+                                    <div style="color:black">@(Model.Customer.doc_birth_date?.ToString("dd.MM.yyyy") ?? "-")</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4">
+                                <label class="r-l-10 small" >Пол</label><br />
+                                <div style="color:black">@(Model.Customer.customer_sex?.ToString() ?? "-")</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="r-l-10 small">Место рождения</label><br />
+                        <div style="color:black">@(Model.Customer.doc_birth_place?.ToString() ?? "-")</div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-4">
+                                <label class="r-l-10 small">СНИЛС</label><br />
+                                <div class="input-group" style="color:black">
+                                    @(Model.Customer.customer_snils?.ToString() ?? "-")
+                                    @*<span class="input-group-btn">
+                                        <button type="button" data-type="btnGetSnils" class="btn waves-effect waves-light btn-default"><i class="fa fa-globe font-18"></i></button>
+                                    </span>*@
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4">
+                                <label class="r-l-10 small">ИНН</label><br />
+                                <div class="input-group" style="color:black">
+                                    @(Model.Customer.customer_inn?.ToString() ?? "-")
+                                    @*<span class="input-group-btn">
+                                        <button type="button" data-type="btnGetInn" class="btn waves-effect waves-light btn-default"><i class="fa fa-globe font-18"></i></button>
+                                    </span>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h3 class="panel-title"><b>Место работы</b></h3>
+            <hr class="m-t-0">
+            <div class="row m-b-20">
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="form-group">
+                        <label class="r-l-10 small">Наименование организации</label><br />
+                        <div style="color:black">@(Model.Customer.social_organization_info?.ToString() ?? "-")</div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label class="r-l-10 small">Должность</label><br />
+                                <div style="color:black">@(Model.Customer.social_job_position?.ToString() ?? "-")</div>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-md-offset-1">
+                                <label class="r-l-10 small">Пенсионер</label><br />
+                                <div>
+                                    @Html.CheckBox("social_pensioner", Model.Customer.social_pensioner ?? false, new { @class = "js-switch extra-small", @type = "checkbox", @data_switchery = "true", @data_plugin = "switchery", @data_color = "#5fbeaa", onclick = "return false" })
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-3">
+                                <label class="r-l-10 small">Нетрудоспособный</label><br />
+                                <div>
+                                    @Html.CheckBox("social_incapable", Model.Customer.social_incapable ?? false, new { @class = "js-switch extra-small", @type = "checkbox", @data_switchery = "true", @data_plugin = "switchery", @data_color = "#5fbeaa", onclick = "return false" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h3 class="panel-title"><b>Контакты</b></h3>
+            <hr class="m-t-0">
+            <div class="row m-b-20">
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label class="r-l-10 small">Адрес регистрации</label><br />
+                                <div style="color:black">@(Model.Customer.legal_address?.ToString() ?? "-")</div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="r-l-10 small">Адрес проживания</label><br />
+                                <div style="color:black">@(Model.Customer.actual_address?.ToString() ?? "-")</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3">
+                                <label class="r-l-10 small">Телефон</label><br />
+                                <div style="color:black">@(Model.Customer.phone_number1?.ToString() ?? "-")</div>
+                            </div>
+                            <div class="col-sm-6 col-md-3">
+                                <label class="r-l-10 small">Телефон 2</label><br />
+                                <div style="color:black">@(Model.Customer.phone_number2?.ToString() ?? "-")</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="r-l-10 small">E-mail</label><br />
+                                <div style="color:black">@(Model.Customer.e_mail?.ToString() ?? "-")</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-body">
+        <ul class="nav nav-pills m-b-15">
+            <li class="active"><a href="#huntingLicsTabContainer" data-toggle="tab" aria-expanded="false">Охотничий билет</a></li>
+            <li><a href="#huntingLicPermsTabContainer" data-toggle="tab" aria-expanded="false">Разрешение</a></li>
+            <li><a href="#customerViolationsTabContainer" data-toggle="tab" aria-expanded="false">Нарушения</a></li>
+            <li><a href="#huntingLicPermPaymentsTabContainer" data-toggle="tab" aria-expanded="false">Оплата</a></li>
+            <li><a href="#changeLogsTabContainer" data-toggle="tab" aria-expanded="false">История изменений</a></li>
+        </ul>
+        <hr />
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="huntingLicsTabContainer">
+                @Html.Action("PartialHuntingLic", "ApplicantPage", new { customerId = ViewBag.CustomerId })
+            </div>
+            <div class="tab-pane fade" id="huntingLicPermsTabContainer">
+            </div>
+            <div class="tab-pane fade" id="customerViolationsTabContainer">
+            </div>
+            <div class="tab-pane fade" id="huntingLicPermPaymentsTabContainer">
+            </div>
+            <div class="tab-pane fade" id="changeLogsTabContainer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetIndividualPhoto", "ApplicantPage")',
+            data: { customerId: '@ViewBag.CustomerId' },
+            success: function (data) {
+                if (data.length > 0)
+                    $('#individualPhoto').attr('src', data)
+            }
+        });
+    });
+
+    $('#removeIndividualBtn').click(function () {
+        var paramObject = {
+            url: '@Url.Action("SubmitCustomerDelete", "ApplicantPage")',
+            params: { customerId: '@ViewBag.CustomerId' },
+            onSuccess: function (data) {
+                $('#searchIndividualBtn').trigger('click');
+            }
+        }
+        removeWithComment(paramObject);
+    });
+
+    $('a#editIndividualBtn').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialModalEditCustomer", "ApplicantPage")',
+            data: { customerId: '@ViewBag.CustomerId' },
+            success: function (data) {
+                $('#myModal').html(data);
+                $('#myModal').modal('show');
+            }
+        });
+    });
+
+    $('a#removeIndividualBtn').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("SubmitRemoveIndividual", "ApplicantPage")',
+            data: { customerId: '@ViewBag.CustomerId' },
+            success: function (data) {
+            }
+        });
+    });
+
+    $('a[href="#customerViolationsTabContainer"]').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableViolations", "ApplicantPage")',
+            data: { customerId: '@ViewBag.CustomerId' },
+            success: function (data) {
+                $('#customerViolationsTabContainer').html(data);
+            }
+        });
+    });
+
+    $('a[href="#changeLogsTabContainer"]').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableChangeLogs", "ApplicantPage")',
+            data: { customerId: '@ViewBag.CustomerId' },
+            success: function (data) {
+                $('#changeLogsTabContainer').html(data);
+            }
+        });
+    });
+
+    $('a[href="#huntingLicPermsTabContainer"]').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableHuntingLicPerms", "ApplicantPage")',
+            data: { customerId: '@ViewBag.CustomerId' },
+            success: function (data) {
+                $('#huntingLicPermsTabContainer').html(data);
+            }
+        });
+    });
+
+    $('a[href="#huntingLicPermPaymentsTabContainer"]').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("TableHuntingLicPermPayments", "ApplicantPage")',
+            data: { customerId: '@ViewBag.CustomerId' },
+            success: function (data) {
+                $('#huntingLicPermPaymentsTabContainer').html(data);
+            }
+        });
+    });
+</script>

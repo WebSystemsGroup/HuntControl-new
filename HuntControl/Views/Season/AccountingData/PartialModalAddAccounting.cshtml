@@ -1,0 +1,88 @@
+﻿@model HuntControl.Domain.Concrete.spr_hunting_farm_accounting
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<script src="~/Content/plugins/select2/js/select2.full.min.js"></script>
+<script>
+    $(document).ready(function () {
+        jQuery("#AddHuntingFarmAccountingForm").validate().settings.ignore = ".bs-select-hidden";
+        $(".select2").select2();
+        $("select").on("select2:close", function (e) {
+            $(this).valid();
+        });
+    });
+</script>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myLargeModalLabel">Добавление годового учёта</h4>
+        </div>
+        <div class="modal-body">
+
+            @using (Ajax.BeginForm("SubmitHuntingFarmAccountingSave", "Season", Model, new AjaxOptions { UpdateTargetId = "accountingsContainer", OnSuccess = "$('#myModal').modal('hide');successAdd();" }, new { @id = "AddHuntingFarmAccountingForm", @class = "form-horizontal" }))
+            {
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        @Html.LabelFor(model => model.spr_hunting_farm_id, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-7">
+                            @Html.DropDownListFor(model => model.spr_hunting_farm_id, ViewBag.HuntingFarms as SelectList, "-- Выберите охотугодье --", new Dictionary<string, object> { { "class", "form-control select2 input-sm" } })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        @Html.LabelFor(model => model.spr_animal_method_account_id, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-7">
+                            @Html.DropDownListFor(model => model.spr_animal_method_account_id, ViewBag.MethodAccounts as SelectList, "-- Выберите способ учёта --", new Dictionary<string, object> { { "class", "form-control select2 input-sm" } })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        @Html.LabelFor(model => model.animal_sex, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-7">
+                            @Html.DropDownListFor(model => model.animal_sex, new SelectList(new List<SelectListItem> {
+                                                                       new SelectListItem { Value = "0", Text = "Без полового различия" },
+                                                                       new SelectListItem { Value = "1", Text = "Самец" },
+                                                                       new SelectListItem { Value = "2", Text = "Самка" }
+                                                                   }, "Value", "Text"), new Dictionary<string, object> { { "class", "form-control select2 input-sm" } })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        @Html.LabelFor(model => model.animal_age, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-7">
+                            @Html.DropDownListFor(model => model.animal_age, new SelectList(new List<SelectListItem> {
+                                                           new SelectListItem { Value = "0", Text = "Без возрастных различий" },
+                                                           new SelectListItem { Value = "1", Text = "До года" },
+                                                           new SelectListItem { Value = "2", Text = "Старше года" }
+                                                       }, "Value", "Text"), new Dictionary<string, object> { { "class", "form-control select2 input-sm" } })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        @Html.LabelFor(model => model.count_animal, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.count_animal, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.count_animal) } })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        @Html.LabelFor(model => model.year_, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.year_, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.year_) } })
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel waves-effect waves-light btn-block-xs" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Отмена</button>
+            <button type="submit" form="AddHuntingFarmAccountingForm" class="btn btn-success waves-effect waves-light btn-block-xs"> Сохранить <i class="fa fa-check m-l-5"></i></button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

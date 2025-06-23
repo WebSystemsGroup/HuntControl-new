@@ -1,0 +1,511 @@
+﻿@model WebAIS.StoreProcedure.SModel.case_customer_root_get_smev
+
+<div class="modal-card-head wrap-flex">
+    <nav class="breadcrumb m-b-0">
+        <div class="container">
+            <div class="row-flex">
+                <div class="col-flex"><div class="breadcrumb-item complete">Запрос</div></div>
+                <div class="col-flex"><div class="breadcrumb-item active">Данные</div></div>
+                <div class="col-flex"><div class="breadcrumb-item">Ответ</div></div>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="modal-card-body">
+    <div class="form-vertical smev-request" id="smev-rz-tabs">
+        <ul class="tab-horizontal">
+            <li><a href="#smev-rz-tab-1">Основные данные</a></li>
+            <li><a href="#smev-rz-tab-2">Список офисов</a></li>
+        </ul>
+        <form id="_rzForm">
+            <input name="data_services_id" type="hidden" class="data_services_id" />
+            <div id="smev-rz-tab-1" class="form-content smev-request">
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="targetRegionCode">Регион местоположения объекта</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <select class="select" name="targetRegionCode" id="targetRegionCode" style="display: none;" data-dictionary="" data-dictionary-options='{"dictionary":"RosReestrOktmo"}'></select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="name">Название ЮЛ (фамилия в случае ИП)</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="" data-validation="required" data-validation-allowing="-" id="name" name="name" placeholder="" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="nameFull">Полное наименование ЮЛ (имя в случае ИП)</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="nameFull" name="nameFull" placeholder="" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="nameFirm">Фирменное название ЮЛ (отчество в случае ИП)</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-validation-allowing="-" id="nameFirm" name="nameFirm" placeholder="" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="inn">ИНН</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-validation="required" data-validation-allowing="-" id="inn" name="inn" value="" placeholder="______" data-inputmask="'mask': '9999999999'">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="ogrn">ОГРН</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-validation="required" data-validation-allowing="-" id="ogrn" name="ogrn" value="" placeholder="______" data-inputmask="'mask': '9999999999999'">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="orgType">Код типа организации по ОКОПФ</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-validation="required" data-validation-allowing="-" id="orgType" name="orgType" value="" placeholder="______">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="orgTypeName">Наименование типа организации по ОКОПФ</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-validation-allowing="-" id="orgTypeName" name="orgTypeName" value="" placeholder="______">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="dateOrgReg">Дата регистрации ЮЛ или ИП</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control has-addons">
+                            <input class="input" type="text" name="dateOrgReg" id="dateOrgReg" value="" placeholder="__.__.____" data-inputmask="'mask': '99.99.9999'"
+                                   data-validation="date" data-validation-format="dd.mm.yyyy"
+                                   data-input-datetimepicker="" data-input-datetimepicker-options='{"timepicker":false,"format":"d.m.Y","scrollMonth":false,"scrollInput":false}' />
+                            <span class="icon" style="top:0px;"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="dateBusinessStart">Дата начала осущ-ния деятельности</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control has-addons">
+                            <input class="input" type="text" name="dateBusinessStart" id="dateBusinessStart" value="" placeholder="__.__.____" data-inputmask="'mask': '99.99.9999'"
+                                   data-validation="date" data-validation-format="dd.mm.yyyy"
+                                   data-input-datetimepicker="" data-input-datetimepicker-options='{"timepicker":false,"format":"d.m.Y","scrollMonth":false,"scrollInput":false}' />
+                            <span class="icon" style="top:0px;"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="documentSeries">Телефон</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-validation-allowing="-" id="documentSeries" name="documentSeries" value="" placeholder="" data-inputmask="'mask': '+799999999999'">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="email">E-mail</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-validation-allowing="-" id="email" name="email" value="" placeholder="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="documentType">Согласие на передачу контактных данных в ИАС МКГУ</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            @Html.DropDownList("enableMkgu", new List<SelectListItem> { new SelectListItem { Text = "Да", Value = "true" }, new SelectListItem { Text = "Нет", Value = "false", Selected = true } }, new { @data_val = "true", @id = "enableMkgu", @Name = "enableMkgu", @class = "select" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="smev-rz-tab-2" class="form-content smev-request p-t-10">
+                <div id="offices-tabs">
+                    <ul>
+                        <li><a href="#offices-tabs-1">Офис 1</a></li>
+                        <li style="float: right;">
+                            <button id="offices-tabs-add" type="button" class="btn btn-brwn p-l-10">
+                                <span class="icon m-0"><i class="ion ion-plus-round"></i></span>
+                            </button> 
+                        </li>
+                    </ul>
+                    <div id="offices-tabs-1">
+                        <div class="row-flex">
+                            <div class="col-flex is-offset-1 is-4">
+                                <label for="targetRegionCode">Регион местоположения объекта</label>
+                            </div>
+                            <div class="col-flex is-5">
+                                <div class="form-control">
+                                    <select class="select" name="offices[0].OfficeType" id="offices[0]_OfficeType" style="display: none;">
+                                        <option value="Head" selected>Организация</option>
+                                        <option value="Branch">Филиал</option>
+                                        <option value="Agency">Представительство</option>
+                                        <option value="Place">Место осуществления деятельности</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row-flex">
+                            <div class="col-flex is-offset-1 is-4">
+                                <label for="targetRegionCode">Перечень выполняемых работ</label>
+                            </div>
+                            <div class="col-flex is-5">
+                                <div class="form-control">
+                                    <select class="select worksClass" name="worksClass[0]" id="worksClass[0]" style="display: none;">
+                                        <option value="Okpd2" selected>ОКПД2</option>
+                                        <option value="Okved2">ОКВЭД2</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row-flex">
+                            <div class="col-flex is-12">
+                                <select class="js-example-basic-multiple" name="Offices[0].Works" multiple="multiple" style="display:none;"></select>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="row-flex nomargin-bottom">
+                                <h2 class="col-flex is-offset-5 form-title">Фактический адрес</h2>
+                            </div>
+                            <div class="row-flex">
+                                <div class="col-flex is-4">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-val-length-max="" data-validation-allowing="-" id="offices_PostAddress_RegionCode" name="offices[0].PostAddress.RegionCode" placeholder="Код региона" type="text" value="">
+                                    </div>
+                                </div>
+
+                                <div class="col-flex is-4">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-val-length-max="" data-validation-allowing="-" id="offices_PostAddress_CityType" name="offices[0].PostAddress.CityType" placeholder="Тип региона" type="text" value="">
+                                    </div>
+                                </div>
+
+                                <div class="col-flex is-4">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-val-length-max="" data-validation="required" data-validation-allowing="-" id="offices_PostAddress_City" name="offices[0].PostAddress.City" placeholder="Город" type="text" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row-flex">
+                                <div class="col-flex is-4">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-val-length-max="" data-validation-allowing="-" id="offices_PostAddress_Index" name="offices[0].PostAddress.Index" placeholder="Индекс" type="text" value="">
+                                    </div>
+                                </div>
+
+                                <div class="col-flex is-4">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-val-length-max="" data-validation-allowing="-" id="offices_PostAddress_District" name="offices[0].PostAddress.District" placeholder="Район" type="text" value="">
+                                    </div>
+                                </div>
+
+                                <div class="col-flex is-4">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-val-length-max="" data-validation="required" data-validation-allowing="-" id="offices_PostAddress_Street" name="offices[0].PostAddress.Street" placeholder="Улица" type="text" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row-flex">
+                                <div class="col-flex is-4">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-val-length-max="" data-validation-allowing="-" id="offices_PostAddress_Building" name="offices[0].PostAddress.Building" placeholder="Здание" type="text" value="">
+                                    </div>
+                                </div>
+
+                                <div class="col-flex is-4">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-val-length-max="" data-validation-allowing="-" id="offices_PostAddress_Corp" name="offices[0].PostAddress.Corp" placeholder="Корпус" type="text" value="">
+                                    </div>
+                                </div>
+
+                                <div class="col-flex is-2">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-val-length-max="" data-validation="required" data-validation-allowing="-" id="offices_PostAddress_House" name="offices[0].PostAddress.House" placeholder="Дом" type="text" value="">
+                                    </div>
+                                </div>
+
+                                <div class="col-flex is-2">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-val-length-max="" data-validation-allowing="-" id="offices_PostAddress_Room" name="offices[0].PostAddress.Room" placeholder="Кв." type="text" value="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="row-flex nomargin-bottom">
+                                <h2 class="col-flex is-offset-5 form-title">Юридический адрес</h2>
+                            </div>
+                            <div class="row-flex">
+                                <div class="col-flex is-4">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-val-length-max="" data-validation="required" data-validation-allowing="-" id="offices_OfficialAddress_RegionCode" name="offices[0].OfficialAddress.RegionCode" placeholder="Код региона" type="text" value="">
+                                    </div>
+                                </div>
+
+                                <div class="col-flex is-4">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-val-length-max="" data-validation="required" data-validation-allowing="-" id="offices_OfficialAddress_CityType" name="offices[0].OfficialAddress.CityType" placeholder="Тип региона" type="text" value="">
+                                    </div>
+                                </div>
+
+                                <div class="col-flex is-4">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-val-length-max="" data-validation-allowing="-" id="offices_OfficialAddress_City" name="offices[0].OfficialAddress.City" placeholder="Город" type="text" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row-flex">
+                                <div class="col-flex is-4">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-val-length-max="" data-validation="required" data-validation-allowing="-" id="offices_OfficialAddress_Index" name="offices[0].OfficialAddress.Index" placeholder="Индекс" type="text" value="">
+                                    </div>
+                                </div>
+
+                                <div class="col-flex is-4">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-val-length-max="" data-validation="required" data-validation-allowing="-" id="offices_OfficialAddress_District" name="offices[0].OfficialAddress.District" placeholder="Район" type="text" value="">
+                                    </div>
+                                </div>
+
+                                <div class="col-flex is-4">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-val-length-max="" data-validation-allowing="-" id="offices_OfficialAddress_Street" name="offices[0].OfficialAddress.Street" placeholder="Улица" type="text" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row-flex">
+                                <div class="col-flex is-4">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-val-length-max="" data-validation="required" data-validation-allowing="-" id="offices_OfficialAddress_Building" name="offices[0].OfficialAddress.Building" placeholder="Здание" type="text" value="">
+                                    </div>
+                                </div>
+
+                                <div class="col-flex is-4">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-val-length-max="" data-validation="required" data-validation-allowing="-" id="offices_OfficialAddress_Corp" name="offices[0].OfficialAddress.Corp" placeholder="Корпус" type="text" value="">
+                                    </div>
+                                </div>
+
+                                <div class="col-flex is-2">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-val-length-max="" data-validation-allowing="-" id="offices_OfficialAddress_House" name="offices[0].OfficialAddress.House" placeholder="Дом" type="text" value="">
+                                    </div>
+                                </div>
+
+                                <div class="col-flex is-2">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-val-length-max="" data-validation="required" data-validation-allowing="-" id="offices_OfficialAddress_Room" name="offices[0].OfficialAddress.Room" placeholder="Кв." type="text" value="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="form-content smev-response" style="display:none;"></div>
+</div>
+<div class="modal-card-foot">
+    <div class="content-footer__action row-flex-right">
+        <button type="button" class="btn btn-danger attach-smev-response" style="display: none;">
+            <span>Прикрепить к услуге</span>
+            <span class="icon">
+                <i class="ion ion-ios-upload-outline"></i>
+            </span>
+        </button>
+        <button type="button" class="btn btn-danger is-form-send smev-send-data" data-url-smev="Smev_RequestRnNotice3">
+            <span>Далее</span>
+            <span class="icon">
+                <i class="ion ion-ios-arrow-forward"></i>
+            </span>
+        </button>
+    </div>
+</div>
+
+<script>
+    var flag = true;
+    multipeSelect('offices-tabs-1', '/Smev/GetOkpd2');
+    $('#smev-rz-tabs').responsiveTabs({
+        startCollapsed: 'accordion'
+    });
+    var offices_tabs = $('#offices-tabs').tabs();
+    var tabTitle = $("#tab_title"),
+        tabContent = "<div class='row-flex'> <div class='col-flex is-offset-1 is-4'> <label for='targetRegionCode'>Регион местоположения объекта</label> </div><div class='col-flex is-5'> <div class='form-control'> <select class='select' name='offices[{olist}].OfficeType' id='offices[{olist}]_OfficeType' style='display: none;'> <option value='Head' selected=''>Организация</option> <option value='Branch'>Филиал</option> <option value='Agency'>Представительство</option> <option value='Place'>Место осуществления деятельности</option> </select> </div></div></div><div class='row-flex'> <div class='col-flex is-offset-1 is-4'> <label for='targetRegionCode'>Перечень выполняемых работ</label> </div><div class='col-flex is-5'> <div class='form-control'> <select class='select worksClass' name='worksClass[{olist}]' id='worksClass[{olist}]' style='display: none;'> <option value='okpd2' selected>ОКПД2</option> <option value='okved2'>ОКВЭД2</option> </select> </div></div></div><div class='row-flex'> <div class='col-flex is-12'><select class='js-example-basic-multiple' name='Offices[{olist}].Works' multiple='multiple' style='display:none;'></select></div></div><div> <div class='row-flex nomargin-bottom'> <h2 class='col-flex is-offset-5 form-title'>Фактический адрес</h2> </div><div class='row-flex'> <div class='col-flex is-4'> <div class='form-control'> <input class='input' data-val='true' data-val-length='' data-val-length-max='' data-validation-allowing='-' id='offices_PostAddress_RegionCode' name='offices[{olist}].PostAddress.RegionCode' placeholder='Код региона' type='text' value=''> </div></div><div class='col-flex is-4'> <div class='form-control'> <input class='input' data-val='true' data-val-length='' data-val-length-max='' data-validation-allowing='-' id='offices_PostAddress_CityType' name='offices[{olist}].PostAddress.CityType' placeholder='Тип региона' type='text' value=''> </div></div><div class='col-flex is-4'> <div class='form-control'> <input class='input' data-val='true' data-val-length='' data-val-length-max='' data-validation='required' data-validation-allowing='-' id='offices_PostAddress_City' name='offices[{olist}].PostAddress.City' placeholder='Город' type='text' value=''> </div></div></div><div class='row-flex'> <div class='col-flex is-4'> <div class='form-control'> <input class='input' data-val='true' data-val-length='' data-val-length-max='' data-validation-allowing='-' id='offices_PostAddress_Index' name='offices[{olist}].PostAddress.Index' placeholder='Индекс' type='text' value=''> </div></div><div class='col-flex is-4'> <div class='form-control'> <input class='input' data-val='true' data-val-length='' data-val-length-max='' data-validation-allowing='-' id='offices_PostAddress_District' name='offices[{olist}].PostAddress.District' placeholder='Район' type='text' value=''> </div></div><div class='col-flex is-4'> <div class='form-control'> <input class='input' data-val='true' data-val-length='' data-val-length-max='' data-validation='required' data-validation-allowing='-' id='offices_PostAddress_Street' name='offices[{olist}].PostAddress.Street' placeholder='Улица' type='text' value=''> </div></div></div><div class='row-flex'> <div class='col-flex is-4'> <div class='form-control'> <input class='input' data-val='true' data-val-length='' data-val-length-max='' data-validation-allowing='-' id='offices_PostAddress_Building' name='offices[{olist}].PostAddress.Building' placeholder='Здание' type='text' value=''> </div></div><div class='col-flex is-4'> <div class='form-control'> <input class='input' data-val='true' data-val-length='' data-val-length-max='' data-validation-allowing='-' id='offices_PostAddress_Corp' name='offices[{olist}].PostAddress.Corp' placeholder='Корпус' type='text' value=''> </div></div><div class='col-flex is-2'> <div class='form-control'> <input class='input' data-val='true' data-val-length='' data-val-length-max='' data-validation='required' data-validation-allowing='-' id='offices_PostAddress_House' name='offices[{olist}].PostAddress.House' placeholder='Дом' type='text' value=''> </div></div><div class='col-flex is-2'> <div class='form-control'> <input class='input' data-val='true' data-val-length='' data-val-length-max='' data-validation-allowing='-' id='offices_PostAddress_Room' name='offices[{olist}].PostAddress.Room' placeholder='Кв.' type='text' value=''> </div></div></div></div><div> <div class='row-flex nomargin-bottom'> <h2 class='col-flex is-offset-5 form-title'>Юридический адрес</h2> </div><div class='row-flex'> <div class='col-flex is-4'> <div class='form-control'> <input class='input' data-val='true' data-val-length='' data-val-length-max='' data-validation='required' data-validation-allowing='-' id='offices_OfficialAddress_RegionCode' name='offices[{olist}].OfficialAddress.RegionCode' placeholder='Код региона' type='text' value=''> </div></div><div class='col-flex is-4'> <div class='form-control'> <input class='input' data-val='true' data-val-length='' data-val-length-max='' data-validation='required' data-validation-allowing='-' id='offices_OfficialAddress_CityType' name='offices[{olist}].OfficialAddress.CityType' placeholder='Тип региона' type='text' value=''> </div></div><div class='col-flex is-4'> <div class='form-control'> <input class='input' data-val='true' data-val-length='' data-val-length-max='' data-validation-allowing='-' id='offices_OfficialAddress_City' name='offices[{olist}].OfficialAddress.City' placeholder='Город' type='text' value=''> </div></div></div><div class='row-flex'> <div class='col-flex is-4'> <div class='form-control'> <input class='input' data-val='true' data-val-length='' data-val-length-max='' data-validation='required' data-validation-allowing='-' id='offices_OfficialAddress_Index' name='offices[{olist}].OfficialAddress.Index' placeholder='Индекс' type='text' value=''> </div></div><div class='col-flex is-4'> <div class='form-control'> <input class='input' data-val='true' data-val-length='' data-val-length-max='' data-validation='required' data-validation-allowing='-' id='offices_OfficialAddress_District' name='offices[{olist}].OfficialAddress.District' placeholder='Район' type='text' value=''> </div></div><div class='col-flex is-4'> <div class='form-control'> <input class='input' data-val='true' data-val-length='' data-val-length-max='' data-validation-allowing='-' id='offices_OfficialAddress_Street' name='offices[{olist}].OfficialAddress.Street' placeholder='Улица' type='text' value=''> </div></div></div><div class='row-flex'> <div class='col-flex is-4'> <div class='form-control'> <input class='input' data-val='true' data-val-length='' data-val-length-max='' data-validation='required' data-validation-allowing='-' id='offices_OfficialAddress_Building' name='offices[{olist}].OfficialAddress.Building' placeholder='Здание' type='text' value=''> </div></div><div class='col-flex is-4'> <div class='form-control'> <input class='input' data-val='true' data-val-length='' data-val-length-max='' data-validation='required' data-validation-allowing='-' id='offices_OfficialAddress_Corp' name='offices[{olist}].OfficialAddress.Corp' placeholder='Корпус' type='text' value=''> </div></div><div class='col-flex is-2'> <div class='form-control'> <input class='input' data-val='true' data-val-length='' data-val-length-max='' data-validation-allowing='-' id='offices_OfficialAddress_House' name='offices[{olist}].OfficialAddress.House' placeholder='Дом' type='text' value=''> </div></div><div class='col-flex is-2'> <div class='form-control'> <input class='input' data-val='true' data-val-length='' data-val-length-max='' data-validation='required' data-validation-allowing='-' id='offices_OfficialAddress_Room' name='offices[{olist}].OfficialAddress.Room' placeholder='Кв.' type='text' value=''> </div></div></div></div>",
+        tabTemplate = "<li><a href='#{href}'>#{label}</a></li>",
+        tabCounter = 2;
+    if (typeof ('#_rzForm') != 'undefined') {
+        $.validate({
+            form: '#registration',
+            lang: 'ru',
+            modules: 'date, security',
+            borderColorOnError: '#e44d32',
+            dateFormat: 'dd-mm-yyyy',
+            addValidClassOnAll: true,
+            validateHiddenInputs: true
+        });
+    };
+    if (typeof ('[data-dictionary]') != 'undefined') {
+        $.each($('[data-dictionary]'), function () {
+            var $this = $(this);
+            var options = $this.data('dictionaryOptions');
+            $.ajax({
+                url: '/Smev/Smev_GetDictionary',
+                type: 'POST',
+                data: { type: options.dictionary },
+                success: function (items) {
+                    if (items != 'undefined') {
+                        $this.empty();
+                        items.Dictionary.forEach(function (item, i, arr) {
+                            $this.append('<option value=' + item.Value + '>' + item.Key + '</option>');
+                        });
+                        $this.val('82000000').niceSelect('update');
+                        $this.change();
+                    }
+                }
+            });
+        });
+    };
+    if (typeof ('#modal_smev_card_content') != 'undefined') {
+        $.datetimepicker.setLocale('ru');
+        $.each($('[data-input-datetimepicker]'), function () {
+            var $this = $(this);
+            var options = $this.data('input-datetimepicker-options');
+            var avalible_time = $this.data('input-datetimepicker-time');
+            if (typeof avalible_time != 'undefined') {
+                options['allowTimes'] = avalible_time.split(',');
+            }
+            $this.datetimepicker(options);
+        });
+        $.validate({
+            lang: 'ru',
+            modules: 'date, security',
+            borderColorOnError: '#e44d32',
+            dateFormat: 'dd-mm-yyyy'
+        });
+        $('input[data-inputmask]').inputmask();
+        $('#modal_smev_card_content select.select').niceSelect();
+    };
+    function _checkRZform() {
+        var bl = false;
+        var $form = $('#modal_smev_card_content').find('form');
+        if (typeof ('#modal_smev_card_content') != 'undefined') {
+            $.each($('[data-validation]'), function () {
+                var $this = $(this);
+                if ($this.val() != '') {
+                    bl = true;
+                }
+                else {
+                    bl = false;
+                }
+            });
+        };
+        return bl;
+    };
+    $('#smev-rz-tabs').responsiveTabs({
+        startCollapsed: 'accordion'
+    });
+    $('#offices-tabs-add').on('click', function () {
+        var label = tabTitle.val() || "Офис " + tabCounter,
+            id = "offices-tabs-" + tabCounter,
+            li = $(tabTemplate.replace(/#\{href\}/g, "#" + id).replace(/#\{label\}/g, label)),
+            tabContentHtml = tabContent.replace(/\{olist\}/g, tabCounter-1);
+        offices_tabs.find(".ui-tabs-nav").append(li);
+        offices_tabs.append("<div id='" + id + "'>" + tabContentHtml + "</div>");
+        offices_tabs.tabs("refresh");
+        $('#' + id + ' select.select').niceSelect();
+        multipeSelect(id, '/Smev/GetOkpd2');
+        tabCounter++;
+    });
+    $('.smev-send-data').on('click', function (e) {
+        if ($('#modal_smev_card_content').find('form').isValid() && flag && _checkRZform()) {
+            event.stopPropagation();
+            var btn = $(this);
+            var url = $(this).data('urlSmev');
+            smevSendData(url, btn);
+        }
+    });
+    $(document).on('change', '.worksClass', function () {
+        var $id = $('[aria-hidden="false"]').attr('id');
+        var $url = "/Smev/Get" + $(this).val();
+        multipeSelect($id, $url);
+    });
+    function multipeSelect(id, url) {
+        var $select2 = $('#' + id + ' .js-example-basic-multiple').select2();
+        $select2.val(null).trigger("change");;
+        $select2.select2({
+            ajax: {
+                url: url,
+                dataType: 'json',
+                type: 'POST',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term,
+                        page: params.page
+                    };
+                },
+                processResults: function (data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            },
+            placeholder: "Поиск...",
+            escapeMarkup: function (markup) { return markup; },
+            minimumInputLength: 3
+        });
+    }
+</script>

@@ -1,0 +1,42 @@
+﻿@model HuntControl.WebUI.Models.ApplicantPageViewModel
+<div id="mainContainer">
+    @if (Model.CustomerSelectList.Any())
+    {
+        
+            <div class="table-responsive">
+                <table class="table">
+                    <tbody>
+                        @foreach (var item in Model.CustomerSelectList)
+                        {
+                        <tr>
+                            <td class="p-l-20-important text-uppercase">
+                                <span class="individual-name">@item.out_customer_name</span><br>
+                                <span class="text-muted font-12"><i class="ion-location m-r-5"></i>@item.out_actual_address</span><br>
+                            </td>
+                            <td>
+                                <span class="text-muted font-12"><i class="md md-phone vertical-middle m-r-5"></i>@item.out_phone_number1</span><br>
+                            </td>
+                            <td class="vertical-middle text-right">
+                                <a href="#" onclick="window.open('@Url.Action("Main","ApplicantPage")#@item.out_id')"><u>ФЛ</u> ></a>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            <span style="color: #00545c;"><strong><i class="icon-info"></i></strong> Поиск не дал результатов.</span>
+        </div>
+    }
+    <div class="row p-t-10 p-l-20-important p-r-20-important p-b-10">
+        <div class="col-sm-12">
+            <div class="dataTables_paginate paging_simple_numbers" id="datatable-editable_paginate">
+                @Html.PageLinks(Model.PageInfo, x => Ajax.ActionLink(x.NameLink, "ModalShowSearchIndividualPage", "Case", new { search = Model.Search }, new AjaxOptions { UpdateTargetId = "mainContainer" }))
+            </div>
+        </div>
+    </div>
+</div>

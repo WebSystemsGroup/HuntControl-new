@@ -1,0 +1,63 @@
+﻿@model HuntControl.Domain.Concrete.spr_animal_type_hunting_season
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<script src="~/Content/plugins/select2/js/select2.full.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#date-range').datepicker({ maxViewMode: 'months', format: 'dd MM', toggleActive: true, autoclose: true, language: 'ru', orientation: 'bottom right' }).on('show', function (e) {
+            console.log('dd');
+            var month = $('th.datepicker-switch').html();
+            $('th.datepicker-switch').html(month.replace(/\d/g, ''));
+        });
+        $(".select2").select2();
+        $("select").on("select2:close", function (e) {
+            $(this).valid();
+        });
+    });
+</script>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myLargeModalLabel">Добавление сезона охоты</h4>
+        </div>
+        <div class="modal-body">
+            @using (Ajax.BeginForm("SubmitHuntingSeasonSave", "Reference", Model, new AjaxOptions { UpdateTargetId = "huntingSeasonsPillContainer", OnSuccess = "$('#myModal').modal('hide'); successAdd();" }, new { @id = "AddHuntingSeasonForm", @class = "form-horizontal" }))
+            {
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        @Html.LabelFor(model => model.spr_animal_type_id, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-6">
+                            @Html.DropDownListFor(model => model.spr_animal_type_id, ViewBag.AnimalTypes as SelectList, "Выберите тип животного", new Dictionary<string, object> { { "class", "form-control select2 input-sm" } })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        @Html.LabelFor(model => model.name_season, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.name_season, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.name_season) } })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        <label class="col-md-4 control-label text-right" for="dateStart">Период</label>
+                        <div class="col-md-7">
+                            <div class="input-daterange input-group" id="date-range">
+                                @Html.TextBox("dateStart", DateTime.Now, "{0:dd MMMM}", new Dictionary<string, object> { { "class", "form-control input-sm required" } })
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                @Html.TextBox("dateStop", DateTime.Now, "{0:dd MMMM}", new Dictionary<string, object> { { "class", "form-control input-sm required" } })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel waves-effect waves-light" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Отмена</button>
+            <button type="submit" form="AddHuntingSeasonForm" class="btn btn-success waves-effect waves-light"> Сохранить <i class="fa fa-check m-l-5"></i></button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

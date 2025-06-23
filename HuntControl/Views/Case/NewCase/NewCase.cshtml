@@ -1,0 +1,400 @@
+﻿
+@{
+    ViewBag.Title = "Новое обращение";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.MvcSiteMap().SiteMapPath()
+<style>
+    .wizard-circle fieldset {
+        display: none;
+    }
+        .wizard-circle fieldset.current {
+            display: inherit;
+        }
+</style>
+<link href="~/Content/plugins/animate.less/animate.min.css" rel="stylesheet" type="text/css">
+<div class="panel panel-default">
+    <div class="panel-body app-content">
+        <div class="icons-tab-steps wizard-circle">
+
+            <!-- Step 1 -->
+            <h6 class="hidden"><i class="step-icon icon-cube"></i>Услуга</h6>
+            <fieldset class="p-0 current">
+                <div id="customerContainer">
+                    @Html.Action("PartialCustomerServices", "Case")
+                </div>
+            </fieldset>
+            <!-- Step 2 -->
+            <h6 class="hidden"><i class="step-icon icon-paintbucket"></i>Заявитель</h6>
+            <fieldset class="p-0">
+                <div id="customerDataContainer">
+                </div>
+            </fieldset>
+            <!-- Step 3 -->
+            <h6 class="hidden"><i class="step-icon icon-paintbucket"></i>Проверка</h6>
+            <fieldset class="p-0">
+                <div id="checkDataContainer">
+                    <div class="row display-flex">
+                        <div class="col-md-6">
+                            <div class="fieldset m-t-20 m-b-20">
+                                <div class="legend">
+                                    <i class="fa fa-briefcase m-r-5" style="font-size: 16px;"></i> Заявитель
+                                </div>
+                                <div class="row p-l-r-10">
+                                    <div class="col-sm-12">
+                                        <ul class="info-account">
+                                            <li><span data-type="customerFio"></span></li>
+                                            <li>Паспорт: <span data-type="docSerial"></span><span data-type="docNumber" class="m-r-5"></span> Выдан: <span data-type="docIssueBody"></span><span data-type="docIssueDate" class="m-l-5"></span>г.</li>
+                                            <li>Место рождения: <span data-type="docBirthPlace"></span> Дата рождения: <span data-type="docBirthDate" class="m-l-5"></span> г.</li>
+                                            <li>Зарегистрирован: <span data-type="customerAddress"> </span></li>
+                                            <li>СНИЛС: <span data-type="customerSnils"> </span> ИНН: <span data-type="customerInn"> </span> ПОЛ: <span data-type="customerSex"></span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="fieldset m-t-20 m-b-20">
+                                <div class="legend">
+                                    <i class="ion-clipboard m-r-5" style="font-size: 16px;"></i> Услуга
+                                </div>
+                                <div class="row p-l-r-10">
+                                    <div class="col-sm-12">
+                                        <ul class="info-account font-13">
+                                            <li><span data-type="serviceName"></span></li>
+                                            <li>Тип услуги: <span data-type="serviceTypeName">Иная услуга</span></li>
+                                            <li>Ведомство: <span data-type="providerName"></span></li>
+                                            <li>Гос.пошлина: <span data-type="tariff"></span></li>
+                                            <li>Сбор: <span data-type="charge"></span></li>
+                                            <li>Количество: <span data-type="countService"></span></li>
+                                            <li>Дней на обработку: <span data-type="dayProccessing"></span>Дней на исполнение: <span data-type="dayExecutaion"></span>Дней на возврат: <span data-type="dayReturn"></span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row display-flex">
+                        <div class="col-md-6">
+                            <div class="fieldset m-t-20 m-b-20">
+                                <div class="legend">
+                                    <i class="fa fa-user-circle-o m-r-5" style="font-size: 16px;"></i> Представитель
+                                </div>
+                                <div id="principalContainer" class="hidden">
+                                    <div class="row p-l-r-10">
+                                        <div class="col-sm-12">
+                                            <ul class="info-account">
+                                                <li><span data-type="customerFioPrincipal"></span></li>
+                                                <li>Паспорт: <span data-type="docSerialPrincipal"></span><span data-type="docNumberPrincipal" class="m-r-5"></span> Выдан: <span data-type="docIssueBodyPrincipal"></span><span data-type="docIssueDatePrincipal" class="m-l-5"></span>г.</li>
+                                                <li>Место рождения: <span data-type="docBirthPlacePrincipal"></span> Дата рождения: <span data-type="docBirthDatePrincipal" class="m-l-5"></span> г.</li>
+                                                <li>Зарегистрирован: <span data-type="customerAddressPrincipal"> </span></li>
+                                                <li>СНИЛС: <span data-type="customerSnilsPrincipal"> </span> ИНН: <span data-type="customerInnPrincipal"> </span> ПОЛ: <span data-type="customerSexPrincipal"></span></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="not-info-in-legend"><i class="ion-ios7-close-outline"></i></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="fieldset m-t-20 m-b-20">
+                                <div class="legend">
+                                    <i class="fa fa-vcard-o m-r-5" style="font-size: 16px;"></i> Контакты
+                                </div>
+                                <div class="row p-l-r-10">
+                                    <div class="col-sm-12">
+                                        <ul class="info-account">
+                                            <li>Телефон: <span data-type="customerTel1"></span>,<span data-type="customerTel2" class="m-l-5"></span></li>
+                                            <li>Электронная почта: <span data-type="customerEmail"></span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>
+<link href="~/Content/plugins/wizard/wizard.min.css" rel="stylesheet" />
+<script src="~/Content/plugins/wizard/jquery.steps.min.js"></script>
+<script>
+
+    function castingFormData(array) {
+        if (array.length > 8) {
+            const requsetData = array;
+            const fio = array[6].value.trim() + ' ' + array[7].value.trim() + ' ' + array[8].value.trim();
+            requsetData.splice(6, 3);
+            requsetData.push({
+                name: 'customer.customer_fio',
+                value: fio,
+            })
+            return $.param(requsetData);
+        }
+        return $.param(array);
+    }
+
+    function nextStageWorking(serviceId, employees_id) {
+        $.ajax({
+            type: 'POST',
+            async: false,
+            url: '@Url.Action("SubmitNextRouteStageSave", "Case")',
+            data: { employeeId: employees_id, routeStageId: '55', serviceId: serviceId, comment: '' },
+            success: function (data) {
+                $('#myModal').modal('hide');
+                swal("Готово!", "Следующий этап успешно добавлен.", "success").then(function () {
+                    location.reload();
+                });
+            },
+            error: function (errorData) {
+                $.Notification.notify('error', 'right top', 'Ошибка!', 'Произошла ошибка при выполнении запроса.');
+            }
+        });
+    }
+
+    function requestSmevLbdSearch(id) {
+        let castomerArrayData = $('#customerForm').serializeArray();
+
+        const requestSmevLbdSearch = [
+            { name: 'request.Fio.LastName', value: castomerArrayData[6].value },
+            { name: 'request.Fio.FirstName', value: castomerArrayData[7].value },
+            { name: 'request.Fio.SecondName', value: castomerArrayData[8].value },
+            { name: 'request.BirthDate', value: castomerArrayData[10].value },
+            { name: 'request.BirthRegionCode', value: castomerArrayData[11].value },
+            { name: 'request.BirthPlace', value: castomerArrayData[12].value },
+            { name: 'request.Snils', value: castomerArrayData[13].value },
+            { name: 'request.RegistrationType', value: castomerArrayData[15].value },
+            { name: 'request.RegionCode', value: castomerArrayData[16].value },
+            { name: 'request.RegistrationPlace', value: castomerArrayData[17].value }
+        ];
+
+        $.ajax({
+            type: 'POST',
+            async: false,
+            url: '@Url.Action("Smev_LbdSearch", "Smev")',
+            data: 'dataServicesId=' + id + '&' + $.param(requestSmevLbdSearch),
+            success: function (data) {
+                $.Notification.notify('success', 'top right', 'Запрос "cведения о наличии (отсутствии) судимости" успешно отправлен');
+            },
+            error: function (data) {
+                $.Notification.notify('error', 'top right', 'Ошибка отправки запроса "cведения о наличии (отсутствии) судимости"');
+            }
+        });
+    }
+
+    function saveCastomer(employees_fio) {
+        let castomerArrayData = $('#customerForm').serializeArray();
+        let fio = castomerArrayData[6].value.trim() + ' ' + castomerArrayData[7].value.trim() + ' ' + castomerArrayData[8].value.trim();
+
+        const dataSaveCastomer = [
+            { name: 'testModel.data_customer.customer_name', value: fio },
+            { name: 'testModel.data_customer.social_pensioner', value: false },
+            { name: 'testModel.data_customer.social_incapable', value: false },
+            { name: 'testModel.data_customer.is_remove', value: false },
+            { name: 'testModel.data_customer.doc_serial', value: castomerArrayData[1].value },
+            { name: 'testModel.data_customer.doc_number', value: castomerArrayData[2].value },
+            { name: 'testModel.data_customer.doc_birth_date', value: castomerArrayData[10].value },
+            { name: 'testModel.data_customer.doc_birth_place', value: castomerArrayData[12].value },
+            { name: 'testModel.data_customer.doc_issue_date', value: castomerArrayData[3].value },
+            { name: 'testModel.data_customer.doc_issue_body', value: castomerArrayData[5].value },
+            { name: 'testModel.data_customer.doc_code', value: castomerArrayData[4].value },
+            { name: 'testModel.data_customer.phone_number1', value: castomerArrayData[19].value },
+            { name: 'testModel.data_customer.phone_number2', value: castomerArrayData[20].value },
+            { name: 'testModel.data_customer.customer_sex', value: castomerArrayData[9].value },
+            { name: 'testModel.data_customer.customer_snils', value: castomerArrayData[13].value },
+            { name: 'testModel.data_customer.e_mail', value: castomerArrayData[21].value },
+            { name: 'testModel.data_customer.customer_inn', value: castomerArrayData[14].value },
+            { name: 'testModel.data_customer.legal_address', value: castomerArrayData[17].value },
+            { name: 'testModel.data_customer.actual_address', value: castomerArrayData[18].value },
+            { name: 'testModel.data_customer.employees_fio', value: employees_fio }
+        ];
+
+        $.ajax({
+            type: 'POST',
+            async: false,
+            url: '@Url.Action("SubmitCustomerSave", "ApplicantPage")', 
+            data: $.param(dataSaveCastomer),
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+    }
+
+    $(function () {
+        $(".icons-tab-steps").steps({
+            headerTag: "h6",
+            bodyTag: "fieldset",
+            transitionEffect: "fade",
+            titleTemplate: '<span class="step"></span> #title#',
+            labels: { previous: "Назад", next: "Далее", finish: "Сохранить и перейти" },
+            onFinishing: function () {
+                var result = true;
+                var recipient = 1912196;
+                var serviceSubId = $('#servicesTable tr.success').data('sprServicesSubId');
+                var countService = $('input#countService').val();
+                var isPrincipal = document.querySelector('#principalSwitch').checked;
+                if (recipient !== undefined) {
+                    var customerForm = recipient === 1912196 ? $('#customerForm') : $('#legalForm');
+                    var principalForm = $('#principalForm');
+                    customerData = {}
+                    $.ajax({
+                        type: 'POST',
+                        async: false,
+                        url: '@Url.Action("SubmitDataServiceSave", "Case")',
+                        data: castingFormData(principalForm.serializeArray()) + '&' + castingFormData(customerForm.serializeArray()) +  '&serviceSubId=' + serviceSubId + '&isPrincipal=' + isPrincipal + '&countService=' + countService,
+                        success: function (data) {
+                            console.log(data);
+                            swal({
+                                castingFormData,
+                                title: 'Готово!', text: 'Новое обращение успешно создано.', type: 'success'
+                            }).then(function () {
+                                $.blockUI({ message: '<div class="fa fa-spin fa-spinner icon-lg"></div>', overlayCSS: { backgroundColor: "#FFF", cursor: "wait" }, css: { border: 0, padding: 0, backgroundColor: "none" } });
+                                requestSmevLbdSearch(data.id); //Запрос СМЕВ судимости
+                                nextStageWorking(data.id, data.employees_id); //Новый  этап в работе
+                                saveCastomer(data.employees_fio); //Сохраняем в физ лицо
+                                location.href = '@Url.Action("Main","Case")/' + data.data_services_info_id;
+                            });
+                            result = true;
+                        },
+                        error: function (data) {
+                            result = false;
+                        }
+                    });
+                }
+                return result;
+            },
+            onStepChanging: function (event, currentIndex, newIndex) {
+                var result = true;
+                //var recipient = $('button.list-group-item.active').data('value');
+                var sprServicesSubId = $('#servicesTable tr.success').data('sprServicesSubId');
+                if (sprServicesSubId !== undefined) {
+                    if (newIndex === 1 && currentIndex === 0) {
+                        $.ajax({
+                            type: 'POST',
+                            url: '@Url.Action("PartialCustomerRecipient", "Case")',
+                            data: { sprServicesSubId: sprServicesSubId },
+                            success: function (data) {
+                                $("#customerDataContainer").html(data);
+                                result = true;
+                            },
+                            error: function () {
+                                result = false;
+                            }
+                        });
+                    }
+                    //if (newIndex === 2 && currentIndex === 1) {
+
+                    //    var customerForm = $('#customerForm');
+                    //    var legalForm = $('#legalForm');
+                    //    var principalForm = $('#principalForm');
+
+                    //    if (recipient === 1912196 && !customerForm.valid()) {
+                    //        $('.nav-tabs a[href="#customerDataTabContainer"]').tab('show');
+                    //        $('#customerDataTabContainer').addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                    //            $(this).removeClass('shake animated');
+                    //        });
+                    //        result = false;
+                    //    }
+                    //    else if (recipient !== 1912196 && !legalForm.valid()) {
+                    //        $('.nav-tabs a[href="#legalDataTabContainer"]').tab('show');
+                    //        $('#legalDataTabContainer').addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                    //            $(this).removeClass('shake animated');
+                    //        });
+                    //        result = false;
+                    //    }
+                    //    else if (!principalForm.valid()) {
+                    //        $('.nav-tabs a[href="#principalDataTabContainer"]').tab('show');
+                    //        $('#principalDataTabContainer').addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                    //            $(this).removeClass('shake animated');
+                    //        });
+                    //        result = false;
+                    //    }
+                    //}
+                    if (newIndex === 2 && currentIndex === 1) {
+                        if ($('#servicesTable tr').is('.success')) {
+                        } else {
+                            $('#servicesTable').addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                                $(this).removeClass('shake animated');
+                            });
+                        }
+                        //if ($('#tariffsTable tr').is('.success')) {
+                            $('#checkDataContainer span[data-type=customerFio]').text($('input[data-form=customer][name="customer.customer_fio"]').val());
+                            $('#checkDataContainer span[data-type=docSerial]').text($('input[data-form=customer][name="customer.document_serial"]').val());
+                            $('#checkDataContainer span[data-type=docNumber]').text($('input[data-form=customer][name="customer.document_number"]').val());
+                            $('#checkDataContainer span[data-type=docBirthDate]').text($('input[data-form=customer][name="customer.document_birth_date"]').val());
+                            $('#checkDataContainer span[data-type=docBirthPlace]').text($('input[data-form=customer][name="customer.document_birth_place"]').val());
+                            $('#checkDataContainer span[data-type=docIssueBody]').text($('input[data-form=customer][name="customer.document_issue_body"]').val());
+                            $('#checkDataContainer span[data-type=docIssueDate]').text($('input[data-form=customer][name="customer.document_issue_date"]').val());
+                            $('#checkDataContainer span[data-type=customerAddress]').text($('input[data-form=customer][name="customer.customer_address"]').val());
+                            $('#checkDataContainer span[data-type=customerSnils]').text($('input[data-form=customer][name="customer.customer_snils"]').val());
+                            $('#checkDataContainer span[data-type=customerInn]').text($('input[data-form=customer][name="customer.customer_inn"]').val());
+                            $('#checkDataContainer span[data-type=customerSex]').text($('select[data-form=customer][name="customer.customer_sex"]').val());
+
+                            if (document.querySelector('#principalSwitch').checked) {
+                                $('#checkDataContainer span[data-type=customerFioPrincipal]').text($('input[data-form=principal][name="principal.customer_fio"]').val());
+                                $('#checkDataContainer span[data-type=docSerialPrincipal]').text($('input[data-form=principal][name="principal.document_serial"]').val());
+                                $('#checkDataContainer span[data-type=docNumberPrincipal]').text($('input[data-form=principal][name="principal.document_number"]').val());
+                                $('#checkDataContainer span[data-type=docBirthDatePrincipal]').text($('input[data-form=principal][name="principal.document_birth_date"]').val());
+                                $('#checkDataContainer span[data-type=docBirthPlacePrincipal]').text($('input[data-form=principal][name="principal.document_birth_place"]').val());
+                                $('#checkDataContainer span[data-type=docIssueBodyPrincipal]').text($('input[data-form=principal][name="principal.document_issue_body"]').val());
+                                $('#checkDataContainer span[data-type=docIssueDatePrincipal]').text($('input[data-form=principal][name="principal.document_issue_date"]').val());
+                                $('#checkDataContainer span[data-type=customerAddressPrincipal]').text($('input[data-form=principal][name="principal.customer_address"]').val());
+                                $('#checkDataContainer span[data-type=customerSnilsPrincipal]').text($('input[data-form=principal][name="principal.customer_snils"]').val());
+                                $('#checkDataContainer span[data-type=customerInnPrincipal]').text($('input[data-form=principal][name="principal.customer_inn"]').val());
+                                $('#checkDataContainer span[data-type=customerSexPrincipal]').text($('select[data-form=principal][name="principal.customer_sex"]').val());
+                                $('#checkDataContainer #principalContainer').removeClass('hidden');
+                                $('#checkDataContainer .not-info-in-legend').addClass('hidden');
+                            } else {
+                                $('#checkDataContainer #principalContainer').addClass('hidden');
+                                $('#checkDataContainer .not-info-in-legend').removeClass('hidden');
+                            }
+
+                            $('#checkDataContainer span[data-type=customerTel1]').text($('input[data-form=customer][name="customer.customer_tel1"]').val());
+                            $('#checkDataContainer span[data-type=customerTel2]').text($('input[data-form=customer][name="customer.customer_tel2"]').val());
+                            $('#checkDataContainer span[data-type=customerEmail]').text($('input[data-form=customer][name="customer.customer_email"]').val());
+
+
+
+                            $('#checkDataContainer span[data-type=serviceName]').text($('#servicesTable tr.success span[data-type=serviceName]').text());
+                            $('#checkDataContainer span[data-type=providerName]').text($('#servicesTable tr.success span[data-type=providerName]').text());
+                            $('#checkDataContainer span[data-type=countService]').text($('#countService').val());
+                            $('#checkDataContainer span[data-type=dayProccessing]').text($('#dayProccessing').val());
+                            $('#checkDataContainer span[data-type=dayReturn]').text($('#dayReturn').val());
+                        $('#checkDataContainer span[data-type=providerName]').text($('#providerName').val());
+
+                        $('#checkDataContainer span[data-type=tariff]').text($('#servicesTable tr.success span[data-type=tariff]').text());
+                        $('#checkDataContainer span[data-type=charge]').text($('#servicesTable tr.success span[data-type=charge]').text());
+                        $('#checkDataContainer span[data-type=dayExecutaion]').text($('#servicesTable tr.success span[data-type=dayExecutaion]').text());
+                            //$('#checkDataContainer span[data-type=dayReturn]').text($('#tariffsTable tr.success span[data-type=dayReturn]').text());
+                            result = true;
+                        //}
+                        //else {
+                        //    $('#tariffsTable').closest('.panel').addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                        //        $(this).removeClass('shake animated');
+                        //    });
+                        //    result = false;
+                        //}
+                    }
+                    return result;
+                } else {
+                    $('#customerContainer').removeClass().addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                        $(this).removeClass();
+                    });
+                    return false;
+                }
+            },
+            onStepChanged: function (event, currentIndex, priorIndex) {
+                if (currentIndex < priorIndex) {
+                    var theSteps = $('.steps ul').find('.current');
+                    $(theSteps).next('li').removeClass('done').addClass('disabled');
+                }
+            }
+        });
+    });
+
+</script>

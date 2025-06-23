@@ -1,0 +1,90 @@
+﻿@model HuntControl.Domain.Concrete.spr_smev
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<script src="~/Content/plugins/bootstrap-select/dist/js/bootstrap-select.min.js" type="text/javascript"></script>
+<script>
+
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+    });
+
+    var init = new Switchery(document.querySelector('#is_smev3'));
+
+</script>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myLargeModalLabel">Изменение сервиса СМЭВ</h4>
+        </div>
+        <div class="modal-body">
+
+            @using (Ajax.BeginForm("SubmitSmevServiceSave", "Reference", Model, new AjaxOptions { UpdateTargetId = "smevServicesTableContainer", OnSuccess = "$('#myModal').modal('hide');" }, new { @id = "EditSmevServiceForm", @class = "form-horizontal" }))
+            {
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <div class="form-group form-group-sm">
+                            <label class="col-md-4 control-label">Наименование сервиса СМЭВ</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.smev_name, new { @class = "form-control", @placeholder = "Введите наименование сервиса", @required = "required" })
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label class="col-md-4 control-label">Наименование органа власти</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.smev_provider, new { @class = "form-control", @placeholder = "Введите наименование органа власти", @required = "required" })
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label class="col-md-4 control-label">Адрес сервиса СМЭВ</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.provider_url, new { @class = "form-control", @placeholder = "Введите адрес", @required = "required" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group form-group-sm">
+                                    <label class="col-md-4 control-label">СМЭВ 3</label>
+                                    <div class="col-md-8">
+                                        @Html.CheckBoxFor(model => model.is_smev3, new { @class = "js-switch extra-small", @type = "checkbox", @data_switchery = "true", @data_plugin = "switchery", @data_color = "#5fbeaa" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label class="col-md-4 control-label">Код поставщика</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.provider_code, new { @class = "form-control", @placeholder = "Введите код", @required = "required" })
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label class="col-md-4 control-label">Наименование поставщика</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.provider_name, new { @class = "form-control", @placeholder = "Введите наименование поставщика", @required = "required" })
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label class="col-md-4 control-label">Описание сервиса</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.smev_description, new { @class = "form-control", @placeholder = "Введите Описание сервиса", @required = "required" })
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label class="col-md-4 control-label">Комментарии</label>
+                            <div class="col-md-8">
+                                @Html.TextAreaFor(model => model.commentt, new { @class = "form-control", @placeholder = "Комментарии" })
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel waves-effect waves-light" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Отмена</button>
+            <button type="submit" form="EditSmevServiceForm" class="btn btn-success waves-effect waves-light"> Сохранить <i class="fa fa-check m-l-5"></i></button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

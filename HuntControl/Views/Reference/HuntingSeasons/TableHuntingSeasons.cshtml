@@ -1,0 +1,180 @@
+﻿@model HuntControl.WebUI.Models.ReferenceViewModel
+<div class="row">
+    <div class="col-sm-10">
+        <h3 class="panel-title m-b-5">Сезоны</h3>
+    </div>
+    <div class="col-sm-2">
+        <div class="text-right">
+            @*@using (Ajax.BeginForm("PartialModalAddBank", "Reference", null, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                {
+                    <button type="submit" class="btn btn-inverse waves-effect waves-light btn-sm btn-block m-b-10"> Добавить <i class="fa fa-plus m-l-5"></i></button>
+                }*@
+        </div>
+    </div>
+</div>
+<div class="panel panel-border panel-primary">
+    <div class="panel-heading p-0">
+        <div class="input-group">
+        </div>
+    </div>
+    <hr class="m-0">
+
+    <div class="panel-body p-0 table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th class="number-row p-l-20-important">№</th>
+                    <th>Наименование</th>
+                    <th>Госпошлина</th>
+                    <th>Сбор</th>
+                    <th class="text-right p-r-20-important">
+                        Действия
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.SprSeasonList)
+                {
+                    <tr class="season-row" data-season-id="@item.id">
+                        <td class="number-row p-l-20-important">
+                            @((Model.PageInfo.CurrentPage - 1) * Model.PageInfo.ItemsPerPage + ++Model.PageInfo.NumberRow)
+                        </td>
+                        <td>
+                            <span>@Html.DisplayFor(i => item.season_name)</span><br>
+                        </td>
+                        <td class="font-13">
+                            @Html.DisplayFor(i => item.tariff_)
+                        </td>
+                        <td class="font-13">
+                            @Html.DisplayFor(i => item.charge_)
+                        </td>
+                        <td class="actions">
+                            <button type="button" class="on-default text-custom link" style="font-size: 22px;line-height: 22px;" data-tooltip-info='{"season_name": @Json.Encode(item.season_name), "tariff_": @Json.Encode(item.tariff_), "charge_": @Json.Encode(item.charge_), "employees_fio_modify": @Json.Encode(item.employees_fio_modify), "date_modify": @Json.Encode(item.date_modify), "commentt_modify": @Json.Encode(item.commentt_modify)}'>
+                                <i class="ion-ios7-information-outline"></i>
+                            </button>
+                            @if (User.IsInRole("superadmin") || User.IsInRole("admin"))
+                            {
+                                using (Ajax.BeginForm("SeasonAnimals", "Reference", new { seasonId = item.id }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                                {
+                                    <button class="on-default edit-row link" data-placement="top" data-toggle="tooltip" data-original-title="Животные">
+                                        <i class="ion-ios7-paw"></i>
+                                        <span class="badge badge-xs badge-danger">@(item.spr_season_animal.Any() ? (object)item.spr_season_animal.Count : null)</span>
+                                    </button>
+                                }
+                                using (Ajax.BeginForm("EditSeason", "Reference", new { seasonId = item.id }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                                {
+                                    <button class="on-default edit-row link"><i class="ion-edit"></i></button>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="dataTables_info" id="datatable_info" role="status" aria-live="polite">Показаны @((Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage > Model.PageInfo.TotalItems) ? Model.PageInfo.TotalItems : Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage) из @Model.PageInfo.TotalItems записей</div>
+            </div>
+            <div class="col-sm-6">
+                <div class="dataTables_paginate paging_simple_numbers" id="datatable-editable_paginate">
+                    @Html.PageLinks(Model.PageInfo, x => Ajax.ActionLink(x.NameLink, "TableHuntingSeasons", "Reference", new { page = x.CurrentPage, search = ViewBag.Serach }, new AjaxOptions { UpdateTargetId = "seasonsContainer" }))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip({ trigger: 'hover' });
+        $('button[data-tooltip-info]').tooltip({
+            title: function () {
+                var tooltipInfo = $(this).data('tooltipInfo');
+                console.log(tooltipInfo);
+                return "<div class='text-left'><strong>Наименование</strong>: " + tooltipInfo['season_name'] + "</br>" +
+                    "<strong>Госпошлина</strong>: " + tooltipInfo['tariff_'] + "</br>" +
+                    "<strong>Сбор</strong>: " + tooltipInfo['charge_'] + "</br>" +
+                    "<strong>Дата избавления</strong>: " + tooltipInfo['date_modify'] + "</br>" +
+                    "<hr class='m-t-5 m-b-5'>" +
+                    "<strong>Добавил</strong>: " + tooltipInfo['employees_fio'] + "</br>" +
+                    "<hr class='m-t-5 m-b-5'>" +
+                    "<strong>Изменил</strong>: " + tooltipInfo['employees_fio_modifi'] + "</br>" +
+                    (tooltipInfo['is_remove'] ?
+                            "<hr class='m-t-5 m-b-5'>" +
+                            "<strong>Удалил</strong>: " + tooltipInfo['employees_fio_remove'] + "</br>" +
+                            "<strong>Причина удаления</strong>: " + tooltipInfo['commentt_remove'] + "</br>" +
+                            "<strong>Дата удаления</strong>: " + tooltipInfo['date_remove'] + "</br>" : "") +
+                    "</div>";
+            },
+            html: true,
+            placement: "left"
+        });
+    });
+    $('#searchTextBanks').change(function () {
+        $.ajax({
+            url: '@Url.Action("PartialTableBanks", "Reference")',
+            type: 'Post',
+            data: { search: $(this).val(), isRemove: '@ViewBag.IsRemove' },
+            success: function (data) {
+                $('#banksContainer').html(data);
+            }
+        });
+    });
+    $('#showRemoves').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableBanks", "Reference")',
+            data: { search: $('#searchTextBanks').val(), isRemove: '@(!ViewBag.IsRemove)' },
+            success: function (data) {
+                $('#banksContainer').html(data);
+            }
+        });
+    });
+
+    $('#banksContainer table td button.recovery-row').click(function () {
+        var bankId = $(this).closest('tr').data('bankId');
+        var paramObject = {
+            url: '@Url.Action("SubmitBankRecovery", "Reference")',
+            params: { bankId: bankId },
+            onSuccess: function (data) {
+                $('#banksContainer').html(data);
+            }
+        }
+        removeRecovery(paramObject);
+    });
+
+    $('#banksContainer table td button.remove-row').click(function () {
+        var bankId = $(this).closest('tr').data('bankId');
+        var paramObject = {
+            url: '@Url.Action("SubmitBankDelete", "Reference")',
+            params: { bankId: bankId },
+            onSuccess: function (data) {
+                $('#banksContainer').html(data);
+            }
+        }
+        removeWithComment(paramObject);
+    });
+    // Обработчик клика по строке сезона
+    $('#seasonsContainer').on('click', '.season-row', function (e) {
+        if ($(e.target).closest('button, a, .actions').length === 0) {
+            var seasonId = $(this).data('season-id');
+            loadSeasonOpens(seasonId);
+        }
+    });
+
+    // Загрузка истории открытий сезона
+    function loadSeasonOpens(seasonId) {
+    $.ajax({
+        url: '@Url.Action("TableSeasonOpens", "Reference")',
+        type: 'GET',
+        data: { seasonId: seasonId },
+        beforeSend: function() {
+            $('#seasonOpensContainer').html('<div class="text-center"><i class="fa fa-spinner fa-spin fa-3x"></i></div>');
+        },
+        success: function(data) {
+            $('#seasonOpensContainer').html(data);
+        },
+    });
+}
+</script>

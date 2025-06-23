@@ -1,0 +1,57 @@
+﻿@model IEnumerable<HuntControl.Domain.Concrete.data_system_errors>
+@{
+    ViewBag.Title = "Errors";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row m-t-15 m-b-15">
+    <div class="col-sm-12">
+        @Html.MvcSiteMap().SiteMapPath()
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-body">
+        <div class="card-box p-0 m-t-20 m-b-20">
+        <div class="input-group">
+            <span class="input-group-btn">
+                <button type="button" class="btn waves-effect waves-light btn-link p-l-20-important"><i class="fa fa-search"></i></button>
+            </span>
+            <input type="text" id="searchTextErrors" class="text-dark no-border-input" placeholder="Поиск..." /> <ul class="typeahead dropdown-menu"></ul><ul class="typeahead dropdown-menu"></ul>
+        </div>
+        <table id="datatable" class="table table-striped" style="margin-top: 0 !important">
+            <thead>
+                <tr class="text">
+                    <th class="number-row">№</th>
+                    <th>@Html.DisplayNameFor(model => model.error_date)</th>
+                    <th>@Html.DisplayNameFor(model => model.error_message)</th>
+                    <th class="p-r-20-important">@Html.DisplayNameFor(model => model.employees_fio)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int index = 1;}
+                @foreach (var item in Model)
+                {
+                    <tr class="text">
+                        <td class="number-row"> @(index++)</td>
+                        <td class="p-l-20-important">@item.error_date.ToString("yyyy.MM.dd hh:mm:ss")</td>
+                        <td>@item.error_message</td>                        
+                        <td class="p-r-20-important">@item.employees_fio</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+            </div>
+    </div>
+</div>
+<script src="~/Content/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/Content/plugins/datatables/dataTables.bootstrap.js"></script>
+<script>
+        $(document).ready(function () {
+            var oTable = $('#datatable').DataTable({ dom: 't<"row m-t-10 p-l-20-important p-b-10 m-r-15"<"col-sm-4"i><"col-sm-8"p>>' });
+            $('#searchTextErrors').keyup(function () {
+                oTable.search($(this).val()).draw();
+            });
+        });
+</script>
+

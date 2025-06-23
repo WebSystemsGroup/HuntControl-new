@@ -1,0 +1,75 @@
+﻿@using HuntControl.WebUI.Models
+@model HuntControl.WebUI.Models.CaseDetailViewModel
+
+@if (Model.DataServicesCustomers.Any())
+{
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.DataServicesCustomers.First().customer_fio)</th>
+                    <th>@Html.DisplayNameFor(model => model.DataServicesCustomers.First().spr_services_sub_tr_id)</th>
+                    <th class="text-right p-r-20-important">
+                        Действия
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.DataServicesCustomers)
+                {
+                    <tr data-customer-id="@item.id">
+                        <td class="vertical-middle">
+                            <span class="individual-name">@Html.DisplayFor(i => item.customer_fio)</span><br>
+                            <span class="text-muted font-12"><i class="fa fa-user m-r-5"></i>@(item.customer_type == 1 ? "Заявитель" : "Доверитель")</span><br>
+                            @if (item.customer_tel1 != null)
+                            {
+                                <span class="text-muted font-12"><i class="md md-phone vertical-middle m-r-5"></i>@item.customer_tel1</span><br>
+                            }
+                            @if (item.customer_tel2 != null)
+                            {
+                                <span class="text-muted font-12"><i class="md md-phone vertical-middle m-r-5"></i>@item.customer_tel2</span><br>
+                            }
+                            @if (item.customer_email != null)
+                            {
+                                <span class="text-muted font-12"><i class="md md-email vertical-middle m-r-5"></i>@item.customer_email</span><br>
+                            }
+
+                        </td>
+                        <td class="vertical-middle">
+                            <span class="text-muted">@Html.DisplayFor(i => item.spr_services_sub_type_recipient.type_name)</span><br>
+                            <span class="text-muted font-12">@Html.DisplayFor(i => item.customer_director_job)</span><br>
+                        </td>
+                        <td class="actions vertical-middle">
+                            @if (User.IsInRole("superadmin"))
+                            {
+                                using (Ajax.BeginForm("PartialModalEditCustomer", "Case", new { customerId = item.id }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                                {
+                                    <button class="on-default edit-row link"><span>@item.id</span> <i class="ion-edit"></i></button>
+                                    
+                                }
+                                if (item.customer_type != 1)
+                                {
+                                    <button class="on-default remove-row link"><i class="ion-trash-b"></i></button>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">
+        <span style="color:#00545c;"><strong><i class="icon-info"></i></strong> Нет заявителей.</span>
+    </div>
+}
+
+<script>
+    $('#customersPillContainer table td button.remove-row').click(function () {
+        var customerId = $(this).closest('tr').data('customerId');
+        removeData('@Url.Action("SubmitCustomerDelete", "Case")', { customerId: customerId }, function (data) { $('#customersPillContainer').html(data); });
+    });
+</script>

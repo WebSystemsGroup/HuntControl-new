@@ -1,0 +1,59 @@
+﻿@model HuntControl.Domain.Concrete.spr_services_sub_customer
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<script src="~/Content/plugins/bootstrap-select/dist/js/bootstrap-select.min.js" type="text/javascript"></script>
+<script>
+
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+    });
+
+</script>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myLargeModalLabel">Добавление заявителя</h4>
+        </div>
+        <div class="modal-body">
+
+            @using (Ajax.BeginForm("SubmitSubServiceCustomerSave", "Reference", Model, new AjaxOptions { UpdateTargetId = "customersPillContainer", OnSuccess = "$('#myModal').modal('hide');" }, new { @id = "AddSubServiceCustomerForm", @class = "form-horizontal" }))
+            {
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group form-group-sm">
+                            <label class="col-md-4 control-label">Тип получателя</label>
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.spr_services_sub_type_recipient_id, ViewBag.TypeRecipients as SelectList, "Выберите тип получателя", new Dictionary<string, object> { { "class", "selectpicker" }, { "data-style", "btn-white btn-sm" } })
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label class="col-md-4 control-label">Перечень представителей</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.representative_list, new {@class = "form-control", @placeholder = "Введите перечень"})
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label class="col-md-4 control-label">Документ подтверждающий право представителя</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.representative_document, new {@class = "form-control", @placeholder = "Введите значение"})
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label class="col-md-4 control-label">Требование к документу</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.representative_specification, new {@class = "form-control", @placeholder = "Введите требование"})
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel waves-effect waves-light" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Отмена</button>
+            <button type="submit" form="AddSubServiceCustomerForm" class="btn btn-success waves-effect waves-light"> Сохранить <i class="fa fa-check m-l-5"></i></button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

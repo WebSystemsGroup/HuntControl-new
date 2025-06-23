@@ -1,0 +1,33 @@
+﻿@model HuntControl.WebUI.Models.StatisticsViewModel
+
+<canvas id="hunticLicForGroupChart" width="400" height="100"></canvas>
+
+<script src="~/Content/plugins/Chart.js/Chart.min.js"></script>
+<script>
+
+    var ctx = document.getElementById('hunticLicForGroupChart').getContext('2d');
+     var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'bar',
+
+            // The data for our dataset
+            data: {
+                labels: ["Болотно-луговая дичь", "Боровая дичь", "Водоплавающая дичь", "Горная дичь", "Иная дичь", "Копытные животные", "Медведи", "Пернатая дичь", "Пушные животные", "Степная и полевая дичь"],
+                datasets: [{
+                    label: "Разрешение по видам",
+                    backgroundColor: 'rgb(2, 99, 178)',
+                    borderColor: 'rgb(2, 99, 178)',
+                    data: @Json.Encode(Model.MainCountIssueGroupTypeList.Select(s => s.out_count).ToArray())
+                }]
+            },
+
+            // Configuration options go here
+            options: {
+                title: {
+                    display: true,
+                    text: 'Разрешения на охоту по видам групп'
+                }
+            }
+        });
+</script>
+

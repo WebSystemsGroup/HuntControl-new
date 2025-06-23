@@ -1,0 +1,212 @@
+﻿<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<script>
+    var infoWindow;
+    var map;
+    var markers = [];
+    var form = $("#AddAnimalLocationForm");
+
+    $("#myModal").on("shown.bs.modal", function () {
+        google.maps.event.trigger(map, "resize");
+    });
+
+    $(document).on('change', 'input[data-type="latitude"]', function () {
+        var lat = $(this).val().replace(',', '.');
+        var lng = $('input[name="animalLocations[' + $(this).data('index') + '].longitude"]').val().replace(',', '.');
+        if (lat > 0 && lng > 0) {
+            markerCurrentChange($(this).data('index'), lat, lng);
+        }
+    });
+
+    $(document).on('change', 'input[data-type="longitude"]', function () {
+        var lng = $(this).val().replace(',', '.');
+        var lat = $('input[name="animalLocations[' + $(this).data('index') + '].latitude"]').val().replace(',', '.');
+        if (lat > 0 && lng > 0) {
+            markerCurrentChange($(this).data('index'), lat, lng);
+        }
+    });
+
+    $(document).on('click', '#removeCoordBtn', function () {
+        var target = $(this).closest('tr');
+        var index = $(this).data('index');
+        target.hide(220, function () {
+            target.remove();
+            markers[index].setMap(null);
+            delete markers[index];
+            markersCurrentInit();
+        });
+    });
+
+    function markerCurrentChange(index, lat, lng) {
+        var latLng = new google.maps.LatLng(lat, lng);
+        if (markers[index] != null) {
+            markers[index].setPosition(latLng);
+        } else {
+            markers[index] = new google.maps.Marker({
+                position: latLng,
+                label: (index + 1).toString(),
+                draggable: true,
+                animation: google.maps.Animation.DROP,
+                map: map
+            });
+            markers[index].addListener('dragend', markersCurrentInit);
+        }
+    }
+
+    $(document).ready(function () {
+        GetMap();
+    });
+
+
+    // Функция загрузки
+    function GetMap() {
+
+        var animalId = '@ViewBag.AnimalId';
+
+        google.maps.visualRefresh = true;
+        // установка основных координат
+        var latLngCenter = new google.maps.LatLng(42.913562499716015, 47.511546623535196);
+
+        // Установка общих параметров отображения карты, как масштаб, центральная точка и тип карты
+        var mapOptions = {
+            zoom: 10,
+            minZoom: 7,
+            center: latLngCenter,
+            mapTypeId: google.maps.MapTypeId.G_NORMAL_MAP,
+            streetViewControl: false
+        };
+
+
+        // Встраиваем гугл-карты в элемент на странице и получаем объект карты
+        map = new google.maps.Map(document.getElementById("canvas"), mapOptions);
+
+        // Получаем данные
+        $.ajax({
+            url: '@Url.Action("GetAnimalCoords", "Reference")',
+            async: false,
+            data: { animalId: animalId},
+            success: function (data) {
+                // Проходим по всем данным и устанавливаем для них маркеры
+                $.each(data, function (i, item) {
+                    if (item.id === animalId) {
+                        if (item.coords.length > 0) {
+                            $.each(item.coords, function(index, coord) {
+                                var latLng = new google.maps.LatLng(coord.lat, coord.lng);
+                                markers[index] = new google.maps.Marker({
+                                    draggable: true,
+                                    position: latLng,
+                                    label: (index + 1).toString(),
+                                    map: map
+                                });
+                            });
+                            map.setCenter(new google.maps.LatLng(item.coords[0].lat + 0.08, item.coords[0].lng - 0.08));
+                            map.setZoom(12);
+                        }
+                    } else {
+                        if (item.coords.length > 0) {
+                            $.each(item.coords, function (index, coord) {
+                                var latLng = new google.maps.LatLng(coord.lat, coord.lng);
+                                var markerOther = new google.maps.Marker({
+                                    position: latLng,
+                                    map: map,
+                                    icon: {
+                                        url: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+                                    }
+                                });
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
+        if (markers.length > 0) {
+            markers.forEach(function (e, i, arr) {
+                e.addListener('dragend', markersCurrentInit);
+            });
+            markersCurrentInit();
+        }
+
+
+        $('#addCoordBtn').click(function () {
+            var index = markers != null ? markers.length : 0;
+            markerCurrentChange(index, map.getCenter().lat(), map.getCenter().lng());
+            markersCurrentInit();
+        });
+
+    }
+
+    function markersCurrentInit() {
+        var latLngInput = '';
+        var inputIndex = 0;
+        markers.forEach(function (e, i, arr) {
+            var lat = e.getPosition().lat();
+            var lng = e.getPosition().lng();
+            latLngInput += insertLatLngField(i, lat, lng, inputIndex++);
+        });
+        $('#animalCoords>table>tbody').html(latLngInput);
+        form.removeData('validator');
+        form.removeData('unobtrusiveValidation');
+        $.validator.unobtrusive.parse(form);
+    }
+
+    function insertLatLngField(index, lat, lng, inputIndex) {
+        return '<tr>' +
+                '<td class="p-l-r-10 p-r-0 p-b-10 text-center font-12 text-muted">' +
+                (index + 1) +
+                '</td>' +
+                '<td class="p-l-r-10 p-b-10">' +
+                '<input class="form-control input-sm p-l-10" data-type="latitude" data-val="true" data-val-number="Значением поля Площадь должно быть число." data-index="' + index + '" name="animalLocations[' + inputIndex + '].latitude" placeholder="Широта" type="text" value="' + lat + '">' +
+                '</td>' +
+                '<td class="p-l-r-10 p-b-10 p-l-0">' +
+                '<input class="form-control input-sm" data-type="longitude" data-val="true" data-val-number="Значением поля Площадь должно быть число." data-index="' + index + '" name="animalLocations[' + inputIndex + '].longitude" placeholder="Долгота" type="text" value="' + lng + '">' +
+                '</td>' +
+                '<td class="p-b-10 p-l-r-10 p-l-0 ">' +
+                    '<button id="removeCoordBtn" type="button" class="btn btn-link p-0 text-danger" data-index="' + index + '"><i class="ion-android-close font-12"></i></button>' +
+                '</td>' +
+            '</tr>';
+    }
+
+
+</script>
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myLargeModalLabel">Места обитания животных</h4>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-7">
+                    <div id="canvas" style="height: 600px;"></div>
+                </div>
+                <div class="col-md-5">
+                    @using (Ajax.BeginForm("SubmitAnimalLocationSave", "Reference", new { animalId = ViewBag.AnimalId }, new AjaxOptions { OnSuccess = "$('#myModal').modal('hide');successAdd();" }, new { @id = "AddAnimalLocationForm", @class = "form-horizontal" }))
+                    {
+                        <div class="card-box p-0">
+                            <div class="row p-l-r-10 p-t-10">
+                                <div class="col-xs-8">
+                                    <span>Координаты</span>
+                                </div>
+                                <div class="col-xs-4 text-right">
+                                    <button id="addCoordBtn" type="button" class="btn waves-effect waves-light btn-link p-0"><i class="ion-plus-round font-18"></i></button>
+                                </div>
+                            </div>
+                            <hr class="m-t-5 m-b-0" />
+                            <div id="animalCoords" style="overflow: auto;height: 560px;padding-top: 10px;padding-bottom: 10px;">
+                                <table style="width: 100%;">
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel waves-effect waves-light btn-block-xs" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Отмена</button>
+            <button type="submit" form="AddAnimalLocationForm" class="btn btn-success waves-effect waves-light btn-block-xs"> Сохранить <i class="fa fa-check m-l-5"></i></button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

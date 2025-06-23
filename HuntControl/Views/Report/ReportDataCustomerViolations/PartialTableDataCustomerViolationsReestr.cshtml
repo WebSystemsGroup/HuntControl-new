@@ -1,0 +1,72 @@
+﻿@model IEnumerable<HuntControl.Domain.Concrete.ReportDataCustomerViolationsReestrResult>
+@if (Model.Any())
+{
+    <div class="card-box p-0 m-t-20 m-b-20">
+        <div class="input-group">
+            <span class="input-group-btn">
+                <button type="button" class="btn waves-effect waves-light btn-link p-l-20-important"><i class="fa fa-search"></i></button>
+            </span>
+            <input type="text" id="searchTextReports" class="text-dark no-border-input" placeholder="Поиск..."><ul class="typeahead dropdown-menu"></ul><ul class="typeahead dropdown-menu"></ul>
+        </div>
+        <table id="datatable" class="table table-striped" style="margin-top: 0 !important">
+            <thead>
+                <tr class="text">
+                    <th class="p-l-20-important">@Html.DisplayNameFor(model => model.out_pr_number_case)</th>
+                    <th>@Html.DisplayNameFor(model => model.out_pr_date_in_ogm)</th>
+                    <th>@Html.DisplayNameFor(model => model.out_pr_number_protocol)</th>
+                    <th>@Html.DisplayNameFor(model => model.out_pr_date_create)</th>
+                    <th>@Html.DisplayNameFor(model => model.out_pr_customer_name)</th>
+                    <th>@Html.DisplayNameFor(model => model.out_violations_name)</th>
+                    <th class="p-r-20-important"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="p-l-20-important">@Html.DisplayFor(model => item.out_pr_number_case)</td>
+                        <td>@item.out_pr_date_in_ogm.ToString().Replace(" 0:00:00", "")</td>
+                        <td>@Html.DisplayFor(model => item.out_pr_number_protocol)</td>
+                        <td>@item.out_pr_date_create.ToString().Replace(" 0:00:00", "")</td>
+                        <td>@Html.DisplayFor(model => item.out_pr_customer_name)</td>
+                        <td><span data-discription="@item.out_violations_part_text">@Html.DisplayFor(model => item.out_violations_name)</span></td>
+                        <td class="p-r-20-important">
+                            <button class="btn btn-link btn-sm" onclick="window.open('@Url.Action("Main","ApplicantPage")#@item.out_data_customer_id')"> ФЛ <i class="ion-chevron-right m-l-5"></i></button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <script src="~/Content/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Content/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script>
+        $(document).ready(function () {
+            var oTable = $('#datatable').DataTable({ dom: 't<"row m-t-10 p-l-20-important p-b-10 m-r-15"<"col-sm-4"i><"col-sm-8"p>>' });
+            $('#searchTextReports').keyup(function () {
+                oTable.search($(this).val()).draw();
+            });
+        });
+    </script>
+}
+else
+{
+    <div class="alert alert-warning">
+        <span><i class="icon-info"></i> Нет данных.</span>
+    </div>
+}
+<script>
+    $(document).ready(function () {
+         $("#report_count").text(@Model.Count());
+    });
+    $(function () {
+        $('[data-discription]').tooltip({
+            title: function () {
+                var tooltipInfo = $(this).data('discription');
+                return "<div class='text-left'>" + tooltipInfo + "</br> </div > ";
+            },
+            html: true,
+            placement: "left"
+        });
+    });
+</script>

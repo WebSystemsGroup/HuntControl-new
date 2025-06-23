@@ -1,0 +1,149 @@
+﻿@model HuntControl.Domain.Concrete.spr_season
+<div class="modal-dialog modal-lg">
+
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myLargeModalLabel">Мастер добавления сезона охоты</h4>
+            </div>
+            <div class="modal-body app-content">
+
+                <div class="wizard-circle wizard_add_accounting" id="wizardAddSeason">
+                    <!-- Step 1 -->
+                    <h6>Данные</h6>
+                    <fieldset class="p-0">
+                        <div id="seasonWizardContainer">
+                            <form id="WizardSeasonForm">
+                                <div class="form-group form-group-sm">
+                                    <div class="row">
+                                        @Html.Label("Сезон", new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(model => model.id, ViewBag.AnimalGroupTypes as SelectList, "Выберите сезон", new Dictionary<string, object> { { "class", "form-control select2 input-sm" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-sm">
+                                    <div class="row">
+                                        @Html.Label("Дата", new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                        <div class="col-md-5">
+                                            <div class="input-daterange input-group" id="date-range">
+                                                @Html.TextBox("date_start", DateTime.Now, "{0:dd.MM.yyyy}", new { @class = "form-control input-sm" })
+                                                <span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
+                                                @Html.TextBox("date_stop", DateTime.Now.AddMonths(1), "{0:dd.MM.yyyy}", new { @class = "form-control input-sm" })
+
+
+                                            </div>
+
+
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-sm">
+                                    <div class="row">
+                                        @Html.Label("Отчетный год", new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                        <div class="col-md-5">
+                                            <div class="input-daterange input-group">
+                                                @Html.TextBox("serviceYear", DateTime.Now.Year, new { @class = "form-control input-sm" })
+                                                <span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </fieldset>
+
+                    <!-- Step 2 -->
+                    <h6>Животные</h6>
+                    <fieldset class="p-0">
+                        <div id="partialAddSeasonContayner" class="hunting_farms_container">
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+
+
+
+
+    <script src="~/Content/plugins/select2/js/select2.full.min.js"></script>
+    <script>
+    //$("#WizardSeasonForm").validate().settings.ignore = ".bs-select-hidden";
+        $(function () {
+            $("#wizardAddSeason").steps({
+                headerTag: "h6",
+                bodyTag: "fieldset",
+                transitionEffect: "fade",
+                titleTemplate: '<span class="step"></span> #title#',
+                labels: { previous: "Назад", next: "Далее", finish: "Сохранить" },
+                onStepChanging: function (event, currentIndex, newIndex) {
+                    var result = true;
+                    var wizardSeasonForm = $('#WizardSeasonForm');
+                    $.validator.unobtrusive.parse(document);
+
+                    if (newIndex === 1 && currentIndex === 0) {
+                        if (wizardSeasonForm.valid()) {
+                            $.ajax({
+                                type: 'POST',
+                                async: false,
+                                url: '@Url.Action("PartialWizardAddHuntSeason", "Season")',
+                                data: { idSeason: $('#id').val(), year: $('#serviceYear').val(), dStart: $('#date_start').val(), dEnd: $('#date_stop').val() },
+                                success: function (data) {
+                                    $("#partialAddSeasonContayner").html(data);
+                                    result = true;
+                                },
+                                error: function () {
+                                    result = false;
+                                }
+
+                            });
+
+                        }
+                    }
+                    return result;
+                },
+                onStepChanged: function (event, currentIndex, priorIndex) {
+                    if (currentIndex < priorIndex) {
+                        var theSteps = $('.steps ul').find('.current');
+                        $(theSteps).next('li').removeClass('done').addClass('disabled');
+                    }
+                },
+                onFinishing: function () {
+
+                    var dataHuntAnimals = [];
+                    $("#tblSearch input[type='checkbox']:checked").each(function (i, e) {
+                        var thisTr = $(this).closest("tr");
+                        var txtNormDay = thisTr.find("#txtNormDay");
+                        var txtNormSeason = thisTr.find("#txtNormSeason");
+                        var idfurm = thisTr.find("#idfurm");
+                        var idanimal = thisTr.find("#idanimal");
+                        var idaccounting = thisTr.find("#idaccounting");
+                        dataHuntAnimals[i] = [txtNormDay.val(), txtNormSeason.val(), idfurm.val(), idanimal.val(), idaccounting.val()];
+                        i++;
+                    });
+                    console.log(dataHuntAnimals);
+                            $.ajax({
+                                method: "POST",
+                                url: "@Url.Action("AddHuntFurmSeason", "Season")",
+                                data: { minearray: dataHuntAnimals, idSeason: $("#idseason").val(), Year: $("#year").val(), datStart: $("#datestart").val(), datEnd: $("#dateend").val() },
+
+                    });
+                    $('#myModal').modal("hide");
+                },
+
+            });
+        });
+
+        $('#seasonWizardContainer #date-range').datepicker({ format: 'dd.mm.yyyy', toggleActive: true, autoclose: true, language: 'ru', orientation: 'bottom right' });
+        $('#seasonWizardContainer #serviceYear').datepicker({ format: 'yyyy', toggleActive: true, autoclose: true, language: 'ru', orientation: 'bottom right', minViewMode: 'years' });
+    $(".select2").select2();
+    $("select").on("select2:close",
+        function(e) {
+            $(this).valid();
+        });
+    </script>

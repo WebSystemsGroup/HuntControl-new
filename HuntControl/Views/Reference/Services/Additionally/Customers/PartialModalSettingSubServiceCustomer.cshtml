@@ -1,0 +1,89 @@
+﻿@model HuntControl.Domain.Concrete.spr_services_sub_customer
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myLargeModalLabel">Тарифы и документы заявителя</h4>
+        </div>
+        <div class="modal-body">
+            <ul class="nav nav-pills m-b-15">
+                <li class="active">
+                    <a href="#tariffsPillContainer" data-toggle="tab" aria-expanded="true">Тарифы</a>
+                </li>
+                <li class="">
+                    <a href="#customerDocumentsPillContainer" data-toggle="tab" aria-expanded="false">Документы</a>
+                </li>
+            </ul>
+
+            <div class="tab-content br-n pn">
+                <div id="tariffsPillContainer" class="tab-pane active">
+                    <div id="collapseEditCustomerTariff" class="panel-collapse collapse" aria-expanded="false">
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-10 col-xs-6">
+                            <h3 class="panel-title">Список тарифов</h3>
+                        </div>
+                        <div class="col-sm-2 col-xs-6 m-b-10">
+                            <div class="text-right">
+                                <button type="button" class="btn btn-inverse waves-effect waves-light btn-sm" id="tariffAddBtn"> Добавить <i class="fa fa-plus m-l-5"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="customerTariffsContainer">
+                        @Html.Action("PartialTableCustomerTariffs", "Reference", new {subServiceCustomerId = ViewBag.SubServiceCustomerId})
+                    </div>
+                </div>
+                <div id="customerDocumentsPillContainer" class="tab-pane">
+                    <div id="collapseEditCustomerDocument" class="panel-collapse collapse" aria-expanded="false">
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-10 col-xs-6">
+                            <h3 class="panel-title">Список документов</h3>
+                        </div>
+                        <div class="col-sm-2 col-xs-6 m-b-10">
+                            <div class="text-right">
+                                <button type="button" class="btn btn-inverse waves-effect waves-light btn-sm" id="documentAddBtn"> Добавить <i class="fa fa-plus m-l-5"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="customerDocumentsContainer">
+                        @Html.Action("PartialTableCustomerDocuments", "Reference", new {subServiceCustomerId = ViewBag.SubServiceCustomerId})
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel waves-effect waves-light" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Закрыть</button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+<script>
+    $('button#tariffAddBtn').on('click', function () {
+        $(this).hide();
+        $.ajax({
+            type: 'POST',
+            async: false,
+            url: 'PartialAddCustomerTariff',
+            data: { subServiceCustomerId: '@ViewBag.SubServiceCustomerId' },
+            success: function (data) {
+                $('#collapseEditCustomerTariff').html(data);
+            }
+        });
+        $('#collapseEditCustomerTariff').collapse('show');
+    });
+
+    $('button#documentAddBtn').on('click', function () {
+        $(this).hide();
+        $.ajax({
+            type: 'POST',
+            async: false,
+            url: 'PartialAddCustomerDocument',
+            data: { subServiceCustomerId: '@ViewBag.SubServiceCustomerId' },
+            success: function (data) {
+                $('#collapseEditCustomerDocument').html(data);
+            }
+        });
+        $('#collapseEditCustomerDocument').collapse('show');
+    });
+</script>

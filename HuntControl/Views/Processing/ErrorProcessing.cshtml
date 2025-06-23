@@ -1,0 +1,661 @@
+﻿
+@{
+    ViewBag.Title = "ErrorProcessing";
+}
+@Html.MvcSiteMap().SiteMapPath()
+
+<style>
+    #listOfComplaints td {
+        vertical-align: middle;
+    }
+
+    #listOfComplaints tr td {
+        padding: 15px 9px;
+    }
+
+    #listOfComplaints tr:first-child td {
+        border-top: 0px;
+    }
+
+    .container {
+        width: 100%;
+    }
+
+    .mb-0 {
+        margin-bottom: 0px;
+    }
+
+    .error-processing-page .mCSB_container {
+        margin-right: 0px;
+    }
+
+    .table > thead > tr > th {
+        color: #343535;
+    }
+
+    .white-space-nowrap {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow-y: hidden;
+    } 
+    .content-center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .w-70 {
+        width: 70%;
+    }
+    .w-30 {
+        width: 30%;
+    }
+    .d-flex {
+        display: flex;
+    }
+    .ml-1 {
+        margin-left: 5px;
+    }
+    .info-messadge {
+        text-align: center;
+        display: block;
+        margin: 0 auto;
+        width: 100%;
+        margin-top: 70%;
+    }
+    .fs-12 {
+        font-size: 13px;
+    }
+    .ditails-text-title {
+        color: #9c9c9c;
+    }
+    .ditails-text {
+        font-size: 15px;
+        display: flex;
+        color: #4e5052;
+        padding-left: 5px;
+    }
+    .mb-1 {
+        margin-bottom: 5px !important;
+    }
+    .mt-2 {
+        margin-top: 10px;
+    }
+    .ditails-info {
+        overflow-y: auto;
+        padding: 5px 10px;
+        position: relative;
+    }
+    .justify-content-between {
+        justify-content: space-between;
+    }
+    .align-items-center {
+        align-items: center;
+    }
+    .d-none {
+        display: none;
+    }
+    .ditails-info .download-btn {
+        font-size: 30px;
+        padding: 5px 20px;
+        color: #333333;  
+        width: 150px;
+    }
+    .ditails-info .download-btn .download-btn-content {
+        display: flex;
+        line-height: 13px;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .ditails-info .download-btn .download-btn-content span {
+        display: block;
+        font-size: 12px;
+        white-space: pre-wrap;
+        color: #333333;
+    }
+    .position-relative {
+        position: relative;
+    }
+    .btn-next-stage {
+        position: absolute;
+        width: 100%;
+        padding: 10px 20px;
+        left: 0;
+        bottom: 0;
+    }
+    .modal-body .custom-file-input {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        height: calc(2.25rem + 2px);
+        margin: 0;
+        opacity: 0;
+    }
+    .modal-body .custom-file {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        height: 32px;
+        margin-bottom: 15px;
+    }
+    .modal-body .custom-file-label::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 3;
+        display: block;
+        height: 29px;
+        padding: .375rem .75rem;
+        line-height: 1.5;
+        color: #495057;
+        content: "Просматривать";
+        background-color: #e9ecef;
+        border-left: 1px solid #ced4da;
+        border-radius: 0 .25rem .25rem 0;
+    }
+    .modal-body .custom-file-label {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 1;
+        height: 31px;
+        padding: .375rem .75rem;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+    }
+    .activeTr {
+        background-color: #efefef;
+    }
+    .justify-content-center {
+        justify-content: center;
+    }
+    .pl-2 {
+        padding-left: 10px;
+    }
+    .align-items-center {
+        align-items: center;
+    }
+    #stages-filter {
+        display: flex;
+        justify-content: center;
+        align-items: center;  
+    }
+    .sort-date {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+    .sort-date i {
+        cursor: pointer;
+        color: #b1b2b3;
+    }
+    .stages-filter {
+        cursor: pointer;
+        color: #b1b2b3;
+        height: 17px;
+    }
+    .active-stages-filter {
+        color: #343535 !important;
+    }
+    .active-sort-date {
+        color: #343535;
+    }
+    .stagesTh { 
+        position: relative
+    }
+    .filter-list-error {
+        display: none;
+        position: absolute;
+        left: 90px;
+        bottom: -115px;
+        z-index: 1000;
+    }
+    .filter-list-error ul {
+        -webkit-user-select: none;
+        padding: 10px;
+        padding-bottom: 5px;
+        list-style: none;
+        margin: 0;
+        background-color: #fff;
+        border-radius: 5px;
+        border: 1px solid #eee;
+        box-shadow: 0px 0px 5px 2px #00000059;
+    }
+    .filter-list-error ul li .form-check {
+        margin-bottom: 5px;
+        display: flex;
+        justify-content: space-between;
+        width: 195px;
+        align-items: center;
+        cursor: pointer;
+    }
+    .filter-list-error ul li .form-check label {
+        margin: 0px;
+        cursor: pointer;
+    }
+    .filter-list-error ul li input {
+        margin: 0;
+    }
+    .active-filter-list-error {
+        display: block;
+    }
+</style>
+
+<div class="d-flex" id="error-processing">
+    <div class="card-box bg-white error-processing-page w-70">
+        <h3>Список жалоб</h3>
+        <hr />
+        <table class="table mb-0">
+            <colgroup>
+                <col style="width: 5%" />
+                <col style="width: 12%" />
+                <col style="width: 40%" />
+                <col style="width: 15%" />
+                <col style="width: 15%" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>№</th>
+                    <th class="text-center">
+                        <div class="sort-date">
+                            Дата
+                            <i class="pl-2 ti-arrows-vertical" id="sort-date" data-sort="defaut"></i>
+                        </div>
+                    </th>
+                    <th>Текст жалобы</th>
+                    <th>Заявитель</th> 
+                    <th class="stagesTh"> 
+                        <div id="stages-filter">
+                            Статус
+                            <i class="pl-2 ti-filter stages-filter"></i>
+                            <div class="filter-list-error">
+                                <ul>
+                                    <li>
+                                        <div class="form-group form-check">
+                                            <label class="form-check-label" for="stages1">
+                                                <span class="label label-danger">Ожидает обработки</span>
+                                            </label>
+                                            <input type="checkbox" checked class="js-switch extra-small" data-switchery="true" data-plugin="switchery" data-color="#5d9cec" id="stages1" onchange="getAllAppeals()">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="form-group form-check">
+                                            <label class="form-check-label" for="stages2">
+                                                <span class="label label-primary">В обработке</span>
+                                            </label>
+                                            <input type="checkbox" checked class="js-switch extra-small" data-switchery="true" data-plugin="switchery" data-color="#5d9cec" id="stages2" onchange="getAllAppeals()">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="form-group form-check">
+                                            <label class="form-check-label" for="stages3">
+                                                <span class="label label-warning">Ожидает подтверждения</span>
+                                            </label>
+                                            <input type="checkbox" checked class="js-switch extra-small" data-switchery="true" data-plugin="switchery" data-color="#5d9cec" id="stages3" onchange="getAllAppeals()">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="form-group form-check">
+                                            <label class="form-check-label" for="stages4">
+                                                <span class="label label-success">Решение предоставлено</span>
+                                            </label>
+                                            <input type="checkbox" class="js-switch extra-small" data-switchery="true" data-plugin="switchery" data-color="#5d9cec" id="stages4" onchange="getAllAppeals()">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+        <div style="overflow-y: auto; height: calc(100vh - 345px);">
+            <table class="table table-hover">
+                <colgroup>
+                    <col style="width: 5%" />
+                    <col style="width: 12%" />
+                    <col style="width: 40%" />
+                    <col style="width: 15%" />
+                    <col style="width: 15%" />
+                </colgroup>
+                <tbody id="listOfComplaints">
+                    <tr><td><div>Загрузка ...</div></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-box bg-white error-processing-page w-30 ml-1 position-relative">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h3>Подробнее</h3>
+                <div class="d-none">
+                    <span>№</span>
+                    <span data-error-processing-number>24658</span>
+                </div>
+            </div>
+            <div class="d-none" data-error-processing-stage>
+                <span class="label label-danger">Ожидает обработки</span>
+            </div>
+        </div>
+
+        <hr class="mb-1 mt-2" />
+
+        <div class="ditails-info" id="ditail_info" style="height: calc(100vh - 305px);">
+            <div class="info-messadge">
+                Выбирите обращение для получения подробной информации
+            </div>
+        </div>
+        <div class="next-stages"> 
+        </div>
+    </div> 
+</div>
+
+<div class="modal fade" id="modalNextStages" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header justify-content-between d-flex align-items-center">
+                <h3 class="modal-title" id="exampleModalLabel">Следующий этап</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="fileDecision" onchange="addFileDecision(this)" data-add-file data-id="">
+                    <label class="custom-file-label" for="fileDecision">Прикретите файл...</label>
+                </div>
+                <div class="form-group">
+                    <label for="textDecision">Текст решение проблемы</label>
+                    <textarea class="form-control" id="textDecision" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="nextStage(document.querySelector('.btn-next-stage').dataset.uuid, document.querySelector('#textDecision').value)">Сменить этап</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalNextStagesIsProcessing" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header justify-content-between d-flex align-items-center">
+                <h3 class="modal-title" id="exampleModalLabel">Следующий этап</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <i class="fa fa-exclamation-triangle" style=" font-size: 100px; color: coral; margin-bottom: 15px;" aria-hidden="true"></i>
+                    <h4>Подтвердите действие для перехода на этап <br /> <b>В обработке</b></h4>
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="nextStage(document.querySelector('.btn-next-stage').dataset.uuid)">Сменить этап</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    getAllAppeals();
+
+    document.querySelector('#error-processing').addEventListener('click', (el) => { 
+        if (el.target.tagName != 'I') {
+            document.querySelector('.filter-list-error')?.classList.remove('active-filter-list-error');
+            document.querySelector('.stages-filter').classList.remove('active-stages-filter'); 
+        } 
+    })
+
+    document.querySelector('.stages-filter').addEventListener('click', () => {
+        document.querySelector('.filter-list-error').classList.toggle('active-filter-list-error');
+        document.querySelector('.stages-filter').classList.toggle('active-stages-filter'); 
+    });
+
+    function filter(string) {
+        switch (string) {
+            case 'Ожидает обработки':
+                return document.querySelector('#stages1').checked;
+            case 'В обработке':
+                return document.querySelector('#stages2').checked;
+            case 'Ожидает подтверждения': 
+                return document.querySelector('#stages3').checked;
+            case 'Решение предоставлено': 
+                return document.querySelector('#stages4').checked;
+            default:
+                return true;
+        } 
+    }
+
+    document.querySelector('.sort-date').addEventListener('click', () => {
+        let el = document.querySelector('#sort-date'); 
+        let data = el.dataset.sort;
+        if (data == 'defaut') {
+            el.dataset.sort = 'up';
+            el.classList.add('active-stages-filter');
+        };
+        if (data == 'up') el.dataset.sort = 'down';
+        if (data == 'down') {
+            el.dataset.sort = 'defaut'
+            el.classList.remove('active-stages-filter');
+        };
+        getAllAppeals();
+    })
+
+    function sortDate(data) {
+        let status = document.querySelector('#sort-date').dataset.sort;
+        if (status == 'defaut') return data;
+        return data.sort((a, b) => {
+            if (status == 'up') {
+                return new Date(Number(a.DateCreate.match(/\d+/g)[0])).valueOf() > new Date(Number(b.DateCreate.match(/\d+/g)[0]).valueOf()) ? 1 : -1;
+            }
+            else {
+                return new Date(Number(a.DateCreate.match(/\d+/g)[0])).valueOf() < new Date(Number(b.DateCreate.match(/\d+/g)[0]).valueOf()) ? 1 : -1;
+            }
+        })
+    }
+
+    function getAllAppeals() {
+        $.ajax({
+            url: '/Processing/RequestGetAllAppeals',
+            method: 'get',
+            success: function (data) { 
+                if (data.length) {
+                    let block = document.querySelector('#listOfComplaints');
+                    block.innerHTML = '';
+                    let array = sortDate(data);
+                    array = array.filter(item => filter(item.State));
+                    array.forEach((item, index) => {
+                        block.innerHTML += `
+                            <tr data-show-details-info='${index}' data-id='${item.Uuid}'>
+                                <td>${item.Number}</td>
+                                <td class="text-center">${new Date(Number(item.DateCreate.match(/\d+/g)[0])).toLocaleDateString()}</td>
+                                <td title="${item.AppealText}">
+                                    <div class="white-space-nowrap">${item.AppealText}</div>
+                                </td>
+                                <td>${item.ApplicantName}</td>  
+                                <td class="text-center" data-stages><span class="label ${labelClass(item.State)}">${item.State}</span></td>
+                            </tr>
+                        `
+                    });
+                    document.querySelectorAll('[data-show-details-info]').forEach((item, index) => item.addEventListener("click", (el) => {
+                        let elTr = el.target; 
+                        while (elTr.tagName != 'TR') elTr = elTr.parentNode;
+                        document.querySelectorAll('#listOfComplaints .activeTr')?.forEach(item => item.classList.remove('activeTr'));
+                        elTr.classList.add('activeTr'); 
+                        let block = document.querySelector('#ditail_info');
+                        block.innerHTML = '';
+                        document.querySelector('.next-stages').innerHTML = '';
+                        let title = ['Услуга', 'Причина подачи жалобы', 'Текст жалобы', 'ФИО', 'Адресс', 'Email', 'Телефон'];
+                        let property = ['ServiceName', 'AppealCase', 'AppealText', 'ApplicantName', 'ApplicantAddress', 'ApplicantEmail', 'ApplicantPhone']; 
+
+                        let strAppend = '';  
+                        property.forEach((item, idx) => {
+                            strAppend += `<div class="mb-1">
+                                                    <span class="fs-12 ditails-text-title">${title[idx]}</span>
+                                                    <span class="ditails-text">${array[index][`${item}`]}</span>
+                                                </div>`;
+                        });
+                        strAppend += `<div class="mb-1">
+                                                    <span class="fs-12 ditails-text-title">Дата создания</span>
+                                                    <span class="ditails-text">${new Date(Number(array[index].DateCreate.match(/\d+/g)[0])).toLocaleDateString()}</span>
+                                                </div>`; 
+                        if (array[index].DateClosed) {
+                            strAppend += `<div class="mb-1">
+                                                    <span class="fs-12 ditails-text-title">Дата решения</span>
+                                                    <span class="ditails-text">${new Date(Number(array[index].DateClosed.match(/\d+/g)[0])).toLocaleDateString()}</span>
+                                                </div>`; 
+                        }
+                        document.querySelector('[data-error-processing-number]').parentNode.classList.remove('d-none');
+                        document.querySelector('[data-error-processing-number]').innerHTML = array[index].Number;
+                        document.querySelector('[data-error-processing-stage]').classList.remove('d-none');
+                        document.querySelector('[data-error-processing-stage]').innerHTML = `<span class="label ${labelClass(array[index].State)}">${array[index].State}</span>`;
+                          
+                        if (array[index].HasFileFromApplic) {
+                            strAppend += `
+                            <div style="display: flex; justify-content: flex-end;">
+                                <button class="btn download-btn" type="button" onClick="downloadDoc('${array[index].Uuid}')">
+                                    <span class="download-btn-content">
+                                        <i class="ti-cloud-down"></i>
+                                        <span>Скачать вложения</span>
+                                    </span>
+                                </button>
+                            </div>
+                            `
+                        } 
+                        block.innerHTML = strAppend;
+                        if (array[index].State == 'Ожидает обработки') {
+                            document.querySelector('.next-stages').innerHTML = `<button type="button" class="btn btn-primary btn-next-stage" data-uuid='${array[index].Uuid}' onclick="openModalStage()" data-toggle="modal" data-target="#modalNextStagesIsProcessing">
+                                            Следующий этап
+                                        </button>`
+                        } else if (array[index].State != 'Ожидает подтверждения') {
+                            document.querySelector('.next-stages').innerHTML = `<button type="button" class="btn btn-primary btn-next-stage" data-uuid='${array[index].Uuid}' onclick="openModalStage()" data-toggle="modal" data-target="#modalNextStages">
+                                        Следующий этап
+                                    </button>`
+                        } 
+                        document.querySelector('[data-add-file]').dataset.id = document.querySelector('.activeTr').dataset.id; 
+                    }));  
+                }
+            },
+            error: function (err) {
+                console.log('Ошибка', err);
+            }
+        });
+    }
+
+    function openModalStage() {
+        let block = document.querySelector('#modalNextStages');
+        block.querySelector('.custom-file input').value = null;
+        block.querySelector('.custom-file label').textContent = 'Прикретите файл...';
+        block.querySelector('#textDecision').value = '';
+
+    }
+
+    async function addFileDecision (el) { 
+
+        el.parentNode.querySelector('label').textContent = el.value; 
+
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        }); 
+
+        let byte = await toBase64(el.files[0]); 
+        $.ajax({
+            url: '/Processing/RequestAddFileToAttr',
+            method: 'post',
+            data: {
+                AppealId: el.dataset.id,
+                FileName: el.files[0].name,
+                FileContent: byte.split(',')[1]
+            },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log('Ошибка', err);
+            }
+        });
+    }
+
+    function nextStage(id, textDecision) {
+        $.ajax({
+            url: '/Processing/RequestEdit',
+            method: 'post',
+            data: { AppealId: id, ApealResult: textDecision},
+            success: function (data) {
+                if (!data.Fault) { 
+                    let stages = `
+                    <span class="label ${labelClassNext(document.querySelector('.activeTr [data-stages] span').innerText).class}">
+                        ${labelClassNext(document.querySelector('.activeTr [data-stages] span').innerText).text}
+                    </span>`;
+                    document.querySelector('.activeTr [data-stages]').innerHTML = stages;
+                    document.querySelector('[data-error-processing-stage]').innerHTML = stages;
+                    document.querySelector('[data-toggle="modal"]').setAttribute('data-target', '#modalNextStages');
+                    document.querySelector('#textDecision').value = '';
+                    if (document.querySelector('.activeTr [data-stages] span').innerText == 'Ожидает подтверждения') {
+                        document.querySelector('[data-toggle="modal"]').remove();
+                    }
+                }
+            },
+            error: function (err) {
+                console.log('Ошибка', err);
+            }
+        });
+    } 
+
+    function downloadDoc(id) {
+        window.open(`/Processing/RequestGetFile?AppealId=${id}`, '_self'); 
+    } 
+
+    function labelClassNext(value) {
+        switch (value) {
+            case 'Ожидает обработки':
+                return {
+                    class: 'label-primary',
+                    text: 'В обработке',
+                };
+            case 'Ожидает подтверждения':
+                return {
+                    class: 'label-success',
+                    text: 'Решение предоставлено',
+                };
+            case 'В обработке':
+                return {
+                    class: 'label-warning',
+                    text: 'Ожидает подтверждения',
+                }
+            default:
+                return {
+                class: 'label-warning',
+                text: 'Ожидает подтверждения',
+            };
+        }
+    }
+
+    function labelClass(value) {
+        switch (value) {
+            case 'Ожидает обработки': return 'label-danger';
+            case 'Ожидает подтверждения': return 'label-warning';
+            case 'В обработке': return 'label-primary';
+            case 'Решение предоставлено': return 'label-success';
+            default: return 'label-primary';
+        }
+    }
+</script>
+

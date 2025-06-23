@@ -1,0 +1,181 @@
+﻿@model IEnumerable<HuntControl.Domain.Concrete.AlertEmployeeSelectResult>
+<ul class="alert-list list">
+    @if (Model.Any())
+    {
+        foreach (var item in Model)
+        {
+            switch (item.out_spr_employee_alert_id)
+            {
+                case 4:
+                    <!-- напоминание -->
+                    <li class="m-b-5 alert-item" data-type="reminder" style="">
+                        <div class="row">
+                            <div class="alert-item-icon">
+                                <i class="ion ion-ios7-bell icon-alert" title="Напоминание"></i>
+                            </div>
+                            <div class="alert-item-data">
+                                <ul class="list-item-data">
+                                    <li>
+                                        <a href="@Url.Action("Main", "Case", new {infoId = item.out_data_services_info_id})">
+                                            <span class="applicant case-num-color">#@item.out_data_services_info_id</span>
+                                        </a>
+                                        <span class="delete-alert" data-alert-id="@item.out_id" data-alert-type-id="@item.out_spr_employee_alert_id"><i class="ion ion-ios7-trash-outline"></i></span>
+                                    </li>
+                                </ul>
+                                <span class="applican-alert"><i class="ion ion-person customer-icon" title="Заявитель"></i>@item.out_customer_name</span>
+                                <h3 class="list-item-title">
+                                    <span class="list-item-subtitle department block text-clip-cust font-12" title="@item.out_alert_name">@item.out_alert_name</span>
+                                </h3>
+                                <span class="alert-date"><i class="fa fa-clock-o"></i> @item.out_date</span>
+                            </div>
+                        </div>
+                    </li>
+                    break;
+                case 5:
+                    <!-- смэв -->
+                    <li class="m-b-5 alert-item" data-type="smev">
+                        <div class="row">
+                            <div class="alert-item-icon">
+                                <i class="ion ion-ios7-world icon-alert" title="Ответ СМЭВ"></i>
+                            </div>
+                            <div class="alert-item-data">
+                                <ul class="list-item-data m-b-0">
+                                    <li>
+                                        <a href="@Url.Action("Main", "Case", new {infoId = item.out_data_services_info_id})">
+                                            <span class="applicant case-num-color">#@item.out_data_services_info_id</span>
+                                        </a>
+                                        <span class="delete-alert" data-alert-id="@item.out_id" data-alert-type-id="@item.out_spr_employee_alert_id"><i class="ion ion-ios7-trash-outline"></i></span>
+                                    </li>
+                                </ul>
+                                <span class="applican-alert"><i class="ion ion-person customer-icon" title="Заявитель"></i>@item.out_customer_name</span>
+                                <h3 class="list-item-title">
+                                    <span class="list-item-subtitle department block text-clip-cust font-12" title="@item.out_request_name">@item.out_request_name</span>
+                                </h3>
+                                <span class="alert-date"><i class="fa fa-clock-o"></i> @item.out_date</span>
+                            </div>
+                        </div>
+                    </li>
+                    break;
+                case 6:
+                    <!-- Примечания -->
+                    <li class="m-b-5 alert-item" data-type="comment">
+                        <div class="row">
+                            <div class="alert-item-icon">
+                                <i class="ion ion-ios7-email icon-alert" title="Примечание"></i>
+                            </div>
+                            <div class="alert-item-data">
+                                <ul class="list-item-data m-b-0">
+                                    <li>
+                                        <a href="@Url.Action("Main", "Case", new {infoId = item.out_data_services_info_id})">
+                                            <span class="applicant case-num-color">#@item.out_data_services_info_id</span>
+                                        </a>
+                                        <span class="delete-alert" data-alert-id="@item.out_id" data-alert-type-id="@item.out_spr_employee_alert_id"><i class="ion ion-ios7-trash-outline"></i></span>
+                                    </li>
+                                </ul>
+                                <span class="applicant-alert"><i class="ion ion-person customer-icon" title="Заявитель"></i>@item.out_customer_name</span><br>
+                                <h3 class="list-item-title" style="padding-top: 2px;">
+                                    <span class="block list-item-subtitle department font-12 commentt-alert">@item.out_commentt</span>
+                                    <span class="block list-item-subtitle department font-12">От кого: <span style="color: black;">@item.out_employee_fio</span></span>
+                                </h3>
+                                <span class="alert-date"><i class="fa fa-clock-o"></i> @item.out_date</span>
+                            </div>
+                        </div>
+                    </li>
+                    break;
+                case 9:
+                    <!-- Новая услуга -->
+                    <li class="m-b-5 alert-item" data-type="newService">
+                        <div class="row">
+                            <div class="alert-item-icon">
+                                <i class="ion ion-ios7-filing icon-alert" title="Новая услуга"></i>
+                            </div>
+                            <div class="alert-item-data">
+                                <ul class="list-item-data m-b-0">
+                                    <li>
+                                        <a href="@Url.Action("Main", "Case", new {infoId = item.out_data_services_info_id})" target="_blank">
+                                            <span class="applicant case-num-color">#@item.out_data_services_info_id</span>
+                                        </a>
+                                        <span class="delete-alert" data-alert-id="@item.out_id" data-alert-type-id="@item.out_spr_employee_alert_id"><i class="ion ion-ios7-trash-outline"></i></span>
+                                    </li>
+                                </ul>
+                                <span class="applican-alert"><i class="ion ion-person customer-icon" title="Заявитель"></i>@item.out_customer_name</span>
+                                <h3 class="list-item-title" style="padding-top: 2px;">
+                                    <span class="list-item-subtitle department block text-clip-cust font-12" title="@item.out_service_name">@item.out_service_name</span>
+                                </h3>
+                                <span class="alert-date"><i class="fa fa-clock-o"></i> @item.out_date</span>
+                            </div>
+                        </div>
+                    </li>
+                    break;
+
+                    <!-- Поддержка -->
+                    @*<li class="m-b-5 alert-item" data-type="setting">
+                            <div class="row">
+                                <div class="alert-item-icon">
+                                    <i class="ion ion-ios7-gear icon-alert" title="Поддержка"></i>
+                                </div>
+                                <div class="alert-item-data">
+                                    <ul class="list-item-data m-b-0">
+                                        <li>
+                                            <a href="@Url.Action("Main","Case", new {infoId = item.out_data_services_info_id})">
+                                                <span class="applicant case-num-color">#@item.out_data_services_info_id</span>
+                                            </a>
+                                            <span class="delete-alert" data-delete-alert-id="@item.out_id" data-delete-alert-type="2"><i class="ion ion-ios7-trash-outline"></i></span>
+                                        </li>
+                                    </ul>
+                                    <h3 class="list-item-title" style="padding-top: 2px;">
+                                        <span class="block list-item-subtitle department font-12 commentt-alert">Новый инцедент - ЕСИА..</span>
+                                    </h3>
+                                    <span class="alert-date"><i class="fa fa-clock-o"></i> 18.07.2017 17:36:28</span>
+                                </div>
+                            </div>
+                        </li>*@
+            }
+        }
+    }
+    else
+    {
+        <li>
+            <div class="alert alert-info">
+                <span style="color:#00545c;"><strong><i class="icon-info"></i></strong> Нет данных.</span>
+            </div>
+        </li>
+    }
+</ul>
+
+<script>
+    $('#alertBarContainer').mCustomScrollbar({
+        theme: "dark",
+        setHeight: "96%"
+    });
+
+    var count = @Model.Count();
+    if(count > 0){
+        $('#alertBtn span.badge').text(count).show();
+    }
+    else{
+        $('#alertBtn span.badge').text(count).hide();
+    }
+
+    $('[data-alert-id]').on('click', function () {
+        var target = $(this);
+        var alertId = target.data('alertId');
+        var alertTypeId = target.data('alertTypeId');
+        $.ajax({
+            url: '@Url.Action("SubmitEmployeeAlertDelete","Home")',
+            type: "POST",
+            data: { alertId: alertId, alertTypeId: alertTypeId },
+            success: function (isSuccess) {
+                target.closest('li.alert-item').hide(220, function () {
+                    var currentValue = parseInt($('#alertBtn span.badge').text(), 10);
+                    var newValue = currentValue - 1;
+                    $('#alertBtn span.badge').text(newValue);
+                    target.remove();
+                    if (newValue == 0) {
+                        $('#alertBtn span.badge').hide();
+                    }
+                });
+            }
+        });
+    });
+</script>

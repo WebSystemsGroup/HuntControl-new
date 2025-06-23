@@ -1,0 +1,873 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="urn://x-artefacts-electron-it-ru" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="SmevRouter" targetNamespace="urn://x-artefacts-electron-it-ru" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="urn://x-artefacts-electron-it-ru">
+      <xsd:element name="GetVersion">
+        <xsd:complexType>
+          <xsd:sequence />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetVersionResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="GetVersionResult" nillable="true" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ClearLog">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="authCode" nillable="true" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ClearLogResponse">
+        <xsd:complexType>
+          <xsd:sequence />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="RunUpdate">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="authCode" nillable="true" type="xsd:string" />
+            <xsd:element minOccurs="0" name="rarUpdateContent" nillable="true" type="xsd:base64Binary" />
+            <xsd:element minOccurs="0" name="forceUpdate" type="xsd:boolean" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="RunUpdateResponse">
+        <xsd:complexType>
+          <xsd:sequence />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetIncomingQueueStats">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="request" nillable="true" type="tns:IncomingQueueStatsRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="IncomingQueueStatsRequest">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SmevSimpleRequestData">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="IncomingQueueStatsRequest" nillable="true" type="tns:IncomingQueueStatsRequest" />
+      <xsd:complexType name="SmevSimpleRequestData">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:FieldsValidator">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" name="AuthCode" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" name="DirectionMode" type="tns:QueryDirectionMode" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="SmevSimpleRequestData" nillable="true" type="tns:SmevSimpleRequestData" />
+      <xsd:complexType name="FieldsValidator">
+        <xsd:sequence />
+      </xsd:complexType>
+      <xsd:element name="FieldsValidator" nillable="true" type="tns:FieldsValidator" />
+      <xsd:simpleType name="QueryDirectionMode">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="TestArea" />
+          <xsd:enumeration value="DevelopmentArea" />
+          <xsd:enumeration value="ProductionArea" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="QueryDirectionMode" nillable="true" type="tns:QueryDirectionMode" />
+      <xsd:element name="GetIncomingQueueStatsResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="GetIncomingQueueStatsResult" nillable="true" type="tns:IncomingQueueStatsResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="IncomingQueueStatsResponse">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SmevResponseData">
+            <xsd:sequence>
+              <xsd:element name="PendingRequestCount" type="xsd:long" />
+              <xsd:element name="PendingResponseCount" type="xsd:long" />
+              <xsd:element name="PendingStatusCount" type="xsd:long" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="IncomingQueueStatsResponse" nillable="true" type="tns:IncomingQueueStatsResponse" />
+      <xsd:complexType name="SmevResponseData">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="AdditionalForms" nillable="true" type="tns:ArrayOfAdditionalForm" />
+          <xsd:element minOccurs="0" name="ErrorCode" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="ErrorDescription" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="ExtractedResponseDocuments" nillable="true" type="tns:ArrayOfExtractedDocument" />
+          <xsd:element minOccurs="0" name="Fault" nillable="true" type="tns:SmevFault" />
+          <xsd:element minOccurs="0" name="QueryExecutionMilliseconds" type="xsd:int" />
+          <xsd:element minOccurs="0" name="ResponseReports" nillable="true" type="tns:ArrayOfResponseReport" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="SmevResponseData" nillable="true" type="tns:SmevResponseData" />
+      <xsd:complexType name="ArrayOfAdditionalForm">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="AdditionalForm" nillable="true" type="tns:AdditionalForm" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ArrayOfAdditionalForm" nillable="true" type="tns:ArrayOfAdditionalForm" />
+      <xsd:complexType name="AdditionalForm">
+        <xsd:sequence>
+          <xsd:element name="Key" nillable="true" type="xsd:string" />
+          <xsd:element name="Name" nillable="true" type="xsd:string" />
+          <xsd:element name="PdfDocument" nillable="true" type="xsd:base64Binary" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="AdditionalForm" nillable="true" type="tns:AdditionalForm" />
+      <xsd:complexType name="ArrayOfExtractedDocument">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ExtractedDocument" nillable="true" type="tns:ExtractedDocument" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ArrayOfExtractedDocument" nillable="true" type="tns:ArrayOfExtractedDocument" />
+      <xsd:complexType name="ExtractedDocument">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="Description" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="DocumentCode" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="FileContent" nillable="true" type="xsd:base64Binary" />
+          <xsd:element minOccurs="0" name="FileName" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Icon" nillable="true" type="xsd:base64Binary" />
+          <xsd:element minOccurs="0" name="MimeType" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Number" nillable="true" type="xsd:int" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ExtractedDocument" nillable="true" type="tns:ExtractedDocument" />
+      <xsd:complexType name="SmevFault">
+        <xsd:sequence>
+          <xsd:element name="ErrorText" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="SmevFault" nillable="true" type="tns:SmevFault" />
+      <xsd:complexType name="ArrayOfResponseReport">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ResponseReport" nillable="true" type="tns:ResponseReport" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ArrayOfResponseReport" nillable="true" type="tns:ArrayOfResponseReport" />
+      <xsd:complexType name="ResponseReport">
+        <xsd:sequence>
+          <xsd:element name="PdfDocument" nillable="true" type="xsd:base64Binary" />
+          <xsd:element name="ReportType" type="tns:ResponseReportType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ResponseReport" nillable="true" type="tns:ResponseReport" />
+      <xsd:simpleType name="ResponseReportType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Request" />
+          <xsd:enumeration value="IntermediateResponse" />
+          <xsd:enumeration value="Response" />
+          <xsd:enumeration value="Full" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="ResponseReportType" nillable="true" type="tns:ResponseReportType" />
+      <xsd:element name="RequestGisGmpExport">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="request" nillable="true" type="tns:GetGisGmpExportRequestData" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="GetGisGmpExportRequestData">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SmevRequestData">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" name="CitizenshipOksm" nillable="true" type="xsd:string" />
+              <xsd:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="KbkFilter" nillable="true" type="q1:ArrayOfstring" />
+              <xsd:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="OktmoFilter" nillable="true" type="q2:ArrayOfstring" />
+              <xsd:element minOccurs="0" name="PayerBirthCertificate" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" name="PayerDrivingLicense" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" name="PayerId" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" name="PayerInnFl" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" name="PayerInnUl" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" name="PayerKio" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" name="PayerKpp" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" name="PayerMobile" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" name="PayerPassportSeriesNumber" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" name="PayerSnils" nillable="true" type="xsd:string" />
+              <xsd:element name="RequestType" type="tns:GisGmpRequestTypeEnum" />
+              <xsd:element minOccurs="0" name="ShowAdditionalRequisites" nillable="true" type="xsd:boolean" />
+              <xsd:element minOccurs="0" name="SupplierBillId" nillable="true" type="xsd:string" />
+              <xsd:element name="TemplateType" type="tns:GisGmpTemplateTypeEnum" />
+              <xsd:element minOccurs="0" name="TimeFrameBegin" nillable="true" type="xsd:dateTime" />
+              <xsd:element minOccurs="0" name="TimeFrameEnd" nillable="true" type="xsd:dateTime" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="GetGisGmpExportRequestData" nillable="true" type="tns:GetGisGmpExportRequestData" />
+      <xsd:complexType name="SmevRequestData">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SmevSimpleRequestData">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" name="Attachments" nillable="true" type="tns:ArrayOfRequestAttachment" />
+              <xsd:element minOccurs="0" name="CustomModeInfo" nillable="true" type="tns:CustomModeInformation" />
+              <xsd:element minOccurs="0" name="DataServicesRequestSmevId" nillable="true" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="SmevRequestData" nillable="true" type="tns:SmevRequestData" />
+      <xsd:complexType name="ArrayOfRequestAttachment">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="RequestAttachment" nillable="true" type="tns:RequestAttachment" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ArrayOfRequestAttachment" nillable="true" type="tns:ArrayOfRequestAttachment" />
+      <xsd:complexType name="RequestAttachment">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:FieldsValidator">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" name="AttachmentType" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" name="AttachmentTypeCode" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" name="FileContent" nillable="true" type="xsd:base64Binary" />
+              <xsd:element name="FileName" nillable="true" type="xsd:string" />
+              <xsd:element name="IsFtpReference" type="xsd:boolean" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="RequestAttachment" nillable="true" type="tns:RequestAttachment" />
+      <xsd:complexType name="CustomModeInformation">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="IuppCallbackUrl" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="SenderEsiaCentrId" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="SenderFsspId" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="SenderGisGmpId" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="SenderOrgAddress" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="SenderOrgInn" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="SenderOrgName" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="SenderOrgOgrn" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="SenderOrgOktmo" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="SmevRecipientCode" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="SmevRecipientName" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="SmevSenderCode" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="SmevSenderLongCode" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="SmevSenderName" nillable="true" type="xsd:string" />
+          <xsd:element name="SmevServiceMnemo" nillable="true" type="xsd:string" />
+          <xsd:element name="SmevServiceUrl" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="CustomModeInformation" nillable="true" type="tns:CustomModeInformation" />
+      <xsd:simpleType name="GisGmpRequestTypeEnum">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="SupplierBill" />
+          <xsd:enumeration value="PayerId" />
+          <xsd:enumeration value="PayerFlData" />
+          <xsd:enumeration value="PayerIpData" />
+          <xsd:enumeration value="PayerUlResidentData" />
+          <xsd:enumeration value="PayerUlNonResidentData" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="GisGmpRequestTypeEnum" nillable="true" type="tns:GisGmpRequestTypeEnum" />
+      <xsd:simpleType name="GisGmpTemplateTypeEnum">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Charge" />
+          <xsd:enumeration value="ChargeStatus" />
+          <xsd:enumeration value="Quittance" />
+          <xsd:enumeration value="AllQuitance" />
+          <xsd:enumeration value="Payment" />
+          <xsd:enumeration value="PaymentModified" />
+          <xsd:enumeration value="PaymentUnmatched" />
+          <xsd:enumeration value="PaymentCancelled" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="GisGmpTemplateTypeEnum" nillable="true" type="tns:GisGmpTemplateTypeEnum" />
+      <xsd:element name="RequestGisGmpExportResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="RequestGisGmpExportResult" nillable="true" type="tns:GetGisGmpExportResponseData" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="GetGisGmpExportResponseData">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SmevResponseData">
+            <xsd:sequence>
+              <xsd:element name="ResponseDataPresence" type="xsd:boolean" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="GetGisGmpExportResponseData" nillable="true" type="tns:GetGisGmpExportResponseData" />
+      <xsd:element name="RequestGiacCriminal">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="request" nillable="true" type="tns:GetGiacCriminalRequestData" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="GetGiacCriminalRequestData">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SmevRequestData">
+            <xsd:sequence>
+              <xsd:element name="Addressee" nillable="true" type="xsd:string" />
+              <xsd:element name="Applicant" nillable="true" type="tns:GiacApplicantData" />
+              <xsd:element name="Exemplars" type="xsd:int" />
+              <xsd:element name="Personal" nillable="true" type="tns:GiacPersonalData" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="GetGiacCriminalRequestData" nillable="true" type="tns:GetGiacCriminalRequestData" />
+      <xsd:complexType name="GiacApplicantData">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:FieldsValidator">
+            <xsd:sequence>
+              <xsd:element name="Address" nillable="true" type="xsd:string" />
+              <xsd:element name="AddressType" nillable="true" type="xsd:string" />
+              <xsd:element name="ApplicantType" nillable="true" type="xsd:string" />
+              <xsd:element name="BirthDate" type="xsd:dateTime" />
+              <xsd:element name="BirthPlace" nillable="true" type="xsd:string" />
+              <xsd:element name="Fio" nillable="true" type="tns:FioType" />
+              <xsd:element name="Snils" nillable="true" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="GiacApplicantData" nillable="true" type="tns:GiacApplicantData" />
+      <xsd:complexType name="FioType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:FieldsValidator">
+            <xsd:sequence>
+              <xsd:element name="FirstName" nillable="true" type="xsd:string" />
+              <xsd:element name="LastName" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" name="SecondName" nillable="true" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="FioType" nillable="true" type="tns:FioType" />
+      <xsd:complexType name="GiacPersonalData">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:FieldsValidator">
+            <xsd:sequence>
+              <xsd:element name="BirthDate" type="xsd:dateTime" />
+              <xsd:element name="BirthPlace" nillable="true" type="xsd:string" />
+              <xsd:element name="DocIssueDate" type="xsd:dateTime" />
+              <xsd:element name="DocIssuer" nillable="true" type="xsd:string" />
+              <xsd:element name="DocNumber" nillable="true" type="xsd:string" />
+              <xsd:element name="DocSeries" nillable="true" type="xsd:string" />
+              <xsd:element name="DocumentCode" nillable="true" type="xsd:string" />
+              <xsd:element name="Fio" nillable="true" type="tns:FioType" />
+              <xsd:element minOccurs="0" name="PreviousNames" nillable="true" type="tns:ArrayOfFioType" />
+              <xsd:element xmlns:q3="http://schemas.microsoft.com/2003/10/Serialization/Arrays" name="Regions" nillable="true" type="q3:ArrayOfstring" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="GiacPersonalData" nillable="true" type="tns:GiacPersonalData" />
+      <xsd:complexType name="ArrayOfFioType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="FioType" nillable="true" type="tns:FioType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ArrayOfFioType" nillable="true" type="tns:ArrayOfFioType" />
+      <xsd:element name="RequestGiacCriminalResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="RequestGiacCriminalResult" nillable="true" type="tns:GetGiacCriminalResponseData" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="GetGiacCriminalResponseData">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SmevResponseData">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="GetGiacCriminalResponseData" nillable="true" type="tns:GetGiacCriminalResponseData" />
+      <xsd:element name="ConfirmDeliveryGiacCriminal">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="request" nillable="true" type="tns:ConfirmDeliveryGiacCriminalRequestData" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="ConfirmDeliveryGiacCriminalRequestData">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SmevRequestData">
+            <xsd:sequence>
+              <xsd:element name="Date" type="xsd:dateTime" />
+              <xsd:element name="MvdResponseNumber" nillable="true" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="ConfirmDeliveryGiacCriminalRequestData" nillable="true" type="tns:ConfirmDeliveryGiacCriminalRequestData" />
+      <xsd:element name="ConfirmDeliveryGiacCriminalResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="ConfirmDeliveryGiacCriminalResult" nillable="true" type="tns:ConfirmDeliveryGiacCriminalResponseData" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="ConfirmDeliveryGiacCriminalResponseData">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SmevResponseData">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="ConfirmDeliveryGiacCriminalResponseData" nillable="true" type="tns:ConfirmDeliveryGiacCriminalResponseData" />
+      <xsd:element name="Notify3MonthsGiacCriminal">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="request" nillable="true" type="tns:Notify3MonthsGiacCriminalRequestData" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="Notify3MonthsGiacCriminalRequestData">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SmevRequestData">
+            <xsd:sequence>
+              <xsd:element name="Date" type="xsd:dateTime" />
+              <xsd:element name="MvdResponseNumber" nillable="true" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="Notify3MonthsGiacCriminalRequestData" nillable="true" type="tns:Notify3MonthsGiacCriminalRequestData" />
+      <xsd:element name="Notify3MonthsGiacCriminalResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="Notify3MonthsGiacCriminalResult" nillable="true" type="tns:Notify3MonthsGiacCriminalResponseData" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="Notify3MonthsGiacCriminalResponseData">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SmevResponseData">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="Notify3MonthsGiacCriminalResponseData" nillable="true" type="tns:Notify3MonthsGiacCriminalResponseData" />
+      <xsd:element name="RequestSnils">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="request" nillable="true" type="tns:GetSnilsRequestData" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="GetSnilsRequestData">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SmevRequestData">
+            <xsd:sequence>
+              <xsd:element name="BirthDate" type="xsd:dateTime" />
+              <xsd:element name="Fio" nillable="true" type="tns:FioType" />
+              <xsd:element name="Gender" type="tns:GenderType" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="GetSnilsRequestData" nillable="true" type="tns:GetSnilsRequestData" />
+      <xsd:simpleType name="GenderType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Male" />
+          <xsd:enumeration value="Female" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="GenderType" nillable="true" type="tns:GenderType" />
+      <xsd:element name="RequestSnilsResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="RequestSnilsResult" nillable="true" type="tns:GetSnilsResponseData" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="GetSnilsResponseData">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SmevResponseData">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" name="BirthDate" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" name="Fio" nillable="true" type="tns:FioType" />
+              <xsd:element minOccurs="0" name="Gender" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" name="ResponseDate" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" name="SnilsResponseItems" nillable="true" type="tns:ArrayOfSnilsResponseItem" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="GetSnilsResponseData" nillable="true" type="tns:GetSnilsResponseData" />
+      <xsd:complexType name="ArrayOfSnilsResponseItem">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="SnilsResponseItem" nillable="true" type="tns:SnilsResponseItem" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ArrayOfSnilsResponseItem" nillable="true" type="tns:ArrayOfSnilsResponseItem" />
+      <xsd:complexType name="SnilsResponseItem">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="BirthArea" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="BirthCity" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="BirthCountry" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="BirthPlaceType" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="BirthRegion" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="DocDate" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="DocName" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="DocNumber" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="DocSeries" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="DocType" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Snils" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="SnilsResponseItem" nillable="true" type="tns:SnilsResponseItem" />
+      <xsd:element name="RequestInnSingular">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="request" nillable="true" type="tns:GetInnSingularRequestData" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="GetInnSingularRequestData">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SmevRequestData">
+            <xsd:sequence>
+              <xsd:element name="BirthDate" type="xsd:dateTime" />
+              <xsd:element minOccurs="0" name="BirthPlace" nillable="true" type="xsd:string" />
+              <xsd:element name="DocumentDate" type="xsd:dateTime" />
+              <xsd:element minOccurs="0" name="DocumentIssuer" nillable="true" type="xsd:string" />
+              <xsd:element minOccurs="0" name="DocumentIssuerCode" nillable="true" type="xsd:string" />
+              <xsd:element name="DocumentSeriesNumber" nillable="true" type="xsd:string" />
+              <xsd:element name="DocumentType" nillable="true" type="xsd:string" />
+              <xsd:element name="Fio" nillable="true" type="tns:FioType" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="GetInnSingularRequestData" nillable="true" type="tns:GetInnSingularRequestData" />
+      <xsd:element name="RequestInnSingularResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="RequestInnSingularResult" nillable="true" type="tns:GetInnSingularResponseData" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="GetInnSingularResponseData">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SmevResponseData">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" name="Inn" nillable="true" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="GetInnSingularResponseData" nillable="true" type="tns:GetInnSingularResponseData" />
+      <xsd:element name="RequestInn">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="request" nillable="true" type="tns:GetInnRequestData" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="GetInnRequestData">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SmevRequestData">
+            <xsd:sequence>
+              <xsd:element name="BirthDate" type="xsd:dateTime" />
+              <xsd:element name="DocumentDate" type="xsd:dateTime" />
+              <xsd:element name="DocumentSeriesNumber" nillable="true" type="xsd:string" />
+              <xsd:element name="DocumentType" nillable="true" type="xsd:string" />
+              <xsd:element name="Fio" nillable="true" type="tns:FioType" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="GetInnRequestData" nillable="true" type="tns:GetInnRequestData" />
+      <xsd:element name="RequestInnResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="RequestInnResult" nillable="true" type="tns:GetInnResponseData" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="GetInnResponseData">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SmevResponseData">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" name="Inn" nillable="true" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="GetInnResponseData" nillable="true" type="tns:GetInnResponseData" />
+    </xsd:schema>
+    <xs:schema xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="anyType" nillable="true" type="xs:anyType" />
+      <xs:element name="anyURI" nillable="true" type="xs:anyURI" />
+      <xs:element name="base64Binary" nillable="true" type="xs:base64Binary" />
+      <xs:element name="boolean" nillable="true" type="xs:boolean" />
+      <xs:element name="byte" nillable="true" type="xs:byte" />
+      <xs:element name="dateTime" nillable="true" type="xs:dateTime" />
+      <xs:element name="decimal" nillable="true" type="xs:decimal" />
+      <xs:element name="double" nillable="true" type="xs:double" />
+      <xs:element name="float" nillable="true" type="xs:float" />
+      <xs:element name="int" nillable="true" type="xs:int" />
+      <xs:element name="long" nillable="true" type="xs:long" />
+      <xs:element name="QName" nillable="true" type="xs:QName" />
+      <xs:element name="short" nillable="true" type="xs:short" />
+      <xs:element name="string" nillable="true" type="xs:string" />
+      <xs:element name="unsignedByte" nillable="true" type="xs:unsignedByte" />
+      <xs:element name="unsignedInt" nillable="true" type="xs:unsignedInt" />
+      <xs:element name="unsignedLong" nillable="true" type="xs:unsignedLong" />
+      <xs:element name="unsignedShort" nillable="true" type="xs:unsignedShort" />
+      <xs:element name="char" nillable="true" type="tns:char" />
+      <xs:simpleType name="char">
+        <xs:restriction base="xs:int" />
+      </xs:simpleType>
+      <xs:element name="duration" nillable="true" type="tns:duration" />
+      <xs:simpleType name="duration">
+        <xs:restriction base="xs:duration">
+          <xs:pattern value="\-?P(\d*D)?(T(\d*H)?(\d*M)?(\d*(\.\d*)?S)?)?" />
+          <xs:minInclusive value="-P10675199DT2H48M5.4775808S" />
+          <xs:maxInclusive value="P10675199DT2H48M5.4775807S" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:element name="guid" nillable="true" type="tns:guid" />
+      <xs:simpleType name="guid">
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:attribute name="FactoryType" type="xs:QName" />
+      <xs:attribute name="Id" type="xs:ID" />
+      <xs:attribute name="Ref" type="xs:IDREF" />
+    </xs:schema>
+    <xsd:schema xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/Arrays" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+      <xsd:complexType name="ArrayOfstring">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ArrayOfstring" nillable="true" type="tns:ArrayOfstring" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ISmevRouter_GetVersion_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetVersion" />
+  </wsdl:message>
+  <wsdl:message name="ISmevRouter_GetVersion_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetVersionResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISmevRouter_ClearLog_InputMessage">
+    <wsdl:part name="parameters" element="tns:ClearLog" />
+  </wsdl:message>
+  <wsdl:message name="ISmevRouter_ClearLog_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ClearLogResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISmevRouter_RunUpdate_InputMessage">
+    <wsdl:part name="parameters" element="tns:RunUpdate" />
+  </wsdl:message>
+  <wsdl:message name="ISmevRouter_RunUpdate_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RunUpdateResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISmevRouter_GetIncomingQueueStats_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetIncomingQueueStats" />
+  </wsdl:message>
+  <wsdl:message name="ISmevRouter_GetIncomingQueueStats_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetIncomingQueueStatsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISmevRouter_RequestGisGmpExport_InputMessage">
+    <wsdl:part name="parameters" element="tns:RequestGisGmpExport" />
+  </wsdl:message>
+  <wsdl:message name="ISmevRouter_RequestGisGmpExport_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RequestGisGmpExportResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISmevRouter_RequestGiacCriminal_InputMessage">
+    <wsdl:part name="parameters" element="tns:RequestGiacCriminal" />
+  </wsdl:message>
+  <wsdl:message name="ISmevRouter_RequestGiacCriminal_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RequestGiacCriminalResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISmevRouter_ConfirmDeliveryGiacCriminal_InputMessage">
+    <wsdl:part name="parameters" element="tns:ConfirmDeliveryGiacCriminal" />
+  </wsdl:message>
+  <wsdl:message name="ISmevRouter_ConfirmDeliveryGiacCriminal_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ConfirmDeliveryGiacCriminalResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISmevRouter_Notify3MonthsGiacCriminal_InputMessage">
+    <wsdl:part name="parameters" element="tns:Notify3MonthsGiacCriminal" />
+  </wsdl:message>
+  <wsdl:message name="ISmevRouter_Notify3MonthsGiacCriminal_OutputMessage">
+    <wsdl:part name="parameters" element="tns:Notify3MonthsGiacCriminalResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISmevRouter_RequestSnils_InputMessage">
+    <wsdl:part name="parameters" element="tns:RequestSnils" />
+  </wsdl:message>
+  <wsdl:message name="ISmevRouter_RequestSnils_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RequestSnilsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISmevRouter_RequestInnSingular_InputMessage">
+    <wsdl:part name="parameters" element="tns:RequestInnSingular" />
+  </wsdl:message>
+  <wsdl:message name="ISmevRouter_RequestInnSingular_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RequestInnSingularResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISmevRouter_RequestInn_InputMessage">
+    <wsdl:part name="parameters" element="tns:RequestInn" />
+  </wsdl:message>
+  <wsdl:message name="ISmevRouter_RequestInn_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RequestInnResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ISmevRouter">
+    <wsdl:operation name="GetVersion">
+      <wsdl:input wsaw:Action="urn://x-artefacts-electron-it-ru/ISmevRouter/GetVersion" message="tns:ISmevRouter_GetVersion_InputMessage" />
+      <wsdl:output wsaw:Action="urn://x-artefacts-electron-it-ru/ISmevRouter/GetVersionResponse" message="tns:ISmevRouter_GetVersion_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ClearLog">
+      <wsdl:input wsaw:Action="urn://x-artefacts-electron-it-ru/ISmevRouter/ClearLog" message="tns:ISmevRouter_ClearLog_InputMessage" />
+      <wsdl:output wsaw:Action="urn://x-artefacts-electron-it-ru/ISmevRouter/ClearLogResponse" message="tns:ISmevRouter_ClearLog_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RunUpdate">
+      <wsdl:input wsaw:Action="urn://x-artefacts-electron-it-ru/ISmevRouter/RunUpdate" message="tns:ISmevRouter_RunUpdate_InputMessage" />
+      <wsdl:output wsaw:Action="urn://x-artefacts-electron-it-ru/ISmevRouter/RunUpdateResponse" message="tns:ISmevRouter_RunUpdate_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetIncomingQueueStats">
+      <wsdl:input wsaw:Action="urn://x-artefacts-electron-it-ru/ISmevRouter/GetIncomingQueueStats" message="tns:ISmevRouter_GetIncomingQueueStats_InputMessage" />
+      <wsdl:output wsaw:Action="urn://x-artefacts-electron-it-ru/ISmevRouter/GetIncomingQueueStatsResponse" message="tns:ISmevRouter_GetIncomingQueueStats_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RequestGisGmpExport">
+      <wsdl:input wsaw:Action="urn://x-artefacts-electron-it-ru/ISmevRouter/RequestGisGmpExport" message="tns:ISmevRouter_RequestGisGmpExport_InputMessage" />
+      <wsdl:output wsaw:Action="urn://x-artefacts-electron-it-ru/ISmevRouter/RequestGisGmpExportResponse" message="tns:ISmevRouter_RequestGisGmpExport_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RequestGiacCriminal">
+      <wsdl:input wsaw:Action="urn://x-artefacts-electron-it-ru/ISmevRouter/RequestGiacCriminal" message="tns:ISmevRouter_RequestGiacCriminal_InputMessage" />
+      <wsdl:output wsaw:Action="urn://x-artefacts-electron-it-ru/ISmevRouter/RequestGiacCriminalResponse" message="tns:ISmevRouter_RequestGiacCriminal_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmDeliveryGiacCriminal">
+      <wsdl:input wsaw:Action="urn://x-artefacts-electron-it-ru/ISmevRouter/ConfirmDeliveryGiacCriminal" message="tns:ISmevRouter_ConfirmDeliveryGiacCriminal_InputMessage" />
+      <wsdl:output wsaw:Action="urn://x-artefacts-electron-it-ru/ISmevRouter/ConfirmDeliveryGiacCriminalResponse" message="tns:ISmevRouter_ConfirmDeliveryGiacCriminal_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Notify3MonthsGiacCriminal">
+      <wsdl:input wsaw:Action="urn://x-artefacts-electron-it-ru/ISmevRouter/Notify3MonthsGiacCriminal" message="tns:ISmevRouter_Notify3MonthsGiacCriminal_InputMessage" />
+      <wsdl:output wsaw:Action="urn://x-artefacts-electron-it-ru/ISmevRouter/Notify3MonthsGiacCriminalResponse" message="tns:ISmevRouter_Notify3MonthsGiacCriminal_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RequestSnils">
+      <wsdl:input wsaw:Action="urn://x-artefacts-electron-it-ru/ISmevRouter/RequestSnils" message="tns:ISmevRouter_RequestSnils_InputMessage" />
+      <wsdl:output wsaw:Action="urn://x-artefacts-electron-it-ru/ISmevRouter/RequestSnilsResponse" message="tns:ISmevRouter_RequestSnils_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RequestInnSingular">
+      <wsdl:input wsaw:Action="urn://x-artefacts-electron-it-ru/ISmevRouter/RequestInnSingular" message="tns:ISmevRouter_RequestInnSingular_InputMessage" />
+      <wsdl:output wsaw:Action="urn://x-artefacts-electron-it-ru/ISmevRouter/RequestInnSingularResponse" message="tns:ISmevRouter_RequestInnSingular_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RequestInn">
+      <wsdl:input wsaw:Action="urn://x-artefacts-electron-it-ru/ISmevRouter/RequestInn" message="tns:ISmevRouter_RequestInn_InputMessage" />
+      <wsdl:output wsaw:Action="urn://x-artefacts-electron-it-ru/ISmevRouter/RequestInnResponse" message="tns:ISmevRouter_RequestInn_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_ISmevRouter" type="tns:ISmevRouter">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetVersion">
+      <soap:operation soapAction="urn://x-artefacts-electron-it-ru/ISmevRouter/GetVersion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ClearLog">
+      <soap:operation soapAction="urn://x-artefacts-electron-it-ru/ISmevRouter/ClearLog" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RunUpdate">
+      <soap:operation soapAction="urn://x-artefacts-electron-it-ru/ISmevRouter/RunUpdate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIncomingQueueStats">
+      <soap:operation soapAction="urn://x-artefacts-electron-it-ru/ISmevRouter/GetIncomingQueueStats" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RequestGisGmpExport">
+      <soap:operation soapAction="urn://x-artefacts-electron-it-ru/ISmevRouter/RequestGisGmpExport" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RequestGiacCriminal">
+      <soap:operation soapAction="urn://x-artefacts-electron-it-ru/ISmevRouter/RequestGiacCriminal" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmDeliveryGiacCriminal">
+      <soap:operation soapAction="urn://x-artefacts-electron-it-ru/ISmevRouter/ConfirmDeliveryGiacCriminal" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Notify3MonthsGiacCriminal">
+      <soap:operation soapAction="urn://x-artefacts-electron-it-ru/ISmevRouter/Notify3MonthsGiacCriminal" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RequestSnils">
+      <soap:operation soapAction="urn://x-artefacts-electron-it-ru/ISmevRouter/RequestSnils" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RequestInnSingular">
+      <soap:operation soapAction="urn://x-artefacts-electron-it-ru/ISmevRouter/RequestInnSingular" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RequestInn">
+      <soap:operation soapAction="urn://x-artefacts-electron-it-ru/ISmevRouter/RequestInn" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SmevRouter">
+    <wsdl:port name="BasicHttpBinding_ISmevRouter" binding="tns:BasicHttpBinding_ISmevRouter">
+      <soap:address location="http://127.0.0.1:9001/SmevRouter" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

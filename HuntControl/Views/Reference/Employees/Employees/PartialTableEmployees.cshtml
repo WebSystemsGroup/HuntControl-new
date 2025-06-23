@@ -1,0 +1,183 @@
+﻿@model HuntControl.WebUI.Models.EmployeeViewModel
+<div class="row">
+    <div class="col-xs-12">
+        <h3 class="panel-title m-b-5 pull-left">Список сотрудников</h3>
+        @using (Ajax.BeginForm("PartialModalAddEmployee", "Reference", null, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+        {
+            <button type="submit" class="btn btn-inverse waves-effect waves-light btn-sm m-b-10 btn-block-xs pull-right"> Добавить <i class="fa fa-plus m-l-5"></i></button>
+        }
+    </div>
+</div>
+<div class="card-box p-0">
+    <div class="input-group">
+        <span class="input-group-btn">
+            <button type="button" class="btn waves-effect waves-light btn-link p-l-20-important" onclick="search()"><i class="fa fa-search"></i></button>
+        </span>
+        <input type="text" id="searchTextEmployees" class="text-dark no-border-input" placeholder="Поиск сотрудника" value="@ViewBag.Search"><ul class="typeahead dropdown-menu"></ul><ul class="typeahead dropdown-menu"></ul>
+    </div>
+    <hr class="m-0">
+
+    <div class="table-responsive">
+        <table class="table table-hover p-b-0">
+            <thead>
+                <tr>
+                    <th class="number-row p-l-20-important">№</th>
+                    <th>@Html.DisplayNameFor(model => model.SprEmployees.First().employees_fio)</th>
+                    <th>@Html.DisplayNameFor(model => model.SprEmployees.First().spr_employees_job_pos_id)</th>
+                    <th class="text-right p-r-20-important">
+                        <button id="showEmployeeRemoves" type="button" class="link p-r-0 text-custom"><i class="@(ViewBag.IsRemove ? "ion-ios7-trash" : "ion-ios7-trash-outline") m-l-5" style="font-size: 20px;" data-placement="bottom" data-toggle="tooltip" data-original-title="@(ViewBag.IsRemove ? "Скрыть удаленные" : "Показать удаленные")"></i></button>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.SprEmployees)
+                {
+                    <tr data-employee-id="@item.id" class="@(item.is_remove == true ? "danger" : "")">
+                        <td class="number-row p-l-20-important">
+                            @((Model.PageInfo.CurrentPage - 1) * Model.PageInfo.ItemsPerPage + ++Model.PageInfo.NumberRow)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(i => item.employees_fio)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(i => item.spr_employees_job_pos.job_pos_name)
+                        </td>
+                        <td class="actions vertical-middle-important">
+                            <button type="button" class="on-default text-custom link" style="font-size: 22px;line-height: 22px;" data-tooltip-info='{"employees_fio": "@item.employees_fio", "employees_login": "@item.employees_login", "employees_fio_add": @Json.Encode(item.employees_fio_add), "employees_fio_modifi": @Json.Encode(item.employees_fio_modifi ?? "-"), "set_date": "@Html.DisplayFor(i=>item.set_date)", "is_remove": @Json.Encode(item.is_remove), "date_remove": "@Html.DisplayFor(i=>item.date_remove)", "employees_fio_remove": @Json.Encode(item.employees_fio_remove), "commentt_remove": @Json.Encode(item.commentt_remove)}'>
+                                <i class="ion-ios7-information-outline"></i>
+                            </button>
+                            @if (User.IsInRole("superadmin") || User.IsInRole("admin"))
+                            {
+                                using (Ajax.BeginForm("PartialModalEmployeeHuntingFarm", "Reference", new { employeeId = item.id }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                                {
+                                    <button class="on-default edit-row link" data-placement="top" data-toggle="tooltip" data-original-title="Охотоугодья">
+                                        <i class="ion-android-locate"></i>
+                                        <span class="badge badge-xs badge-danger">@(item.spr_employees_hunting_farm.Any() ? (object)item.spr_employees_hunting_farm.Count : null)</span>
+                                    </button>
+                                }
+                                using (Ajax.BeginForm("PartialModalEmployeeRole", "Reference", new { employeeId = item.id }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                                {
+                                    <button class="on-default edit-row link" data-placement="top" data-toggle="tooltip" data-original-title="Роли">
+                                        <i class="fa fa-group"></i>
+                                        <span class="badge badge-xs badge-danger">@(item.spr_employees_role_join.Any() ? (object)item.spr_employees_role_join.Count : null)</span>
+                                    </button>
+                                }
+                                if (item.is_remove != true)
+                                {
+                                    using (Ajax.BeginForm("PartialModalEditEmployee", "Reference", new { employeeId = item.id }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                                    {
+                                        <button class="on-default edit-row link" data-placement="top" data-toggle="tooltip" data-original-title="Изменение"><i class="ion-edit"></i></button>
+                                    }
+                                    <button class="on-default remove-row link" data-placement="top" data-toggle="tooltip" data-original-title="Удаление"><i class="ion-trash-b"></i></button>
+                                }
+                                else
+                                {
+                                    <button class="on-default recovery-row link" data-placement="top" data-toggle="tooltip" data-original-title="Восстановление"><i class="fa fa-history"></i></button>
+                                }
+
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <hr class="m-0">
+    <div class="row p-t-10 p-l-20-important p-r-20-important p-b-10">
+        <div class="col-sm-6">
+            <div class="dataTables_info" id="datatable_info" role="status" aria-live="polite">Показаны @((Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage > Model.PageInfo.TotalItems) ? Model.PageInfo.TotalItems : Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage) из @Model.PageInfo.TotalItems записей</div>
+        </div>
+        <div class="col-sm-6">
+            <div class="dataTables_paginate paging_simple_numbers" id="datatable-editable_paginate">
+                @Html.PageLinks(Model.PageInfo, x => Ajax.ActionLink(x.NameLink, "PartialTableEmployees", "Reference", new { page = x.CurrentPage, search = ViewBag.Search, isRemove = ViewBag.IsRemove }, new AjaxOptions { UpdateTargetId = "employeesContainer" }))
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip({ trigger: 'hover' });
+        $('button[data-tooltip-info]').tooltip({
+            title: function () {
+                var tooltipInfo = $(this).data('tooltipInfo');
+                return "<div class='text-left'>" +
+                    "<strong>ФИО</strong>: " + tooltipInfo['employees_fio'] + "</br>" +
+                    "<strong>Логин</strong>: " + tooltipInfo['employees_login'] + "</br>" +
+                    "<hr class='m-t-5 m-b-5'>" +
+                    "<strong>Добавил</strong>: " + tooltipInfo['employees_fio_add'] + "</br>" +
+                    "<strong>Дата добавления</strong>: " + tooltipInfo['set_date'] + "</br>" +
+                    "<hr class='m-t-5 m-b-5'>" +
+                    "<strong>Изменил</strong>: " + tooltipInfo['employees_fio_modifi'] + "</br>" +
+                    (tooltipInfo['is_remove'] ?
+                        "<hr class='m-t-5 m-b-5'>" +
+                        "<strong>Удалил</strong>: " + tooltipInfo['employees_fio_remove'] + "</br>" +
+                        "<strong>Причина удаления</strong>: " + tooltipInfo['commentt_remove'] + "</br>" +
+                        "<strong>Дата удаления</strong>: " + tooltipInfo['date_remove'] + "</br>" : "") +
+                    "</div>";
+            },
+            html: true,
+            placement: "left"
+        });
+    });
+
+    //$("#employeesContainer tbody > tr > td:not(.actions)").on("click", function () {
+    //    var employeeId = $(this).closest('tr').data('employeeId');
+    //    $.ajax({
+    //        type: 'POST',
+    //        url: 'PartialTableEmployeeRoles',
+    //        data: { employeeId: employeeId },
+    //        success: function (data) {
+    //            $("#employeeRolesContainer").html(data);
+    //            $(".icons-tab-steps").steps('next');
+    //        }
+    //    });
+    //});
+
+    $('#searchTextEmployees').change(function () {
+        $.ajax({
+            url: '@Url.Action("PartialTableEmployees", "Reference")',
+            type: 'Post',
+            data: { search: $(this).val(), isRemove: '@ViewBag.IsRemove' },
+            success: function (data) {
+                $('#employeesContainer').html(data);
+            }
+        });
+    });
+
+    $('#showEmployeeRemoves').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableEmployees", "Reference")',
+            data: { search: $('#searchTextAnimals').val(), isRemove: '@(!ViewBag.IsRemove)' },
+            success: function (data) {
+                $('#employeesContainer').html(data);
+            }
+        });
+    });
+
+    $('#employeesContainer table td button.recovery-row').click(function () {
+        var employeeId = $(this).closest('tr').data('employeeId');
+        var paramObject = {
+            url: '@Url.Action("SubmitEmployeeRecovery", "Reference")',
+            params: { employeeId: employeeId },
+            onSuccess: function (data) {
+                $('#employeesContainer').html(data);
+            }
+        }
+        removeRecovery(paramObject);
+    });
+
+    $('#employeesContainer table td button.remove-row').click(function () {
+        var employeeId = $(this).closest('tr').data('employeeId');
+        var paramObject = {
+            url: '@Url.Action("SubmitEmployeeDelete", "Reference")',
+            params: { employeeId: employeeId },
+            onSuccess: function (data) {
+                $('#employeesContainer').html(data);
+            }
+        }
+        removeWithComment(paramObject);
+    });
+</script>
+

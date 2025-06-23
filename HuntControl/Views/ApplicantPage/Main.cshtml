@@ -1,0 +1,111 @@
+﻿@model HuntControl.WebUI.Models.ApplicantPageViewModel
+@{
+    ViewBag.Title = "Страница физ. лица";
+}
+
+@Html.MvcSiteMap().SiteMapPath()
+
+<div class="row">
+    <div class="col-sm-10">
+        <div class="input-group m-b-20">
+            <input type="text" id="searchTextIndividual" class="text-dark form-control" placeholder="Поиск физ. лица" style="padding-left: 40px;"><ul class="typeahead dropdown-menu"></ul><ul class="typeahead dropdown-menu"></ul>
+            <span style="position:absolute; top:7px; left: 15px; z-index: 2; font-size: 18px;"><i class="ion-ios7-search"></i></span>
+            @*<a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="search-individual-settings collapsed"><i class="ion-android-mixer"></i></a>*@
+            <span class="input-group-btn">
+                <button type="button" id="searchIndividualBtn" class="btn btn-inverse waves-effect waves-light">Найти</button>
+            </span>
+        </div>
+
+        <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" style="">
+            <div class="card-box p-20">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group form-group-sm m-b-0">
+                            <label class="control-label m-r-10" for="isRemove">Показать аннулированные</label>
+                            @Html.CheckBox("isRemove", false, new { @class = "js-switch extra-small", @placeholder = "Введите наименование", @data_switchery = "true", @data_plugin = "switchery", @data_color = "#f05050" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-2">
+        @using (Ajax.BeginForm("PartialModalAddCustomer", "ApplicantPage", null, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+        {
+            <button type="submit" class="btn btn-default waves-effect waves-light pull-right text-uppercase"><i class="ion-person-add m-r-5"></i>Добавить</button>
+        }
+    </div>
+</div>
+
+
+<div id="mainContainer">
+    <div class="alert alert-warning">
+        <span style="color: #00545c;"><strong><i class="icon-info"></i></strong> Воспользуйтесь поиском.</span>
+    </div>
+</div>
+
+
+
+@section scripts
+{
+    <script>
+        var customerId = location.hash.substring(1);
+        if (customerId !== '') {
+            $.ajax({
+                url: '@Url.Action("PartialIndividualList", "ApplicantPage")',
+                type: 'Post',
+                data: { customerId: customerId },
+                success: function (data) {
+                    var divBlock;
+                    if (data !== '') {
+                        divBlock = individualListBlock(data)
+                    }
+                    $('#mainContainer').html(divBlock);
+
+                }
+            });
+        }
+        $('#searchTextIndividual').keyup(function (e) {
+            if (e.which == 13) {
+                $('#searchIndividualBtn').click();
+            }
+        });
+        $('#searchIndividualBtn').click(function () {
+            $.ajax({
+                url: '@Url.Action("PartialIndividualList", "ApplicantPage")',
+                type: 'Post',
+                data: { search: $('#searchTextIndividual').val() },
+                success: function (data) {
+                    var divBlock;
+                    if (data !== '') {
+                        divBlock = individualListBlock(data)
+                    }
+                    else {
+                        divBlock = '<div class="alert alert-warning">';
+                        divBlock += '<span style="color: #00545c;"><strong><i class="icon-info"></i></strong> Поиск не дал результатов.</span>';
+                        divBlock += '</div>';
+                    }
+                    $('#mainContainer').html(divBlock);
+                }
+            });
+        }).focus();
+
+        function individualListBlock(data) {
+            var divBlock = '<div class="row">';
+            divBlock += '<div class="col-md-3">';
+            divBlock += '<div id="individualListContainer">';
+            divBlock += data;
+            divBlock += '</div>';
+            divBlock += '</div>';
+            divBlock += '<div class="col-md-9">';
+            divBlock += '<div id="individualPageContainer">';
+            divBlock += '<div class="alert alert-warning">';
+            divBlock += '<span style="color: #00545c;"><strong><i class="icon-info"></i></strong> Выберите физ.лицо из списка.</span>';
+            divBlock += '</div>';
+            divBlock += '</div>';
+            divBlock += '</div>';
+            divBlock += '</div>';
+            return divBlock;
+        }
+    </script>
+}

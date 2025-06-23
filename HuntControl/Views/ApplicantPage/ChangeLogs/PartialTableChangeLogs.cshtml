@@ -1,0 +1,114 @@
+﻿@model HuntControl.WebUI.Models.ApplicantPageViewModel
+<div class="row">
+    <div class="col-sm-12">
+        <h3 class="panel-title m-b-5">История изменений</h3>
+    </div>
+</div>
+
+@if (Model.DataChangeLogList.Any())
+{
+    <div class="card-box p-0">
+        <div class="input-group">
+            <span class="input-group-btn">
+                <button type="button" class="btn waves-effect waves-light btn-link p-l-20-important"><i class="fa fa-search"></i></button>
+            </span>
+            <input type="text" id="searchTextChangeLogs" class="text-dark no-border-input" placeholder="Поиск изменения" value="@ViewBag.Serach"><ul class="typeahead dropdown-menu"></ul><ul class="typeahead dropdown-menu"></ul>
+        </div>
+        <hr class="m-0">
+
+        <div class="table-responsive">
+            <table class="table table-striped table-hover font-13">
+                <thead>
+                    <tr>
+                        <th class="number-row p-l-20-important">№</th>
+                        <th>Таблица</th>
+                        <th>@Html.DisplayNameFor(model => model.DataChangeLogList.First().old_value)</th>
+                        <th>@Html.DisplayNameFor(model => model.DataChangeLogList.First().new_value)</th>
+                        <th>@Html.DisplayNameFor(model => model.DataChangeLogList.First().employees_fio)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.DataChangeLogList)
+                    {
+                        <tr>
+                            <td class="number-row p-l-20-important">
+                                @((Model.PageInfo.CurrentPage - 1) * Model.PageInfo.ItemsPerPage + ++Model.PageInfo.NumberRow)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(i => item.table_name_)<br />
+                                <span class="text-muted">Поле: </span>@Html.DisplayFor(i => item.field_name_)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(i => item.old_value)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(i => item.new_value)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(i => item.employees_fio)<br />
+                                <span class="text-muted">Дата: </span>@Html.DisplayFor(i => item.date_change)
+                            </td>
+                            <td class="actions">
+                                
+                                    <button type="button" class="on-default text-custom link" style="font-size: 22px;line-height: 22px;" data-tooltip-info='{"table_name_": "@item.table_name_", "field_name_": "@item.field_name_", "employees_fio": "@item.employees_fio", "date_change": "@item.date_change", "commentt": "@item.commentt", "old_value": "@item.old_value", "new_value": "@item.new_value", "table_name_base_": "@item.table_name_base_", "field_name_base_": "@item.field_name_base_"}'>
+                                        <i class="ion-ios7-information-outline"></i>
+                                    </button>
+                                
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="row p-t-10 p-l-20-important p-r-20-important p-b-10">
+            <div class="col-sm-6">
+                <div class="dataTables_info" id="datatable_info" role="status" aria-live="polite">Показаны @((Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage > Model.PageInfo.TotalItems) ? Model.PageInfo.TotalItems : Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage) из @Model.PageInfo.TotalItems записей</div>
+            </div>
+            <div class="col-sm-6">
+                <div class="dataTables_paginate paging_simple_numbers" id="datatable-editable_paginate">
+                    @Html.PageLinks(Model.PageInfo, x => Ajax.ActionLink(x.NameLink, "PartialTableChangeLogs", "ApplicantPage", new { page = x.CurrentPage, search = ViewBag.Serach, customerId = ViewBag.CustomerId }, new AjaxOptions { UpdateTargetId = "changeLogsTabContainer" }))
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">
+        <span style="color:#00545c;"><strong><i class="icon-info"></i></strong> Нет изменений.</span>
+    </div>
+}
+
+
+<script>
+    $(function () {
+        $('button[data-tooltip-info]').tooltip({
+            title: function () {
+                var tooltipInfo = $(this).data('tooltipInfo');
+                return "<div class='text-left'>" +
+                            "<strong>Таблица</strong>: " + tooltipInfo['table_name_'] + " - " + tooltipInfo['table_name_base_'] + "</br>" +
+                            "<strong>Поле</strong>: " + tooltipInfo['field_name_'] + " - " + tooltipInfo['field_name_base_'] + "</br>" +
+                            "<strong>Старое значение</strong>: " + tooltipInfo['old_value'] + "</br>" +
+                            "<strong>Новое значение</strong>: " + tooltipInfo['new_value'] + "</br>" +
+                            "<strong>Комментарии</strong>: " + tooltipInfo['commentt'] + "</br>" +
+                            "<hr class='m-t-5 m-b-5'>" +
+                            "<strong>Изменил</strong>: " + tooltipInfo['employees_fio'] + "</br>" +
+                            "<strong>Дата изменения</strong>: " + tooltipInfo['date_change'] + "</br>" +
+                       "</div>";
+            },
+            html: true,
+            placement: "left"
+        });
+    });
+    $('#searchTextChangeLogs').change(function () {
+        $.ajax({
+            url: '@Url.Action("PartialTableChangeLogs", "ApplicantPage")',
+            type: 'Post',
+            data: { search: $(this).val(), customerId: '@ViewBag.CustomerId' },
+            success: function (data) {
+                $('#changeLogsTabContainer').html(data);
+            }
+        });
+    });
+</script>

@@ -1,0 +1,153 @@
+﻿@model HuntControl.WebUI.Models.HuntingFarmViewModel
+<ol class="breadcrumb m-b-0 text-muted">
+    <li>
+        @ViewBag.StepValues
+    </li>
+</ol>
+<hr class="m-t-0 m-b-10">
+<div class="row">
+    <div class="col-sm-10">
+        <h3 class="panel-title m-b-5">Список сезонов</h3>
+    </div>
+    <div class="col-sm-2">
+        <div class="text-right">
+            @using (Ajax.BeginForm("PartialModalAddHuntingFarmSeason", "Reference", new { huntingFarmId = ViewBag.HuntingFarmId }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+            {
+                <button type="submit" class="btn btn-inverse waves-effect waves-light btn-sm btn-block m-b-10"> Добавить <i class="fa fa-plus m-l-5"></i></button>
+            }
+        </div>
+    </div>
+</div>
+<div class="card-box p-0">
+    <div class="table-responsive">
+        <table class="table table-hover m-b-0">
+            <thead>
+                <tr>
+                    <th class="number-row p-l-20-important">№</th>
+                    <th>@Html.DisplayNameFor(model => model.HuntingFarmSeasonList.First().spr_season_id)</th>
+                    <th>Период</th>
+                    <th class="text-right p-r-20-important">
+                        <button id="showSeasonRemoves" type="button" class="link p-r-0 text-custom"><i class="@(ViewBag.IsRemove ? "ion-ios7-trash" : "ion-ios7-trash-outline") m-l-5" style="font-size: 20px;" data-placement="bottom" data-toggle="tooltip" data-original-title="@(ViewBag.IsRemove ? "Скрыть удаленные" : "Показать удаленные")"></i></button>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.HuntingFarmSeasonList)
+                {
+                    <tr data-hunting-farm-season-id="@item.id" class="@(item.is_remove == true ? "danger" : "")">
+                        <td class="number-row p-l-20-important">
+                            @((Model.PageInfo.CurrentPage - 1) * Model.PageInfo.ItemsPerPage + ++Model.PageInfo.NumberRow)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(i => item.spr_season.season_name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(i => item.date_start) - @Html.DisplayFor(i => item.date_stop)
+                        </td>
+                        <td class="actions">
+                            <button type="button" class="on-default text-custom link" style="font-size: 22px;line-height: 22px;" data-tooltip-info='{"date_start": "@item.date_start", "date_stop": "@item.date_stop", "employees_fio": @Json.Encode(item.employees_fio), "employees_fio_modifi": @Json.Encode(item.employees_fio_modifi ?? "-"), "set_date": "@Html.DisplayFor(i=>item.set_date)", "is_remove": @Json.Encode(item.is_remove), "date_remove": "@Html.DisplayFor(i=>item.date_remove)", "employees_fio_remove": @Json.Encode(item.employees_fio_remove), "commentt_remove": @Json.Encode(item.commentt_remove)}'>
+                                <i class="ion-ios7-information-outline"></i>
+                            </button>
+                            @if (User.IsInRole("superadmin") || User.IsInRole("admin"))
+                            {
+                                if (item.is_remove != true)
+                                {
+                                    using (Ajax.BeginForm("PartialModalHuntingFarmSeasonForm", "Reference", new { huntingFarmSeasonId = item.id }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                                    {
+                                        <button class="on-default edit-row link" data-placement="top" data-toggle="tooltip" data-original-title="Бланки">
+                                            <i class="ion-clipboard"></i>
+                                            <span class="badge badge-xs badge-danger">@(item.spr_hunting_farm_season_forms.Any() ? (object)item.spr_hunting_farm_season_forms.Count : null)</span>
+                                        </button>
+                                    }
+                                    using (Ajax.BeginForm("PartialModalEditHuntingFarmSeason", "Reference", new { huntingFarmSeasonId = item.id }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                                    {
+                                        <button class="on-default edit-row link" data-placement="top" data-toggle="tooltip" data-original-title="Изменение"><i class="ion-edit"></i></button>
+                                    }
+                                    <button class="on-default remove-row link" data-placement="top" data-toggle="tooltip" data-original-title="Удаление"><i class="ion-trash-b"></i></button>
+                                }
+                                else
+                                {
+                                    <button class="on-default recovery-row link" data-placement="top" data-toggle="tooltip" data-original-title="Восстановление"><i class="fa fa-history"></i></button>
+                                }
+
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <hr class="m-0">
+    <div class="row p-t-10 p-l-20-important p-r-20-important p-b-10">
+        <div class="col-sm-6">
+            <div class="dataTables_info" id="datatable_info" role="status" aria-live="polite">Показаны @((Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage > Model.PageInfo.TotalItems) ? Model.PageInfo.TotalItems : Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage) из @Model.PageInfo.TotalItems записей</div>
+        </div>
+        <div class="col-sm-6">
+            <div class="dataTables_paginate paging_simple_numbers" id="datatable-editable_paginate">
+                @Html.PageLinks(Model.PageInfo, x => Ajax.ActionLink(x.NameLink, "PartialTableHuntingFarmSeasons", "Reference", new { page = x.CurrentPage, isRemove = ViewBag.IsRemove, huntingFarmId = ViewBag.HuntingFarmId }, new AjaxOptions { UpdateTargetId = "huntingFarmSeasonContainer" }))
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip({ trigger: 'hover' });
+        $('button[data-tooltip-info]').tooltip({
+            title: function () {
+                var tooltipInfo = $(this).data('tooltipInfo');
+                return "<div class='text-left'>" +
+                    "<strong>Дата начала</strong>: " + tooltipInfo['date_start'] + "</br>" +
+                    "<strong>Дата окончания</strong>: " + tooltipInfo['date_stop'] + "</br>" +
+                    "<hr class='m-t-5 m-b-5'>" +
+                    "<strong>Добавил</strong>: " + tooltipInfo['employees_fio'] + "</br>" +
+                    "<strong>Дата добавления</strong>: " + tooltipInfo['set_date'] + "</br>" +
+                    "<hr class='m-t-5 m-b-5'>" +
+                    "<strong>Изменил</strong>: " + tooltipInfo['employees_fio_modifi'] + "</br>" +
+                    (tooltipInfo['is_remove'] ?
+                        "<hr class='m-t-5 m-b-5'>" +
+                        "<strong>Удалил</strong>: " + tooltipInfo['employees_fio_remove'] + "</br>" +
+                        "<strong>Причина удаления</strong>: " + tooltipInfo['commentt_remove'] + "</br>" +
+                        "<strong>Дата удаления</strong>: " + tooltipInfo['date_remove'] + "</br>" : "") +
+                    "</div>";
+            },
+            html: true,
+            placement: "left"
+        });
+    });
+
+    $('#showSeasonRemoves').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableHuntingFarmSeasons", "Reference")',
+            data: { huntingFarmId: '@ViewBag.HuntingFarmId', isRemove: '@(!ViewBag.IsRemove)' },
+            success: function (data) {
+                $('#huntingFarmSeasonContainer').html(data);
+            }
+        });
+    });
+
+    $('#huntingFarmSeasonContainer table td button.recovery-row').click(function () {
+        var huntingFarmSeasonId = $(this).closest('tr').data('huntingFarmSeasonId');
+        var paramObject = {
+            url: '@Url.Action("SubmitHuntingFarmSeasonRecovery", "Reference")',
+            params: { huntingFarmSeasonId: huntingFarmSeasonId },
+            onSuccess: function (data) {
+                $('#huntingFarmSeasonContainer').html(data);
+            }
+        }
+        removeRecovery(paramObject);
+    });
+
+    $('#huntingFarmSeasonContainer table td button.remove-row').click(function () {
+        var huntingFarmSeasonId = $(this).closest('tr').data('huntingFarmSeasonId');
+        var paramObject = {
+            url: '@Url.Action("SubmitHuntingFarmSeasonDelete", "Reference")',
+            params: { huntingFarmSeasonId: huntingFarmSeasonId },
+            onSuccess: function (data) {
+                $('#huntingFarmSeasonContainer').html(data);
+            }
+        }
+        removeWithComment(paramObject);
+    });
+</script>

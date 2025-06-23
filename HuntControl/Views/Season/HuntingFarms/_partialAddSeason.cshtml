@@ -1,0 +1,76 @@
+﻿@model IEnumerable<HuntControl.Domain.Concrete.CustomerHuntingSeason>
+<div>
+
+
+
+    <input type="hidden" id="idseason" value="@ViewBag.idSeason" />
+    <input type="hidden" id="year" value="@ViewBag.year" />
+    <input type="hidden" id="datestart" value="@ViewBag.DataStart" />
+    <input type="hidden" id="dateend" value="@ViewBag.DateEnd" />
+
+
+
+    <table id="tblSearch" class="table form-control-static table-hover mb-0">
+        <thead>
+        <th></th>
+        <th>Охотоугодье</th>
+        <th>Животное</th>
+        <th>Кол-во на г.</th>
+        <th>Норма на сезон</th>
+        <th>Норма на день</th>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr data-onclientclick="tdFurmAnimal">
+                    <td data-click="clicktd">
+                        <input id="checkFurmAnimal" type="checkbox" data-type="cb" class="checkbox" />
+                        <input type="hidden" id="idfurm" value="@item.out_spr_hunting_farm_id" />
+                        <input type="hidden" id="idanimal" value="@item.out_spr_animal_id" />
+                        <input type="hidden" id="idaccounting" value="@item.out_spr_hunting_farm_accounting_id" />
+                    </td>
+                    <td data-click="clicktd">@item.out_hunting_farm_name</td>
+                    <td data-click="clicktd">@item.out_animal_name</td>
+                    <td data-click="clicktd">@item.out_count_animal</td>
+                    <td><input id="txtNormDay" type="number" min="1" max="@item.out_count_animal" disabled class="form-control input-sm touchspin" style="width:50px;" value="1" /></td>
+                    <td><input id="txtNormSeason" type="number" min="1" max="@item.out_count_animal" disabled class="form-control input-sm touchspin" style="width:50px;" value="1" /></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+
+    
+
+
+
+
+    $('[data-click="clicktd"]').on('click', function (e) {
+        var $this = $(this);
+        var thisTD = $this.closest('tr');
+        var cbFarmAnimal = thisTD.find("#checkFurmAnimal");
+        var txtNormDay = thisTD.find("#txtNormDay");
+        var txtNormSeason = thisTD.find("#txtNormSeason");
+
+        if (cbFarmAnimal.prop("checked") != true) {
+            cbFarmAnimal.prop("checked", true);
+            thisTD.addClass("active");
+            txtNormDay.prop("disabled", false);
+            txtNormSeason.prop("disabled", false);
+        }
+        else {
+            cbFarmAnimal.prop("checked", false);
+            thisTD.removeClass("active");
+            txtNormDay.prop("disabled", true);
+            txtNormSeason.prop("disabled", true);
+        }
+
+    });
+
+    
+  
+
+</script>
+

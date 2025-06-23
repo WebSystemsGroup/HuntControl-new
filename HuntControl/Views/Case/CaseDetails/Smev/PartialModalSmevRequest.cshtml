@@ -1,0 +1,179 @@
+﻿@model IEnumerable<HuntControl.Domain.Concrete.CaseServicesSmevRequestSelectResult>
+<link href="~/Content/plugins/animate.less/animate.min.css" rel="stylesheet" type="text/css">
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<script src="~/Content/plugins/notifyjs/dist/notify.min.js"></script>
+<script src="~/Content/plugins/notifications/notify-metro.js"></script>
+<style>
+    .steps.clearfix {
+        border-bottom: 1px solid #eee;
+        margin-bottom: 15px;
+    }
+
+    .actions.clearfix.text-right {
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+    }
+</style>
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">        
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="position: absolute;top: 15px;right: 25px;"><i class="ion-close"></i></button>
+        <div class="modal-body p-0 m-t-10">
+            <div class="app-content">
+                <div class="icons-tab-steps wizard-circle">
+                    <!-- Step 1 -->
+                    <h6><i class="step-icon icon-cube"></i>СМЭВ запрос</h6>
+                    <fieldset class="p-0">
+                        <div id="smevRequestContainer">
+                            <table id="smevRequestTable" class="table table-hover">
+                                <thead class="hidden">
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    @foreach (var item in Model)
+                                    {
+                                <tr data-smev-request-id="@item.out_spr_smev_request_id" class="font-13">
+                                    <td>@item.out_smev_name</td>
+                                    <td>@item.out_request_name</td>
+                                    <td>@item.out_type_name</td>
+                                    <td class="text-right vertical-middle">
+                                        <i class="fa fa-check-circle font-18 text-muted"></i>
+                                    </td>
+                                </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <hr class="m-t-10" />
+                        <div class="actions clearfix text-right">
+                            <button type="button" id="nextSmevRequestData" class="btn btn-default waves-effect waves-light btn-block-xs m-l-5"> Далее <i class="ion-chevron-right m-l-5"></i></button>
+                        </div>
+
+                    </fieldset>
+
+                    <!-- Step 2 -->
+                    <h6><i class="step-icon icon-paintbucket"></i>Данные</h6>
+                    <fieldset class="p-0">
+                        <div id="smevRequestDataContainer">
+                        </div>
+                    </fieldset>
+
+                    <!-- Step 3 -->
+                    <h6><i class="step-icon icon-paintbucket"></i>Ответ</h6>
+                    <fieldset class="p-0">
+                        <div id="smevRequestResponseContainer">
+                            
+                        </div>                        
+                    </fieldset>
+
+                </div>
+            </div>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+<link href="~/Content/plugins/wizard/wizard.min.css" rel="stylesheet" />
+<script src="~/Content/plugins/wizard/jquery.steps.min.js"></script>
+<link href="~/Content/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+<script src="~/Content/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/Content/plugins/datatables/dataTables.bootstrap.js"></script>
+<script>
+    $(function () {
+        $('#smevRequestTable').dataTable();
+
+        $(".icons-tab-steps").steps({
+            forceMoveForward: true,
+            enablePagination: false,
+            headerTag: "h6",
+            bodyTag: "fieldset",
+            transitionEffect: "fade",
+            titleTemplate: '<span class="step"></span> #title#',
+
+
+            onStepChanging: function (event, currentIndex, newIndex) {
+                var result = false;
+                if (newIndex == 0) {
+                    result = true;
+                }
+                else if (newIndex == 1 ) {
+                    var smevRequestId = $('table#smevRequestTable tr.success').data('smevRequestId');
+                    if (smevRequestId != undefined) {
+                        $.ajax({
+                            type: 'POST',
+                            async: false,
+                            url: '@Url.Action("PartialSmevRequestDataForm", "Case")',
+                            data: { smevRequestId: smevRequestId, infoId: '@ViewBag.InfoId' },
+                            success: function (data) {
+                                $('#smevRequestDataContainer').html(data);
+                                result = true;
+                            }
+                        });
+                    } else {
+                        $('#smevRequestContainer').addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                            $(this).removeClass('shake animated');
+                        });
+                    }
+                }
+                else if (newIndex == 2) {
+                    result = true;
+                }
+                
+                return result;
+            },
+            onStepChanged: function (event, currentIndex, priorIndex) {
+
+            }
+        });
+    });
+
+    $('#smevRequestTable tr').click(function () {
+        $('#smevRequestTable tr').removeClass('success');
+        $(this).addClass('success');
+    });
+
+    $('button#nextSmevRequestData').click(function () {
+        $(".icons-tab-steps").steps('next');
+    });
+
+
+    function smevSendData(url, serializeData) {
+        string_byte = null;
+        var modal = $('.modal-content');
+        modal.find("input:hidden.data_services_id").val($("#tab-services").find(".r-tabs-state-custom-active").data("serviceId"));
+        console.log(modal.find("input:hidden.dataServicesId").val());
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: serializeData,
+            beforeSend: function () {
+                $('#myModal').block({ message: '<div class="fa fa-spin fa-spinner icon-lg"></div> Выполняется запрос, подождите...', overlayCSS: { backgroundColor: "#FFF", cursor: "wait" }, css: { border: 0, padding: 30, backgroundColor: "none" } });               
+            },
+            success: function (data) {
+                console.log(data);
+                string_byte = data._response;
+                if (data._response != "") {
+                    var iframe = $('<iframe>');
+                    iframe.css('width', '100%');
+                    iframe.css('height', '40em');
+                    iframe.attr("src", "data:application/pdf;base64," + string_byte);
+                    modal.find('#smevRequestResponseContainer').html(iframe);
+                    $(".icons-tab-steps").steps('next');
+
+                }
+                if (data.errorText != null) {
+                    $.Notification.notify('error', 'top right', 'Ошибка!', data.errorText);
+                };
+            },
+            complete: function () {
+                $('#myModal').unblock();
+            }
+        });
+    };
+        
+</script>

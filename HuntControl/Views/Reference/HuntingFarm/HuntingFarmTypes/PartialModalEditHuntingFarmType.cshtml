@@ -1,0 +1,32 @@
+﻿@model HuntControl.Domain.Concrete.spr_hunting_farm_type
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myLargeModalLabel">Изменение данных вида охотугодья</h4>
+        </div>
+        <div class="modal-body">
+
+            @using (Ajax.BeginForm("SubmitHuntingFarmTypeSave", "Reference", Model, new AjaxOptions { UpdateTargetId = "huntingFarmTypeContainer", OnSuccess = "$('#myModal').modal('hide');" }, new { @id = "EditHuntingFarmTypeForm", @class = "form-horizontal" }))
+            {
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group form-group-sm">
+                            <label class="col-md-4 control-label">Наименование</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.type_name, new { @class = "form-control", @placeholder = "Введите наименование" })
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+            }
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel waves-effect waves-light btn-block-xs" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Отмена</button>
+            <button type="submit" form="EditHuntingFarmTypeForm" class="btn btn-success waves-effect waves-light btn-block-xs"> Сохранить <i class="fa fa-check m-l-5"></i></button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

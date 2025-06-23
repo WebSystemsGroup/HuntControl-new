@@ -1,0 +1,42 @@
+﻿@model HuntControl.Domain.Concrete.spr_animal_type
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myLargeModalLabel">Изменение данных вида животных</h4>
+        </div>
+        <div class="modal-body">
+
+            @using (Ajax.BeginForm("SubmitAnimalTypeSave", "Reference", Model, new AjaxOptions { UpdateTargetId = "animalTypesPillContainer", OnSuccess = "$('#myModal').modal('hide');" }, new { @id = "EditAnimalTypeForm", @class = "form-horizontal" }))
+            {
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group form-group-sm">
+                            <label class="col-md-4 control-label">Наименование</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.type_name, new { @class = "form-control", @placeholder = "Введите наименование" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group form-group-sm">
+                            <label class="col-md-4 control-label">Комментарии</label>
+                            <div class="col-md-8">
+                                @Html.TextAreaFor(model => model.commentt, new { @class = "form-control", @placeholder = "Комментарии" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel waves-effect waves-light" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Отмена</button>
+            <button type="submit" form="EditAnimalTypeForm" class="btn btn-success waves-effect waves-light"> Сохранить <i class="fa fa-check m-l-5"></i></button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

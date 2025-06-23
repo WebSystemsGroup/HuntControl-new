@@ -1,0 +1,10 @@
+﻿
+@{
+    ViewBag.Title = "Справочник юр. лиц";
+}
+
+@Html.MvcSiteMap().SiteMapPath()
+
+<div id="legalPersonsContainer">
+    @Html.Action("PartialTableLegalPersons", "Reference")
+</div>

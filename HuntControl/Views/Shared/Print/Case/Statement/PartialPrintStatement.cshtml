@@ -1,0 +1,252 @@
+﻿@model HuntControl.WebUI.Models.Print.Case.Statement.StatementModel
+<link href="~/Content/css/print.css" rel="stylesheet" />
+<style>
+    @@media print {
+        .printSelected > * {
+            display: none;
+            page-break-after: always;
+        }
+
+        .printSelected > .printSelection {
+            display: block;
+        }
+
+        @@page {
+            size: portrait;
+            /*margin: 15mm 10mm 15mm 25mm;*/
+        }
+
+        #print-content {
+            width: 165mm; /* ширина */
+        }
+    }
+
+    .page {
+        margin: 0;
+        page-break-after: always;
+    }
+
+    .printSelection {
+        display: none;
+    }
+
+    #print-content table {
+        border-collapse: collapse; /* Отображать только одинарные линии */
+    }
+
+    #print-content th {
+        text-align: left; /* Выравнивание по левому краю */
+        padding: 2px; /* Поля вокруг содержимого ячеек */
+        border: 2px solid black; /* Граница вокруг ячеек */
+        font-size: 8.0pt;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+    #print-content td {
+        font-size: 11.0pt;
+    }
+
+    #print-content {
+        font-family: Times New Roman;
+        /*min-height: 290mm;*/
+        position: relative;
+        width: 165mm;
+        margin: 0 auto;
+    }
+
+    .fs-11 {
+        font-size: 11px !important;
+    }
+</style>
+<style>
+    .bb {
+        border-bottom: 1px solid black !important;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    td {
+        vertical-align: bottom;
+        border: none !important;
+        min-height: 14pt !important;
+        font-size: 16px !important;
+    }
+</style>
+
+<div id="print-content">
+    <div class=WordSection1>
+        <!-- page 1 start-->
+        <div class="page page-1">
+            <div style="line-height:1.0; font-weight:bold">
+                <div style="padding-left:60%">
+                    Министерство природных
+                    ресурсов и экологии Республики Дагестан
+                </div>
+                <div style="padding-left:60%">
+                    Начальнику Управления охраны 
+                    объектов животного мира и 
+                    особо охраняемых природных 
+                    территорий
+                </div>
+                <div style="padding-left:60%">
+                    Гаджиханов С.Я.
+                </div>
+            </div>
+            <div style="font-size: 18px; text-align: center; margin-top: 15px;">
+                Заявление  <br />
+                о получении    охотничьего билета единого федерального образца
+            </div>
+            <table>
+                <tr><td width="200px">1.Фамилия, имя, отчество</td><td class="bb">@Model.StatementInfoGet.out_customer_name</td></tr>
+                <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+            </table>
+            <table>
+                <tr><td class="bb">&nbsp;</td><td class="bb">&nbsp;</td></tr>
+                <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+            </table>
+            <table>
+                <tr><td width="230px">2.Число, месяц, год рождения</td><td class="bb">@(((DateTime)Model.StatementInfoGet.out_document_birth_date).ToString("dd.MM.yyyy")) </td></tr>
+                <tr><td width="65px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+            </table>
+            <table>
+                <tr><td width="150px">3.Место рождения</td><td class="bb"> @Model.StatementInfoGet.out_document_birth_place</td></tr>
+                <tr><td width="50px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+            </table>
+            <table>
+                <tr><td width="150px">4.Почтовый адрес</td><td class="bb">@Model.StatementInfoGet.out_customer_address</td></tr>
+                <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+            </table>
+            <table>
+                <tr><td width="250px">5.Номер контактного телефона</td><td class="bb"> @(Model.StatementInfoGet.out_customer_tel1 + "   " + Model.StatementInfoGet.out_customer_tel2)</td></tr>
+                <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+            </table>
+            <table>
+                <tr><td width="330px">6.Адрес электронной почты(при наличии)</td><td class="bb"> @Model.StatementInfoGet.out_customer_email</td></tr>
+                <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+            </table>
+            <table>
+                <tr><td class="bb">&nbsp;</td><td class="bb">&nbsp;</td></tr>
+                <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+            </table>
+            <table>
+                <tr><td class="bb">&nbsp;</td><td class="bb">&nbsp;</td></tr>
+                <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+            </table>
+            <table>
+                <tr><td width="330px">7.Наличие членского билета (дата выдачи,<br> серия и номер, кем выдан)</td><td class="bb">&nbsp;</td></tr>
+                <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+            </table>
+            <table>
+                <tr><td class="bb">&nbsp;</td><td class="bb">&nbsp;</td></tr>
+                <tr><td width="60%px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+            </table>
+            <div style="font-size: 16px;text-align:left; margin-top: 15px;">
+                Прошу выдать мне охотничий билет единого федерального образца. <br />
+                С требованиями охотничьего минимума ознакомлен. <br />
+                Непогашенной или неснятой судимости за совершение умышленного преступления не имею.
+            </div>
+            <div style=" font-size: 16px;text-align:left; margin-top: 15px;">
+                Приложения:
+            </div>
+            <div style="font-size: 16px; text-align:left; margin-top: 15px;">
+                1. Две личные фотографии;
+            </div>
+            <div style="font-size: 16px; text-align:left; margin-top: 15px;">
+                2. Копия основного документа удостоверяющего личность (копия паспорта все листы)  <br />
+                на __ листах
+            </div>
+            <div style="font-size: 16px; text-align:left; margin-top: 15px;">
+                3. В случае наличия: охотничий билет или членский охотничий билет, выданные до __ <br />
+                _______ 20__ года и срок действия которых не истек
+            </div>
+            <br>
+            <table>
+                <tr><td width="10px">@*"@DateTime.Now.Date.ToString("dd")"*@</td><td width="100px" class="bb">@*@DateTime.Now.Date.ToString("MMMMM").ToLower()*@</td><td width="10px">20</td><td width="25px" class="bb">@*@DateTime.Now.Date.ToString("yy")*@</td><td width="12px">г.</td><td width="55%"></td><td></td><td width="24%" class="text-center fs-11">_______(подпись заявителя)</td><td width="10px"></td> </tr>
+            </table>
+            <table>
+                <tr><td class="bb">&nbsp;</td><td class="bb">&nbsp;</td></tr>
+                <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+            </table>
+            <table>
+                <tr><td width="60px"></td><td class="text-left fs-11">*Заявление заполняется разборчивым почерком</td></tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="print-content">
+    <div class=WordSection1>
+        <div class="page page-2">
+            <div style="line-height:1.0; font-weight:bold">
+                <div style="padding-left:60%">
+                    Министерство природных
+                    ресурсов и экологии Республики Дагестан
+                </div>
+
+                <div style="padding-left:60%">
+                    Начальнику Управления охраны
+                    объектов животного мира и
+                    особо охраняемых природных
+                    территорий
+                </div>
+                <div style="padding-left:60%">
+                    Гаджиханову С.Я.
+                </div>
+            </div>
+            <br><br>
+            <table>
+                <tr><td width="40px">от</td><td class="bb">@Model.StatementInfoGet.out_customer_name</td></tr>
+                <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+            </table>
+            <table>
+                <tr><td width="230px">проживающего(ей) по адресу:</td><td class="bb">@Model.StatementInfoGet.out_customer_address_actual</td></tr>
+                <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+            </table>
+            <table>
+                <tr><td class="bb">&nbsp;</td><td class="bb">&nbsp;</td></tr>
+                <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+            </table>
+            <table>
+                <tr><td width="60px">Паспорт</td><td class="bb text-center">@Model.StatementInfoGet.out_document_serial  @Model.StatementInfoGet.out_document_number</td><td width="60px">выдан</td><td class="bb text-center">@(((DateTime)Model.StatementInfoGet.out_document_issue_date).ToString("dd.MM.yyyy")) </td></tr>
+                <tr><td width="10px"></td><td class="text-center fs-11">(серия, номер)</td><td></td><td class="text-center fs-11">(кем и когда)</td></tr>
+            </table>
+            <table>
+                <tr><td class="bb">&nbsp;</td><td class="bb">@Model.StatementInfoGet.out_document_issue_body</td></tr>
+                <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+            </table>
+            <br><br>
+            <div style="font-size: 18px; text-align: center; margin-top: 15px;">
+                Заявление
+            </div>
+            <table>
+                <tr><td width="20px">Я,</td><td class="bb">@Model.StatementInfoGet.out_customer_name</td></tr>
+                <tr><td width="10px"></td><td class="text-center fs-11">(фамилия, имя, отчество полностью)</td></tr>
+            </table>
+            <table>
+                <tr><td class="bb">&nbsp;</td><td class="bb">&nbsp;</td></tr>
+                <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+            </table>
+            <br><br><br>
+            <div style="font-size:18px; text-align: left; margin-top: 15px;">
+                Даю свое согласие на предоставление персональных данных, связанных с <br>
+                наличием (отсутствием) непогашенной или снятой судимости за совершение <br>
+                умышленного преступления
+            </div>
+            <br><br><br>
+            <table>
+                <tr><td width="20%" class="bb text-center">@*@DateTime.Now.Date.ToString("dd.MM.yyyy")*@</td><td width="30px"></td><td class="bb" width="20%"></td><td width="10px" class="text-center">&nbsp;</td><td class="bb" width="40%">@(Model.StatementInfoGet.out_customer_name)</td></tr>
+                <tr><td width="20%" class="text-center fs-11">(дата)</td><td></td><td class="text-center fs-11">(подпись)</td><td width="10px"></td><td class="text-center fs-11">(ФИО)</td></tr>
+            </table>
+            <br><br><br>
+            <br><br><br>
+            <table>
+                <tr><td width="45%" class="text-center">Начальник отдела</td><td width="50px"></td><td class="bb" width="24%"></td><td width="10px" class="text-center"></td><td></td></tr>
+                <tr><td></td><td></td><td class="text-center fs-11">(подпись)</td><td width="10px"></td></tr>
+            </table>
+        </div>
+    </div>
+</div>
+

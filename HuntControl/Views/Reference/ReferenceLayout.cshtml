@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewBag.Title = "Справочники";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="profile-sidebar">
+            <!-- SIDEBAR USERPIC -->
+            <!-- SIDEBAR MENU -->
+            <div class="profile-usermenu">
+                <ul class="nav">
+                    <li class="text-muted menu-title">Справочники</li>
+                    <li>
+                        <a href="#" class="accordion-heading" data-toggle="collapse" data-target="#submenu2" aria-expanded="true">Охотхозяйство <span class="pull-right"><b class="caret"></b></span></a>
+                        <ul class="nav nav-list collapse in" id="submenu2">
+                            <li class="active">@Html.ActionLink("Охотхозяйство", "HuntingFarm", "Reference", null, new Dictionary<string, string> { { "data-toggle", "tab" } })</li>
+                            <li><a href="#v-types" data-toggle="tab" aria-expanded="false">Виды охотхозяйств</a></li>
+                            <li><a href="#v-animals" data-toggle="tab" aria-expanded="false">Животные охотхозяства</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" class="accordion-heading" data-toggle="collapse" data-target="#submenu3">Животные <span class="pull-right"><b class="caret"></b></span></a>
+                        <ul class="nav nav-list collapse" id="submenu3">
+                            <li><a href="#v-settings" data-toggle="tab" aria-expanded="false">Животные</a></li>
+                            <li><a href="#v-types" data-toggle="tab" aria-expanded="false">Виды животных</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!-- END MENU -->
+        </div>
+    </div>
+    <div class="col-md-9">
+        @RenderBody()   
+    </div>
+</div>
+

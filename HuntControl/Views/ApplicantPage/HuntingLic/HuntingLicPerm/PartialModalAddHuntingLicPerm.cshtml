@@ -1,0 +1,259 @@
+﻿@model HuntControl.Domain.Concrete.data_customer_hunting_lic_perm
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<script src="~/Content/plugins/select2/js/select2.full.min.js"></script>
+<script src="~/Scripts/moment.js"></script>
+<script>
+    $(document).ready(function () {
+        jQuery("#AddHuntingLicPermForm").validate().settings.ignore = ".bs-select-hidden";
+        $('#date_given').datepicker({ format: 'dd.mm.yyyy', autoclose: true, language: 'ru' });
+        $(".select2").select2();
+        $(".select2.empty").val('').trigger('change');
+        $("select:not('disabled')").on("select2:close", function (e) {
+            $(this).valid();
+        });
+    });
+
+    $('#data_customer_hunting_lic_id').change(function () {
+        var selected = $(this).val() != null && $(this).val() !== '';
+        $('#spr_hunting_farm_id').prop("disabled", !selected).val('').trigger('change');
+    });
+
+    $('#spr_hunting_farm_id').change(function () {
+        console.log('2222')
+        var selected = $(this).val() != null && $(this).val() !== '',
+            $this = $(this);
+        $('#hunting_farm_arr_id').val(null).trigger('change');
+        if (selected) {
+            console.log('1111')
+            $.ajax({
+                url: '@Url.Action("GetHuntingFarmGroupTypes", "ApplicantPage")',
+                data: { huntingFarmId: $('#spr_hunting_farm_id').val() },
+                success: function (data) {
+                    console.log(data);
+                    $("#season_id").html(null);
+                    data.forEach(function (el, i) {
+                        var dStart = moment(el.date_start).format('DD.MM.YYYY');
+                        var dStop = moment(el.date_stop).format('DD.MM.YYYY');
+                   
+                        $("#season_id").append('<option value="' + i++ + '" + data-spr-season-id="' + el.id.spr_season_id + '" data-hunting-farm-season-id="' + el.id.id + '">' + el.text + " (" + dStart + " - " + dStop + ")" + '</option>');
+                    });
+                    $("#season_id").select2().prop("disabled", false).val('').trigger('change');
+                }
+            });
+            $('#season_id').prop("disabled", true).val('').trigger('change');
+            //disabled dubl
+            $('#hunting_farm_arr_id option').prop('disabled',false);
+            $('#hunting_farm_arr_id').find('option').each(function(){
+                if ($(this).attr('value') === $this.val()){
+                    $(this).prop('disabled',true);               
+                }
+            });
+            $('#hunting_farm_arr_id').select2("destroy").select2();
+        }
+    });
+
+    $('#hunting_farm_arr_id_collapse').on('hidden.bs.collapse',
+        function() {
+            $('#hunting_farm_arr_id').val(null).trigger('change');
+        });
+
+    $('#season_id').change(function () {
+        var selected = $('#season_id :selected').data('sprSeasonId') != null && $('#season_id :selected').data('sprSeasonId') !== '';
+        console.log(selected);//$(this).val() != null && $(this).val() !== '';
+        var huntingFarmSeasonId = $('#season_id :selected').data('huntingFarmSeasonId');
+        var seasonId = $('#season_id :selected').data('sprSeasonId');
+        console.log($('#season_id :selected'), huntingFarmSeasonId);
+        $('#spr_hunting_farm_season_id').val(huntingFarmSeasonId);
+        $('#spr_season_id').val(seasonId);
+        if (selected) {
+            $.ajax({
+                url: '@Url.Action("GetHuntingFarmHuntingTypes", "ApplicantPage")',
+                data: { huntingFarmSeasonId },
+                success: function (data) {
+                    console.log(data);
+                    $("#spr_hunting_type_id").html(null).select2({
+                        data: data
+                    }).prop("disabled", false).val('').prop('selectedIndex', 0).trigger('change');
+                    $('#spr_method_remove_id').prop("disabled", !selected).val('').val('').prop('selectedIndex', 3).trigger('change');
+                }
+            });
+        } else {
+            $('#spr_hunting_type_id').prop("disabled", true).val('').trigger('change');
+        }
+    });
+
+    $('#spr_method_remove_id').change(function () {
+        var selected = $(this).val() != null && $(this).val() !== '';
+        if (selected) {
+            $.ajax({
+                url: '@Url.Action("PartialTableAnimalLimits", "ApplicantPage")',
+                data: { huntingFarmSeasonId: $('#season_id :selected').data('huntingFarmSeasonId'), huntingTypeId: $('#spr_hunting_type_id').val() },
+                success: function (data) {
+                    $('#alimalLimitContainer').html(data);
+                }
+            });
+        } else {
+            $('#alimalLimitContainer').html('');
+        }
+        $('#serial_form').prop("disabled", !selected);
+        $('#number_form').prop("disabled", !selected);
+        $('#fio_given').prop("disabled", !selected);
+        //$('#date_given').prop("disabled", !selected);
+    });
+
+    $('#spr_employees_id').change(function () {
+        var selected = $(this).val() != null && $(this).val() !== '';
+        if (selected) {
+            $.ajax({
+                url: '@Url.Action("GetSprEmployees", "ApplicantPage")',
+                data: { employees_id: $('#spr_employees_id').val() },
+                success: function (data) {
+                    $('#fio_given').val(data.employees_fio);
+                    $('#job_pos_name').val(data.job_pos_name);
+                }
+            });
+        }
+        else {
+            $('#fio_given').val("");
+            $('#job_pos_name').val("");
+        }
+        });
+</script>
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myLargeModalLabel">Добавление разрешения на охоту</h4>
+        </div>
+        <div class="modal-body">
+            <div style="height: 400px; overflow-x: hidden">
+                @using (Ajax.BeginForm("SubmitHuntingLicPermSave", "ApplicantPage", Model, new AjaxOptions { OnSuccess = "$('#myModal').modal('hide'); successAdd(); $('a[href=#huntingLicPermsTabContainer]').trigger('click');" }, new { @id = "AddHuntingLicPermForm", @class = "form-horizontal" }))
+                {
+                    @Html.HiddenFor(model => model.spr_hunting_farm_season_id)
+                    @Html.HiddenFor(model => model.spr_season_id)
+                    <div class="row p-l-r-10">
+                        <div class="col-lg-12">
+                            <div class="form-group form-group-sm">
+                                @Html.LabelFor(model => model.data_customer_hunting_lic_id, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                <div class="col-md-6">
+                                    @Html.DropDownListFor(model => model.data_customer_hunting_lic_id, ViewBag.HuntingLics as SelectList, new { @class = "form-control select2 input-sm", data_placeholder = "Выберите охотбилет" })
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                @Html.LabelFor(model => model.spr_hunting_farm_id, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                <div class="col-md-6">
+                                    @Html.DropDownListFor(model => model.spr_hunting_farm_id, ViewBag.HuntingFarms as SelectList, new { @class = "form-control select2 input-sm empty", data_placeholder = "Выберите охотугодье" })
+                                </div>
+                                <div class="col-md-2">
+                                    <a style="border-bottom: 1px dashed; font-size: 12px !important;" role="button" data-toggle="collapse" href="#hunting_farm_arr_id_collapse" aria-expanded="false" aria-controls="hunting_farm_arr_id_collapse">Добавить</a>
+                                </div>
+                            </div>
+                            <div class="collapse" id="hunting_farm_arr_id_collapse">
+                                <div class="form-group form-group-sm">
+                                    <label class="col-md-4 control-label text-right" for="hunting_farm_arr_id">Дополнительные охотугодья</label>
+                                    <div class="col-md-6">
+                                        @Html.DropDownList("hunting_farm_arr_id", ViewBag.HuntingFarms as SelectList, new { @class = "form-control select2 input-sm empty", @data_placeholder = "Охотугодье", @Name = "hunting_farm_arr_id", @Id= "hunting_farm_arr_id", @multiple = "multiple" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <label class="col-md-4 control-label text-right" for="spr_season_id">Сезон</label>
+                                <div class="col-md-6">
+                                    @Html.DropDownListFor(model => model.spr_season_id, new SelectList(new List<SelectListItem>(), "Value", "Text"), new { @class = "form-control select2 input-sm empty", @disabled = "disabled", @data_placeholder = "Выберите сезон", @Name = "season_id", @Id= "season_id" })
+                                </div>
+                            </div>
+                            @*<div class="form-group form-group-sm">
+                        @Html.LabelFor(model => model.spr_season_id, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-6">
+                            @Html.DropDownListFor(model => model.spr_season_id, new SelectList(new List<SelectListItem>(), "Value", "Text"), new { @class = "form-control select2 input-sm empty", @disabled = "disabled", @data_placeholder = "Выберите сезон" })
+                        </div>
+                    </div>*@
+                            <div class="form-group form-group-sm">
+                                @Html.LabelFor(model => model.spr_hunting_type_id, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                <div class="col-md-6">
+                                    @Html.DropDownListFor(model => model.spr_hunting_type_id, new SelectList(new List<SelectListItem>(), "Value", "Text"), new { @class = "form-control select2 input-sm empty", @disabled = "disabled", @data_placeholder = "Выберите вид охоты" })
+
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                @Html.LabelFor(model => model.spr_method_remove_id, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                <div class="col-md-6">
+                                    @Html.DropDownListFor(model => model.spr_method_remove_id, ViewBag.MethodRemoves as SelectList, new { @class = "form-control select2 input-sm empty", @disabled = "disabled", @data_placeholder = "Выберите способ изъятия" })
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                @Html.LabelFor(model => model.serial_form, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(model => model.serial_form, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.serial_form) }, { "disabled", "disabled" } })
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                @Html.LabelFor(model => model.number_form, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(model => model.number_form, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.number_form) }, { "disabled", "disabled" } })
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <div class="row">
+                                    @Html.LabelFor(model => model.fio_given, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                    <div class="col-md-6">
+                                        @Html.DropDownListFor(model => model.spr_employees_id, ViewBag.SprEmployees as SelectList, "Выберите сотрудника", new Dictionary<string, object> { { "class", "form-control select2 required" } })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <div class="row">
+                                    @Html.LabelFor(model => model.job_pos_name, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(model => model.job_pos_name, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.job_pos_name) }, { "readonly", "readonly" } })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm hidden">
+                                @Html.LabelFor(model => model.fio_given, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(model => model.fio_given, new Dictionary<string, object> { { "class", "form-control required" }, { "placeholder", Html.DisplayNameFor(model => model.fio_given) }, { "disabled", "disabled" } })
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                @Html.LabelFor(model => model.date_given, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        @Html.TextBox("date_given", DateTime.Now, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.date_given) }, { "data-type", "date" } })
+                                        <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                @Html.LabelFor(model => model.tariff_, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.tariff_, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.tariff_) } })
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                @Html.LabelFor(model => model.charge_, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.charge_, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.charge_) } })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div id="alimalLimitContainer">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel waves-effect waves-light" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Отмена</button>
+            <button type="submit" form="AddHuntingLicPermForm" class="btn btn-success waves-effect waves-light"> Сохранить <i class="fa fa-check m-l-5"></i></button>
+        </div>
+    </div>
+</div>

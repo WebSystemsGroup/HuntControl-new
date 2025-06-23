@@ -1,0 +1,218 @@
+﻿@model HuntControl.WebUI.Models.ApplicantPermViewModel
+
+<div class="row">
+    <div class="col-sm-10 col-xs-6">
+        <h3 class="panel-title">Список разрешений на охоту</h3>
+    </div>
+
+    <div class="col-sm-2 col-xs-6 m-b-10">
+        <div class="text-right">
+            @using (Ajax.BeginForm("PartialModalAddHuntingLicPerm", "ApplicantPage", new { customerId = ViewBag.CustomerId }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+            {
+                <button type="submit" class="btn btn-inverse waves-effect waves-light btn-sm"> Добавить <i class="fa fa-plus m-l-5"></i></button>
+            }
+        </div>
+    </div>
+
+</div>
+
+@if (Model.dataCustomerInfoGetsList.Any())
+{
+    <div class="card-box p-0">
+        <table class="table m-b-0">
+            <thead>
+                <tr>
+                    <th class="number-row p-l-20-important">№</th>
+                    <th>Бланк</th>
+                    <th>Охотугодье</th>
+                    <th>Дата выдачи</th>
+                    <th class="text-right p-r-20-important">
+                        Действия
+                        @*<button id="showPermRemoves" type="button" class="link p-r-0 text-custom"><i class="@(ViewBag.IsRemove ? "ion-ios7-trash" : "ion-ios7-trash-outline") m-l-5" style="font-size: 20px;" data-placement="bottom" data-toggle="tooltip" data-original-title="@(ViewBag.IsRemove ? "Скрыть удаленные" : "Показать удаленные")"></i></button>*@
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.dataCustomerInfoGetsList)
+                {
+                    <tr data-hunting-lic-perm-id="@item.out_data_customer_hunting_lic_perm_id" data-season-name="@item.out_season_name" data-animal-group-type-identity="@item.out_spr_season_id" class="@(item.out_is_remove == true ? "danger" : "")">
+                        <td class="number-row p-l-20-important vertical-middle-important">
+                            @((Model.PageInfo.CurrentPage - 1) * Model.PageInfo.ItemsPerPage + ++Model.PageInfo.NumberRow)
+                        </td>
+                        <td class="vertical-middle-important">
+                            @Html.DisplayFor(m => item.out_serial_form) @Html.DisplayFor(m => item.out_number_form)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.out_hunting_farm_name)<br />
+                            <small class="text-muted">@Html.DisplayFor(m => item.out_season_name)</small>
+                        </td>
+                        <td class="vertical-middle-important">
+                            @Html.DisplayFor(m => item.out_date_given)
+                        </td>
+                        <td class="actions vertical-middle-important">
+                            <button type="button" class="on-default text-custom link" style="font-size: 22px; line-height: 22px;" data-tooltip-info='{"type_name": @Json.Encode(item.out_hunting_type_name), "serial_form": @Json.Encode(item.out_serial_form), "number_form": @Json.Encode(item.out_number_form), "hunting_farm_name": @Json.Encode(item.out_hunting_farm_name), "fio_given": @Json.Encode(item.out_fio_given), "date_given": "@Html.DisplayFor(i => item.out_date_given)", "tariff_": "@Html.DisplayFor(i => item.out_tariff)", "charge_": "@Html.DisplayFor(i => item.out_charge)", "employees_fio": @Json.Encode(item.out_employees_fio ?? "-"), "set_date": "@Html.DisplayFor(i => item.out_set_date)", "employees_fio_modifi": @Json.Encode(item.out_employees_fio_modifi ?? "-"), "is_remove": "@item.out_is_remove", "employees_fio_remove": "@item.out_employees_fio_remove", "date_remove": "@item.out_date_remove", "commentt_remove": "@item.out_commentt_remove"}'>
+                                <i class="ion-ios7-information-outline"></i>
+                            </button>
+                            @if (item.out_is_remove != true)
+                            {
+                                <div class="btn-group dropup">
+                                    <button type="button" class="on-default dropdown-toggle link" data-toggle="dropdown" aria-expanded="true" title="Печать"><i class="ion-printer"></i></button>
+                                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                        <li><a data-print="Perm">Заявление</a></li>
+                                        <li><a data-print="Blank">Бланк</a></li>
+                                    </ul>
+                                </div>
+                                using (Ajax.BeginForm("PartialModalHuntingLicPermBack", "ApplicantPage", new { huntingLicPermId = item.out_data_customer_hunting_lic_perm_id }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                                {
+                                    <button class="on-default edit-row link" data-placement="top" data-toggle="tooltip" data-original-title="Корешки">
+                                        <i class="ion-clipboard"></i>
+                                        <span class="badge badge-xs badge-danger">@(item.out_count_back > 0 ? (object)item.out_count_back : null)</span>
+                                    </button>
+                                }
+                                using (Ajax.BeginForm("PartialModalAnimalLimit", "ApplicantPage", new { huntingLicPermId = item.out_data_customer_hunting_lic_perm_id }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                                {
+                                    <button class="on-default edit-row link" data-placement="top" data-toggle="tooltip" data-original-title="Нормы на животного">
+                                        <i class="ion-ios7-paw"></i>
+                                        <span class="badge badge-xs badge-danger">@(item.out_count_animal > 0 ? (object)item.out_count_animal : null)</span>
+                                    </button>
+                                }
+                                using (Ajax.BeginForm("PartialModalEditHuntingLicPerm", "ApplicantPage", new { huntingLicPermId = item.out_data_customer_hunting_lic_perm_id }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                                {
+                                    <button class="on-default edit-row link" data-placement="top" data-toggle="tooltip" data-original-title="Изменение"><i class="ion-edit"></i></button>
+                                }
+                                <button class="on-default remove-row link" data-placement="top" data-toggle="tooltip" data-original-title="Удаление"><i class="ion-trash-b"></i></button>
+                            }
+                            else
+                            {
+                                <button class="on-default recovery-row link" data-placement="top" data-toggle="tooltip" data-original-title="Восстановление"><i class="fa fa-history"></i></button>
+                            }
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div id="test"></div>
+
+        <hr class="m-0">
+        <div class="row p-t-10 p-l-20-important p-r-20-important p-b-10">
+            <div class="col-sm-6">
+                <div class="dataTables_info" id="datatable_info" role="status" aria-live="polite">Показаны @((Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage > Model.PageInfo.TotalItems) ? Model.PageInfo.TotalItems : Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage) из @Model.PageInfo.TotalItems записей</div>
+            </div>
+            <div class="col-sm-6">
+                <div class="dataTables_paginate paging_simple_numbers" id="datatable-editable_paginate">
+                    @Html.PageLinks(Model.PageInfo, x => Ajax.ActionLink(x.NameLink, "PartialTableHuntingLicPerms", "ApplicantPage", new { page = x.CurrentPage, customerId = ViewBag.CustomerId }, new AjaxOptions { UpdateTargetId = "huntingLicPermsTabContainer" }))
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+}
+else
+{
+    <div class="alert alert-warning">
+        <span style="color:#00545c;"><strong><i class="icon-info"></i></strong> Нет разрешений.</span>
+    </div>
+}
+
+
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip({ trigger: 'hover' });
+        $('button[data-tooltip-info]').tooltip({
+            title: function () {
+                var tooltipInfo = $(this).data('tooltipInfo');
+                return "<div class='text-left'>" +
+                    "<strong>Вид охоты</strong>: " + tooltipInfo['type_name'] + "</br>" +
+                    "<strong>Серия</strong>: " + tooltipInfo['serial_form'] + "</br>" +
+                    "<strong>Номер</strong>: " + tooltipInfo['number_form'] + "</br>" +
+                    "<strong>Охотугодье</strong>: " + tooltipInfo['hunting_farm_name'] + "</br>" +
+                    "<strong>Выдал</strong>: " + tooltipInfo['fio_given'] + "</br>" +
+                    "<strong>Дата выдачи</strong>: " + tooltipInfo['date_given'] + "</br>" +
+                    "<strong>Госпошлина</strong>: " + tooltipInfo['tariff_'] + "</br>" +
+                    "<strong>Установленный сбор</strong>: " + tooltipInfo['charge_'] + "</br>" +
+                    "<hr class='m-t-5 m-b-5'>" +
+                    "<strong>Добавил</strong>: " + tooltipInfo['employees_fio'] + "</br>" +
+                    "<strong>Дата добавления</strong>: " + tooltipInfo['set_date'] + "</br>" +
+                    "<hr class='m-t-5 m-b-5'>" +
+                    "<strong>Изменил</strong>: " + tooltipInfo['employees_fio_modifi'] + "</br>" +
+                    (tooltipInfo['is_remove'] === 'True' ?
+                            "<hr class='m-t-5 m-b-5'>" +
+                            "<strong>Удалил</strong>: " + tooltipInfo['employees_fio_remove'] + "</br>" +
+                            "<strong>Причина удаления</strong>: " + tooltipInfo['commentt_remove'] + "</br>" +
+                            "<strong>Дата удаления</strong>: " + tooltipInfo['date_remove'] + "</br>" : "") +
+                    "</div>";
+            },
+            html: true,
+            placement: "left"
+        });
+    });
+
+    $('#showPermRemoves').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableHuntingLicPerms", "ApplicantPage")',
+            data: { customerId: '@ViewBag.CustomerId', isRemove: '@(!ViewBag.IsRemove)' },
+            success: function (data) {
+                $('#huntingLicPermsTabContainer').html(data);
+            }
+        });
+    });
+
+    $('#huntingLicPermsTabContainer table td button.recovery-row').click(function () {
+        var huntingLicPermId = $(this).closest('tr').data('huntingLicPermId');
+        var paramObject = {
+            url: '@Url.Action("SubmitHuntingLicPermRecovery", "ApplicantPage")',
+            params: { huntingLicPermId: huntingLicPermId },
+            onSuccess: function (data) {
+                $('#huntingLicPermsTabContainer').html(data);
+            }
+        }
+        removeRecovery(paramObject);
+    });
+
+    $('#huntingLicPermsTabContainer table td button.remove-row').click(function () {
+        var huntingLicPermId = $(this).closest('tr').data('huntingLicPermId');
+        var paramObject = {
+            url: '@Url.Action("SubmitHuntingLicPermDelete", "ApplicantPage")',
+            params: { huntingLicPermId: huntingLicPermId },
+            onSuccess: function (data) {
+                $('#huntingLicPermsTabContainer').html(data);
+            }
+        }
+        removeWithComment(paramObject);
+    });
+
+     $('a[data-print]').click(function () {
+        var print = $(this).data('print');
+         var huntingLicPermId = $(this).closest('tr').data('hunting-lic-perm-id');
+         var animalGroupTypeIdentity = $(this).closest('tr').data('animal-group-type-identity');
+         var seasonName = $(this).closest('tr').data('season-name');
+         let castomerId = document.querySelector('#individualListContainer .active').dataset.customerId; // Временно
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialPrintHuntingLicPerm", "ApplicantPage")',
+            data: { permsId: huntingLicPermId, dataTypePerms: print, animalGroupTypeIdentity: animalGroupTypeIdentity, seasonName: seasonName, castomerId: castomerId},
+            success: function (data) {
+               @* $(window.open().document.body).html(data);*@
+                //$('#test').append(data);
+                $(data).printThis({
+                   debug: false,
+                    importCSS: false,
+                    importStyle: true,
+                    printContainer: true,
+                    loadCSS: "",
+                    pageTitle: "",
+                    removeInline: false,
+                    printDelay: 333,
+                    header: null,
+                    formValues: true
+                });
+            }
+        });
+    });
+</script>
+<script src="~/Content/plugins/print/printThis.js"></script>

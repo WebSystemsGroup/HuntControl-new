@@ -1,0 +1,9 @@
+﻿@{
+    ViewBag.Title = "Справочник нарушений";
+}
+
+@Html.MvcSiteMap().SiteMapPath()
+
+<div id="violationsContainer">
+    @Html.Action("PartialTableViolations", "Reference")
+</div>

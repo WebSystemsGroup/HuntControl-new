@@ -1,0 +1,104 @@
+﻿@model IEnumerable<HuntControl.Domain.Concrete.ReportCountViolationsEmployees>
+<style>
+    .fs-8 {
+        font-size: 8px !important;
+        line-height: 0.5 !important;
+    }
+</style>
+@if (Model.Any())
+{
+    <div class="card-box p-0 m-t-20 m-b-20">
+        <div class="input-group">
+            <span class="input-group-btn">
+                <button type="button" class="btn waves-effect waves-light btn-link p-l-20-important"><i class="fa fa-search"></i></button>
+            </span>
+            <input type="text" id="searchTextReports" class="text-dark no-border-input" placeholder="Поиск..." /> <ul class="typeahead dropdown-menu"></ul><ul class="typeahead dropdown-menu"></ul>
+        </div>
+        <table id="datatable" class="table table-striped" style="margin-top: 0 !important">
+            <thead>
+                <tr class="text">
+                    <th class="number-row">№</th>
+                    <th>@Html.DisplayNameFor(model => model.out_employees_fio)</th>
+                    <th title="Уведомление направлено">@Html.DisplayNameFor(model => model.out_un)</th>
+                    <th title="Протокол составлен">@Html.DisplayNameFor(model => model.out_ps)</th>
+                    <th title="Определение вынесено">@Html.DisplayNameFor(model => model.out_ov)</th>
+                    <th title="Постановление вынесено">@Html.DisplayNameFor(model => model.out_pv)</th>
+                    <th title="Штраф оплачен">@Html.DisplayNameFor(model => model.out_sho)</th>
+                    <th title="Уведомление 20.25 направлено">@Html.DisplayNameFor(model => model.out_un20)</th>
+                    <th title="Протокол 20.25 составлен">@Html.DisplayNameFor(model => model.out_ps20)</th>
+                    <th title="Направлен в службу судебных приставов">@Html.DisplayNameFor(model => model.out_np)</th>
+                    <th title="Направлен по подведомственности">@Html.DisplayNameFor(model => model.out_npp)</th>
+                    <th title="Прекращено">@Html.DisplayNameFor(model => model.out_prk)</th>
+                    <th title="Без статуса">@Html.DisplayNameFor(model => model.out_bs)</th>
+                    <th class="p-r-20-important" title="Всего">Всего</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int index = 1;}
+                @{int x1; int x2; int x3; int x4; int x5; int x6; int x7; int x8; int x9; int x10; int x11;}
+                @{int tx1; int tx2; int tx3; int tx4; int tx5; int tx6; int tx7; int tx8; int tx9; int tx10; int trez = 0; int tx11; tx1 = tx2 = tx3 = tx4 = tx5 = tx6 = tx7 = tx8 = tx9 = tx10 = tx11 = 0;}
+                @foreach (var item in Model)
+                {
+                    <tr class="text">
+                        @{x1 = item.out_un; x2 = item.out_ps; x3 = item.out_ov; x4 = item.out_pv; x5 = item.out_sho; x6 = item.out_un20; x7 = item.out_ps20; x8 = item.out_np; x9 = item.out_npp; x10 = item.out_prk; x11 = item.out_bs;
+                            int rez = x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + x11;
+                            tx1 += item.out_un; tx2 += item.out_ps; tx3 += item.out_ov; tx4 += item.out_pv; tx5 += item.out_sho; tx6 += item.out_un20; tx7 += item.out_ps20; tx8 += item.out_np; tx9 += item.out_npp; tx10 += item.out_prk; tx11 += item.out_bs;
+                            trez += rez;}
+                        <td class="number-row"> @(index++)</td>
+                        <td class="p-l-20-important">@item.out_employees_fio</td>
+                        <td>@item.out_un</td>
+                        <td>@item.out_ps</td>
+                        <td>@item.out_ov</td>
+                        <td>@item.out_pv</td>
+                        <td>@item.out_sho</td>
+                        <td>@item.out_un20</td>
+                        <td>@item.out_ps20</td>
+                        <td>@item.out_np</td>
+                        <td>@item.out_npp</td>
+                        <td>@item.out_prk</td>
+                        <td>@item.out_bs</td>
+                        <td class="p-r-20-importanttext-center text-center" style="font-weight:600">@rez</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr class="text" style="border-top: 2px solid gray;">
+                    <th colspan="2" class="number-row">Итого</th>                    
+                    <th title="Уведомление направлено">@tx1</th>
+                    <th title="Протокол составлен">@tx2</th>
+                    <th title="Определение вынесено">@tx3</th>
+                    <th title="Постановление вынесено">@tx4</th>
+                    <th title="Штраф оплачен">@tx5</th>
+                    <th title="Уведомление 20.25 направлено">@tx6</th>
+                    <th title="Протокол 20.25 составлен">@tx7</th>
+                    <th title="Направлен в службу судебных приставов">@tx8</th>
+                    <th title="Направлен по подведомственности">@tx9</th>
+                    <th title="Прекращено">@tx10</th>
+                    <th title="Без статуса">@tx11</th>
+                    <th class="p-r-20-important text-center" title="Всего">@trez</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <script src="~/Content/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Content/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script>
+        $(document).ready(function () {
+            var oTable = $('#datatable').DataTable({ dom: 't<"row m-t-10 p-l-20-important p-b-10 m-r-15"<"col-sm-4"i><"col-sm-8"p>>' });
+            $('#searchTextReports').keyup(function () {
+                oTable.search($(this).val()).draw();
+            });
+        });
+    </script>
+}
+else
+{
+    <div class="alert alert-warning">
+        <span><i class="icon-info"></i> Нет данных.</span>
+    </div>
+}
+    <script>
+    $(document).ready(function () {
+         $("#report_count").text(@Model.Count());
+     });
+    </script>

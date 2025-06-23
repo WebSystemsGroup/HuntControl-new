@@ -1,0 +1,288 @@
+﻿@model HuntControl.WebUI.Models.CaseDetailViewModel
+<link rel="stylesheet" href="~/Content/plugins/switchery/dist/switchery.min.css">
+<style>
+    .alert {
+        padding: 10px;
+        margin-bottom: 0px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        position: relative;
+    }
+
+    .alert-success {
+        background: #eef1ee;
+        color: #797979;
+        position: relative;
+    }
+
+    .data_services_commentt.edit {
+        color: #797979;
+        border: 1px dashed green;
+        background: white;
+        font-style: italic;
+    }
+
+    .alert-dismissable {
+        color: #797979;
+    }
+
+    .notes-bottom {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        margin-right: -15px;
+        margin-left: -15px;
+    }
+
+    .notes-bottom > div {
+        position: relative;
+        width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+
+    .notes-bottom .notes-textarea {
+        -ms-flex-preferred-size: 0;
+        flex-basis: 0;
+        -ms-flex-positive: 1;
+        flex-grow: 1;
+        max-width: 100%;
+    }
+
+    .notes-bottom .notes-btn {
+        -ms-flex: 0 0 auto;
+        flex: 0 0 auto;
+        width: auto;
+        max-width: 100%;
+        padding-left: 0;
+    }
+
+    #commenttsPillContainer table tr p {
+        margin-bottom: 3px;
+    }
+
+    textarea#commentt {
+        width: 100%;
+        height: 40px;
+        max-height: 94px;
+        padding: 10px;
+        background-color: #eef1ee;
+        border: none;
+        border-radius: 5px;
+        resize: none;
+    }
+
+    .gosuslugi-checkbox {
+        margin-right: 20px;
+        cursor: pointer;
+    }
+
+        .gosuslugi-checkbox input {
+            display: none;
+        }
+
+            .gosuslugi-checkbox input:checked + img {
+                filter: grayscale(0);
+            }
+
+        .gosuslugi-checkbox img {
+            filter: grayscale(1);
+            transition-duration: .2s;
+        }
+</style>
+
+
+@if (Model.DataServicesCommentsList.Any())
+{
+    <div class="m-b-20 p-0">
+        <div class="table-responsive" style="height:200px; overflow-y:auto">
+            <table class="table table-striped m-b-0">
+                @foreach (var item in Model.DataServicesCommentsList)
+                {
+                    <tr data-commentt-id="@item.id">
+                        @if (item.spr_employees_id == Model.EmployeeId)
+                        {
+                            <td class="text-right">
+                                <p class="font-12 text-muted text-right">
+                                    <i class="fa fa-user m-r-5"></i> <span class="m-r-15"> Я </span> <i class="fa fa-clock-o m-r-5"></i> <span class="m-r-5">@Html.DisplayFor(i => item.date_enter)</span> @if (item.employees_fio_modifi != null)
+                                    {<i class="ion ion-edit m-r-5"></i>}
+                                </p>
+                                <div class="text-right col-sm-8 pull-right alert alert-success alert-dismissable data_services_commentt" data-commentt="@item.commentt">
+                                    @if (item.is_remove != true)
+                                    {@Html.DisplayFor(i => item.commentt)}
+                                else
+                                {<i>Примечание было удалено</i>}
+                                </div>
+                            </td>
+                            <td class="actions vertical-middle-important">
+                                <button type="button" class="on-default text-custom link" style="font-size: 22px; line-height: 22px;" data-tooltip-info='{"employees_fio": @Json.Encode(item.employees_fio ?? "-"), "employees_fio_modifi": @Json.Encode(item.employees_fio_modifi ?? "-"), "is_remove": "@item.is_remove", "employees_fio_remove": "@item.employees_fio_remove", "date_remove": "@item.date_remove", "commentt_remove": "@item.commentt_remove"}'>
+                                    <i class="ion-ios7-information-outline"></i>
+                                </button>
+                                @if (item.is_remove != true)
+                                {
+                                    <button class="on-default cancel-row link hidden"><i class="ion-close"></i></button>
+                                    <button class="on-default edit-row link"><i class="ion-edit"></i></button>
+                                    <button class="on-default remove-row link" data-placement="top" data-toggle="tooltip" data-original-title="Удаление"><i class="ion-trash-b"></i></button>
+                                }
+                                else
+                                {
+                                    <button class="on-default recovery-row link" data-placement="top" data-toggle="tooltip" data-original-title="Восстановление"><i class="fa fa-history"></i></button>
+                                }
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <p class="font-12 text-muted">
+                                    <i class="fa fa-user m-r-5"></i> <span class="m-r-15">@Html.DisplayFor(i => item.employees_fio)</span> <i class="fa fa-clock-o m-r-5"></i> <span class="m-r-5">@Html.DisplayFor(i => item.date_enter)</span> @if (item.employees_fio_modifi != null)
+                                    {<i class="ion ion-edit m-r-5"></i>}
+                                </p>
+                                @if (item.is_remove != true)
+                                {<div class="col-sm-8 alert alert-info alert-dismissable">@Html.DisplayFor(i => item.commentt)</div> }
+                            else
+                            { <div class="col-sm-8 alert alert-info alert-dismissable"><i>Примечание было удалено</i></div>}
+                            </td>
+                        }
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+}
+@using (Ajax.BeginForm("SubmitCommentSave", "Case", null, new AjaxOptions { UpdateTargetId = "commenttsPillContainer" }, new { @id = "addCommentsForm" }))
+{
+    @Html.Hidden("id", Guid.Empty)
+    @Html.Hidden("spr_employees_id", Model.EmployeeId)
+    @Html.Hidden("data_services_id", Model.DataServiceId)
+    @Html.Hidden("data_services_info_id", ViewBag.InfoId as string)
+    <div class="notes-bottom">
+        <div class="notes-textarea">
+                @if (Model.DataServiceList.First().spr_services_sub_way_get_id == ViewBag.WayGetId)
+                {
+                    <textarea id="commentt" name="commentt" placeholder="Текст примечания"></textarea>
+                }
+                else
+                {
+                    <textarea id="commentt" name="commentt" placeholder="Текст примечания"></textarea>
+                }
+        </div>
+        <div class="notes-btn">
+            <div class="text-right">
+                @if (Model.DataServiceList.First().spr_services_sub_way_get_id == ViewBag.WayGetId)
+                {
+                    <label class="gosuslugi-checkbox" for="epguCheck" data-placement="top" data-toggle="tooltip" data-tooltip-info="Отправить на портал">
+                        <input type="checkbox" name="epguCheck" id="epguCheck" value="true">
+                        <img src="~/Content/img/gosuslugi-icon.svg" height="30" for="epguCheck">
+                    </label>
+                    <button type="submit" class="btn btn-sm btn-default waves-effect waves-light" disabled style="height:38px"><i class="fa fa-paper-plane"></i></button>
+                }
+                else
+                {
+                    <button type="submit" class="btn btn-sm btn-default waves-effect waves-light" disabled style="height:38px"><i class="fa fa-paper-plane"></i></button>
+                }
+            </div>
+        </div>
+    </div>
+
+}
+<script src="~/Content/plugins/select2/js/select2.full.min.js"></script>
+<script>
+    var chatInput = document.querySelector('#commentt');
+
+    var autoExpandTextarea = function (textarea) {
+        textarea.style.height = '40px';
+        textarea.style.height = textarea.scrollHeight + 'px';
+    };
+
+    chatInput.addEventListener('input', function () {
+        autoExpandTextarea(this);
+    });
+
+    $(document).ready(function () {
+        $(".select2").select2();
+    });
+    $(function () {
+        $('label[data-tooltip-info]').tooltip({
+            title: function () {
+                var tooltipInfo = $(this).data('tooltipInfo');
+                return "<div class='text-left'>"+
+                    "<strong>Отправить на портал</strong></div>";
+            },
+            html: true,
+            placement: "left"
+        });
+    });
+    $(function () {
+        $('button[data-tooltip-info]').tooltip({
+            title: function () {
+                var tooltipInfo = $(this).data('tooltipInfo');
+                return "<div class='text-left'>" +
+                    "<strong>Добавил</strong>: " + tooltipInfo['employees_fio'] + "</br>" +
+                    "<strong>Редактировал</strong>: " + tooltipInfo['employees_fio_modifi'] + "</br>" +
+                    "</div>";
+            },
+            html: true,
+            placement: "left"
+        });
+    });
+
+    $('#commenttsPillContainer table td button.remove-row').click(function () {
+        var commentId = $(this).closest('tr').data('commenttId');
+        var paramObject = {
+            url: '@Url.Action("SubmitCommentDelete", "Case")',
+            params: { commentId: commentId },
+            onSuccess: function (data) {
+                $('#commenttsPillContainer').html(data);
+            }
+        }
+        removeWithComment(paramObject);
+    });
+
+    $('#commenttsPillContainer table td button.recovery-row').click(function (e) {
+        var commentId = $(this).closest('tr').data('commenttId');
+        var paramObject = {
+            url: '@Url.Action("SubmitCommentRecovery", "Case")',
+            params: { commentId: commentId },
+            onSuccess: function (data) {
+                $('#commenttsPillContainer').html(data);
+            }
+        }
+        removeRecovery(paramObject);
+    });
+
+    $('#commenttsPillContainer table td button.edit-row').click(function (e) {
+        var commentId = $(this).closest('tr').data('commenttId');
+        var edit_commentt = $(this).closest('tr').find('.data_services_commentt').data('commentt');
+        $('#commenttsPillContainer table td button.edit-row').removeClass('hidden');
+        $(this).addClass("hidden");
+        $('#commenttsPillContainer table td button.cancel-row').addClass('hidden');
+        $(this).closest('tr').find('button.cancel-row').removeClass('hidden');
+        $('#commenttsPillContainer table').find('.data_services_commentt').removeClass('edit');
+        $(this).closest('tr').find('.data_services_commentt').addClass('edit');
+        $('#addCommentsForm').find('[name="id"]').val(commentId);
+        $('#addCommentsForm').find('[name="commentt"]').val(edit_commentt);
+        $('#addCommentsForm').find('[type="submit"]').html("Изменить <i class='fa fa-edit m-l-5'></i>");
+        $('#addCommentsForm').find('[type="submit"]').prop("disabled", false);
+    });
+
+    $('#commenttsPillContainer table td button.cancel-row').click(function (e) {
+        var commentId = "00000000-0000-0000-0000-000000000000";
+        $('#commenttsPillContainer table td button.edit-row').removeClass('hidden');
+        $('#commenttsPillContainer table td button.cancel-row').addClass('hidden');
+        $('#commenttsPillContainer table').find('.data_services_commentt').removeClass('edit');
+        $('#addCommentsForm').find('[name="id"]').val(commentId);
+        $('#addCommentsForm').find('[name="commentt"]').val('');
+        $('#addCommentsForm').find('[type="submit"]').html("Добавить <i class='fa fa-paper-plane m-l-5'></i>");
+        $('#addCommentsForm').find('[type="submit"]').prop("disabled", true);
+    });
+
+    $('#addCommentsForm').find('[name="commentt"]').keyup(function () {
+        if (!$.trim(this.value)) {
+            $('#addCommentsForm').find('[type="submit"]').prop("disabled", true);
+        }
+        else {
+            $('#addCommentsForm').find('[type="submit"]').prop("disabled", false);
+        }
+    });
+</script>

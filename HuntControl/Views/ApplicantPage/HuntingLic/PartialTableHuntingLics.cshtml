@@ -1,0 +1,132 @@
+﻿@using HuntControl.Domain.Concrete
+@model HuntControl.WebUI.Models.ApplicantPageViewModel
+<div class="row">
+    <div class="col-sm-10 col-xs-6">
+        <h3 class="panel-title">Список охотничьих билетов</h3>
+    </div>
+    <div class="col-sm-2 col-xs-6 m-b-10">
+        <div class="text-right">
+            @using (Ajax.BeginForm("PartialModalAddHuntingLic", "ApplicantPage", new { customerId = ViewBag.CustomerId }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+            {
+                <button type="submit" class="btn btn-inverse waves-effect waves-light btn-sm"> Добавить <i class="fa fa-plus m-l-5"></i></button>
+            }
+        </div>
+    </div>
+</div>
+
+@if (Model.HuntingLicList.Any())
+{
+    <div class="card-box p-0">
+        <div class="table-responsive">
+            <table class="table m-b-0">
+                <thead>
+                    <tr>
+                        <th class="number-row p-l-20-important"></th>
+                        <th>@Html.DisplayNameFor(model => model.HuntingLicList.First().serial_license)</th>
+                        <th>@Html.DisplayNameFor(model => model.HuntingLicList.First().number_license)</th>
+                        <th>@Html.DisplayNameFor(model => model.HuntingLicList.First().issue_date)</th>
+                        <th>@Html.DisplayNameFor(model => model.HuntingLicList.First().cancelled_date)</th>
+                        <th class="text-right p-r-20-important">
+                            Действия
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.HuntingLicList)
+                    {
+                        <tr data-hunting-lic-id="@item.id">
+                            <td class="number-row p-l-20-important">
+                                @if (item.cancelled_date == null)
+                                {
+                                    <i class="text-success ion-ios7-circle-filled" style="font-size: 18px;"></i>
+                                }
+                                else
+                                {
+                                    <i class="text-danger ion-ios7-circle-filled" style="font-size: 18px;"></i>
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(i => item.serial_license)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(i => item.number_license)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(i => item.issue_date)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(i => item.cancelled_date)
+                            </td>
+                            <td class="actions">
+                                <button type="button" class="on-default text-custom link" style="font-size: 22px; line-height: 22px;" data-tooltip-info='{"serial_license": @Json.Encode(item.serial_license), "number_license": @Json.Encode(item.number_license), "issue_date": "@Html.DisplayFor(i => item.issue_date)", "reestr_date": "@Html.DisplayFor(i => item.reestr_date)", "employees_authorized": @Json.Encode(item.employees_authorized), "issue_body": "@Html.DisplayFor(i => item.issue_body)", "cancelled_date": "@Html.DisplayFor(i => item.cancelled_date)", "cancelled_ground": "@Html.DisplayFor(i => item.cancelled_ground)", "employees_fio": @Json.Encode(item.employees_fio ?? "-"), "set_date": "@Html.DisplayFor(i => item.set_date)", "employees_fio_modifi": @Json.Encode(item.employees_fio_modifi ?? "-"), "is_remove": "@item.is_remove", "employees_fio_remove": "@item.employees_fio_remove", "date_remove": "@item.date_remove", "commentt_remove": "@item.commentt_remove"}'>
+                                    <i class="ion-ios7-information-outline"></i>
+                                </button>
+                                
+                                    @using (Ajax.BeginForm("PartialModalEditHuntingLic", "ApplicantPage", new { huntingLicId = item.id }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                                    {
+                                        <button class="on-default edit-row link"><i class="ion-edit"></i></button>
+                                    }
+                                    <button class="on-default remove-row link"><i class="ion-trash-b"></i></button>
+                                
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <hr class="m-0">
+        <div class="row p-t-10 p-l-20-important p-r-20-important p-b-10">
+            <div class="col-sm-6">
+                <div class="dataTables_info" id="datatable_info" role="status" aria-live="polite">Показаны @((Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage > Model.PageInfo.TotalItems) ? Model.PageInfo.TotalItems : Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage) из @Model.PageInfo.TotalItems записей</div>
+            </div>
+            <div class="col-sm-6">
+                <div class="dataTables_paginate paging_simple_numbers" id="datatable-editable_paginate">
+                    @Html.PageLinks(Model.PageInfo, x => Ajax.ActionLink(x.NameLink, "PartialTableHuntingLics", "ApplicantPage", new { customerId = ViewBag.CustomerId, page = x.CurrentPage }, new AjaxOptions { UpdateTargetId = "huntingLicContainer" }))
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">
+        <span style="color:#00545c;"><strong><i class="icon-info"></i></strong> Нет охотничьих билетов.</span>
+    </div>
+}
+
+
+<script>
+    $('#huntingLicContainer table td button.remove-row').click(function () {
+        var huntingLicId = $(this).closest('tr').data('huntingLicId');
+        removeData('@Url.Action("SubmitHuntingLicDelete", "ApplicantPage")', { huntingLicId: huntingLicId }, function (data) { $('#huntingLicContainer').html(data); });
+    });
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip({ trigger: 'hover' });
+        $('button[data-tooltip-info]').tooltip({
+            title: function () {
+                var tooltipInfo = $(this).data('tooltipInfo');
+                return "<div class='text-left'>" +
+                    "<strong>Серия</strong>: " + tooltipInfo['serial_license'] + "</br>" +
+                    "<strong>Номер</strong>: " + tooltipInfo['number_license'] + "</br>" +
+                    "<strong>Дата выдачи</strong>: " + tooltipInfo['issue_date'] + "</br>" +
+                    "<strong>Дата реестра</strong>: " + tooltipInfo['reestr_date'] + "</br>" +
+                    "<strong>Уполномоченное лицо</strong>: " + tooltipInfo['employees_authorized'] + "</br>" +
+                    "<strong>Кем выдан</strong>: " + tooltipInfo['issue_body'] + "</br>" +
+                    "<hr class='m-t-5 m-b-5'>" +
+                    "<strong>Добавил</strong>: " + tooltipInfo['employees_fio'] + "</br>" +
+                    "<strong>Дата добавления</strong>: " + tooltipInfo['set_date'] + "</br>" +
+                    "<hr class='m-t-5 m-b-5'>" +
+                    "<strong>Изменил</strong>: " + tooltipInfo['employees_fio_modifi'] + "</br>" +
+                    (tooltipInfo['is_remove'] === 'True' ?
+                        "<hr class='m-t-5 m-b-5'>" +
+                        "<strong>Удалил</strong>: " + tooltipInfo['employees_fio_remove'] + "</br>" +
+                        "<strong>Причина удаления</strong>: " + tooltipInfo['commentt_remove'] + "</br>" +
+                        "<strong>Дата удаления</strong>: " + tooltipInfo['date_remove'] + "</br>" : "") +
+                    "</div>";
+            },
+            html: true,
+            placement: "left"
+        });
+    });
+
+</script>

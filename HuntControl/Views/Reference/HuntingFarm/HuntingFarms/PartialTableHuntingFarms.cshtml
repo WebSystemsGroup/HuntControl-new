@@ -1,0 +1,155 @@
+﻿@model HuntControl.WebUI.Models.HuntingFarmViewModel
+
+<div class="card-box p-0">
+    <div class="input-group">
+        <span class="input-group-btn">
+            <button type="button" class="btn waves-effect waves-light btn-link p-l-20-important"><i class="fa fa-search"></i></button>
+        </span>
+        <input type="text" id="searchTextHuntingFarms" class="text-dark no-border-input" placeholder="Поиск охотугодий" value="@ViewBag.Serach"><ul class="typeahead dropdown-menu"></ul><ul class="typeahead dropdown-menu"></ul>
+    </div>
+    <hr class="m-0">
+    <div class="table-responsive">
+        <table class="table table-hover m-b-0">
+            <thead>
+                <tr>
+                    <th class="number-row p-l-20-important">№</th>
+                    <th>@Html.DisplayNameFor(model => model.HuntingFarmList.First().hunting_farm_name)</th>
+                    <th>@Html.DisplayNameFor(model => model.HuntingFarmList.First().spr_legal_person_id)</th>
+                    <th class="text-right p-r-20-important">
+                        <button id="showFarmRemoves" type="button" class="link p-r-0 text-custom"><i class="@(ViewBag.IsRemove ? "ion-ios7-trash" : "ion-ios7-trash-outline") m-l-5" style="font-size: 20px;" data-placement="bottom" data-toggle="tooltip" data-original-title="@(ViewBag.IsRemove ? "Скрыть удаленные" : "Показать удаленные")"></i></button>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.HuntingFarmList)
+                {
+                    <tr data-hunting-farm-id="@item.id" class="@(item.is_remove == true ? "danger" : "")">
+                        <td class="number-row p-l-20-important text-nowrap">
+                            @((Model.PageInfo.CurrentPage - 1) * Model.PageInfo.ItemsPerPage + ++Model.PageInfo.NumberRow)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(i => item.hunting_farm_name)<br />
+                            <span class="text-muted font-12">@Html.DisplayFor(i => item.spr_hunting_farm_type.type_name)</span>
+                        </td>
+                        <td class="vertical-middle">
+                            @Html.DisplayFor(i => item.spr_legal_person.legal_name)
+                        </td>
+                        <td class="actions">
+                            <button type="button" class="on-default text-custom link" style="font-size: 22px;line-height: 22px;" data-tooltip-info='{"hunting_farm_type": "@item.spr_hunting_farm_type.type_name", "hunting_farm_name": "@item.hunting_farm_name", "employees_fio": "@item.employees_fio", "set_date": "@item.set_date", "is_remove": "@item.is_remove", "employees_fio_remove": "@item.employees_fio_remove", "commentt_remove": "@item.commentt_remove", "date_remove": "@item.date_remove", "hunting_farm_description": "@item.hunting_farm_description"}'>
+                                <i class="ion-ios7-information-outline"></i>
+                            </button>
+                            @if (User.IsInRole("superadmin") || User.IsInRole("admin"))
+                            {
+                                if (item.is_remove != true)
+                                {
+                                    using (Ajax.BeginForm("PartialModalHuntingFarmLocation", "Reference", new { huntingFarmId = item.id }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                                    {
+                                        <button class="on-default edit-row link" data-placement="top" data-toggle="tooltip" data-original-title="Координаты охотугодья">
+                                            <i class="ion-ios7-location"></i>
+                                            <span class="badge badge-xs badge-danger">@(item.spr_hunting_farm_location_count > 0 ? (object)item.spr_hunting_farm_location_count : null)</span>
+                                        </button>
+                                    }
+                                    using (Ajax.BeginForm("PartialModalHuntingFarmAnimal", "Reference", new { huntingFarmId = item.id }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                                    {
+                                        <button class="on-default edit-row link" data-placement="top" data-toggle="tooltip" data-original-title="Животные охотугодья">
+                                            <i class="ion-ios7-paw"></i>
+                                            <span class="badge badge-xs badge-danger">@(item.spr_hunting_farm_animal.Any() ? (object)item.spr_hunting_farm_animal.Count : null)</span>
+                                        </button>
+                                    }
+                                    using (Ajax.BeginForm("PartialModalEditHuntingFarm", "Reference", new { huntingFarmId = item.id }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                                    {
+                                        <button class="on-default edit-row link" data-placement="top" data-toggle="tooltip" data-original-title="Изменение"><i class="ion-edit"></i></button>
+                                    }
+                                    <button class="on-default remove-row link" data-placement="top" data-toggle="tooltip" data-original-title="Удаление"><i class="ion-trash-b"></i></button>
+                                }
+                                else
+                                {
+                                    <button class="on-default recovery-row link" data-placement="top" data-toggle="tooltip" data-original-title="Восстановление"><i class="fa fa-history"></i></button>
+                                }
+
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <hr class="m-0">
+
+    <div class="row p-t-10 p-l-r-10 p-b-10">
+        <div class="col-sm-6">
+            <div class="dataTables_info" id="datatable_info" role="status" aria-live="polite">Показаны @((Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage > Model.PageInfo.TotalItems) ? Model.PageInfo.TotalItems : Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage) из @Model.PageInfo.TotalItems записей</div>
+        </div>
+        <div class="col-sm-6">
+            <div class="dataTables_paginate paging_simple_numbers" id="datatable-editable_paginate">
+                @Html.PageLinks(Model.PageInfo, x => Ajax.ActionLink(x.NameLink, "PartialTableHuntingFarms", "Reference", new { page = x.CurrentPage, sprHuntingFarmsTypeId = ViewBag.sprHuntingFarmsTypeId, search=ViewBag.Search }, new AjaxOptions { UpdateTargetId = "huntingFarmContainer" }))
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip({ trigger: 'hover' });
+        $('button[data-tooltip-info]').tooltip({
+            title: function () {
+                var tooltipInfo = $(this).data('tooltipInfo');
+                return "<div class='text-left'>" +
+                    "<strong>Вид охотугодья</strong>: " + tooltipInfo['hunting_farm_type'] + "</br>" +
+                    "<strong>Наименование</strong>: " + tooltipInfo['hunting_farm_name'] + "</br>" +
+                    "<strong>Описание</strong>: " + tooltipInfo['hunting_farm_description'] + "</br>" +
+                    (tooltipInfo['is_remove'] === 'True' ? "<strong>Удалил</strong>: " + tooltipInfo['employees_fio_remove'] + "</br>" + "<strong>Дата удаления</strong>: " + tooltipInfo['date_remove'] + "</br>" + "<strong>Причина удаления</strong>: " + tooltipInfo['commentt_remove'] + "</br>" : "<strong>Добавил</strong>: " + tooltipInfo['employees_fio'] + "</br>" + "<strong>Дата добавления</strong>: " + tooltipInfo['set_date'] + "</br>") +
+                    "</div>";
+            },
+            html: true,
+            placement: "left"
+        });
+    });
+
+    $('#searchTextHuntingFarms').change(function () {
+        $.ajax({
+            url: '@Url.Action("PartialTableHuntingFarms", "Reference")',
+            type: 'Post',
+            data: { search: $(this).val(), isRemove: '@ViewBag.IsRemove', sprHuntingFarmsTypeId:'@ViewBag.sprHuntingFarmsTypeId' },
+            success: function (data) {
+                $('#huntingFarmContainer').html(data);
+            }
+        });
+    });
+    
+    
+    $('#showFarmRemoves').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableHuntingFarms", "Reference")',
+            data: { search: $('#searchTextHuntingFarms').val(), isRemove: '@(!ViewBag.IsRemove)' },
+            success: function (data) {
+                $('#huntingFarmContainer').html(data);
+            }
+        });
+    });
+
+    $('#huntingFarmContainer table td button.remove-row').click(function () {
+        var huntingFarmId = $(this).closest('tr').data('huntingFarmId');
+        var paramObject = {
+            url: '@Url.Action("SubmitHuntingFarmDelete", "Reference")',
+            params: { huntingFarmId: huntingFarmId },
+            onSuccess: function (data) {
+                $('#huntingFarmContainer').html(data);
+            }
+        }
+        removeWithComment(paramObject);
+    });
+
+    $('#huntingFarmContainer table td button.recovery-row').click(function () {
+        var huntingFarmId = $(this).closest('tr').data('huntingFarmId');
+        var paramObject = {
+            url: '@Url.Action("SubmitHuntingFarmRecovery", "Reference")',
+            params: { huntingFarmId: huntingFarmId },
+            onSuccess: function (data) {
+                $('#huntingFarmContainer').html(data);
+            }
+        }
+        removeRecovery(paramObject);
+    });
+</script>

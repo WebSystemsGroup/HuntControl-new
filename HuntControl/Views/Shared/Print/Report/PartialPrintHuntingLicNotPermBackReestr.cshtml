@@ -1,0 +1,134 @@
+﻿@model IEnumerable<HuntControl.Domain.Concrete.ReportHuntingLicNotPermBackResult>
+<link href="~/Content/css/print-report.css" rel="stylesheet" />
+<style>
+    @@media print {
+        @@page {
+            size: portrait;
+        }
+
+        .page {
+            height: auto;
+            width: 100%;
+            page-break-after: always;
+        }
+
+        table thead th, table tbody td {
+            font-size: 10px !important;
+            padding: 5px !important;
+        }
+
+        .dl-horizontal dt {
+            min-width: 90px;
+        }
+
+        .dl-horizontal dd {
+            margin-left: 110px;
+        }
+
+        table thead tr th {
+            font-weight: bold;
+        }
+
+        thead {
+            display: table-row-group
+        }
+
+        tr {
+            page-break-inside: avoid
+        }
+
+        #printable th {
+            text-align: center;
+            padding: 2px; /* Поля вокруг содержимого ячеек */
+            border: 1px solid black; /* Граница вокруг ячеек */
+            font-size: 8.0pt;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        h6 {
+            margin: 10px !important;
+        }
+        /*---*/
+        .report_head {
+            padding-bottom: 5px;
+        }
+
+            .report_head table tbody td {
+                font-size: 12px !important;
+                padding: 3px !important;
+            }
+
+        .org_name {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .report_name {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .head-left {
+            border-right: 1px solid black;
+        }
+
+        .head-center {
+            border-right: 1px solid black;
+        }
+    }
+</style>
+
+<div id="printable">
+    <div class="report_head">
+        <table width="100%">
+            <tr>
+                <td valign="top"><img src="~/Content/img/docGebLogo.png" align="top" height="70%" /></td>
+                <td width="25%;" class="text-right head-left" valign="top">
+                    <span class="org_name">Министерство природных ресурсов и экологии Республики Дагестан</span>
+                </td>
+                <td width="50%" valign="top" class="head-center">
+                    <div class="report_name">Реестр нарушений без корешков</div>
+                    <table>                        
+                        <tr><td width="20%">Период:</td><td><b>@ViewBag.Period</b></td></tr>
+                    </table>
+                </td>
+                <td width="20%" valign="top">
+                    <table>
+                        <tr><td>Распечатал:</td></tr>
+                        <tr><td>@ViewBag.PrintEmployee</td></tr>
+                        <tr><td>@DateTime.Now.ToShortDateString()</td></tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="page">
+        <table class="table text-center">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.out_customer_name)</th>
+                    <th>@Html.DisplayNameFor(model => model.out_actual_address) <br /> @Html.DisplayNameFor(model => model.out_phone_number1) @Html.DisplayNameFor(model => model.out_phone_number2)</th>
+                    <th>@Html.DisplayNameFor(model => model.out_hunting_farm_name)  <br /> @Html.DisplayNameFor(model => model.out_group_type_name)</th>
+                    <th>Серия и номер бланка</th>
+                    <th>@Html.DisplayNameFor(model => model.out_fio_given) <br /> @Html.DisplayNameFor(model => model.out_date_given)</th>
+                    <th>@Html.DisplayNameFor(model => model.out_date_stop)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="text-left">@Html.DisplayFor(model => item.out_customer_name)</td>
+                        <td class="text-left">@Html.DisplayFor(model => item.out_actual_address) <br /> @Html.DisplayFor(model => item.out_phone_number1) @Html.DisplayFor(model => item.out_phone_number2)</td>
+                        <td class="text-left">@Html.DisplayFor(model => item.out_hunting_farm_name)  <br /> @Html.DisplayFor(model => item.out_group_type_name)</td>
+                        <td class="text-left">@Html.DisplayFor(model => item.out_serial_form) @Html.DisplayFor(model => item.out_number_form)</td>
+                        <td class="text-left">@Html.DisplayFor(model => item.out_fio_given) <br /> @(item.out_date_given?.ToShortDateString())</td>
+                        <td class="text-left">@(item.out_date_stop?.ToShortDateString())</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    </div>

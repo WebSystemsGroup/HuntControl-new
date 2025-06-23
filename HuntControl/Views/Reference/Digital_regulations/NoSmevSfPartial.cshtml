@@ -1,0 +1,134 @@
+﻿@model IEnumerable<WebAIS.Models.KcrModel.object4Type>
+
+<div class="row justify-content-end">
+    <div class="col-lg-11 accardion-milti-castoner">
+        <div class="accardion-milti-castoner-сontrol">
+            <button type="button" class="btn accardion-milti-castoner-btn-show" data-accardion onclick="showAdccardion(this)">
+                Межведомственные запросы без СМЭВ
+            </button>
+            <i class="fa fa-chevron-left accardion-chevron" aria-hidden="true"></i>
+        </div>
+        <div class="accardion-content-milti-castoner" data-accardion-content style="display: none">
+            <fieldset>
+                @foreach (var requests in Model)
+                {
+                    if (requests.requests != null)
+                    {
+                        foreach (var request in requests.requests)
+                        {
+                            <div class="row justify-content-end">
+                                <div class="col-lg-11 accardion-milti-castoner">
+                                    <div class="accardion-milti-castoner-сontrol">
+                                        <button type="button" class="btn accardion-milti-castoner-btn-show" data-accardion onclick="showAdccardion(this)">
+                                            Запрос без СМЭВ
+                                        </button>
+                                        <i class="fa fa-chevron-left accardion-chevron" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="accardion-content-milti-castoner" data-accardion-content style="display: none">
+                                        <fieldset>
+                                            <div class="row justify-content-center">
+                                                <table class="table">
+                                                    <tbody>
+                                                        @if (request.request != null)
+                                                        {
+                                                            if (request.request.id != null)
+                                                            {
+                                                                <tr>
+                                                                    <td>Идентификатор</td>
+                                                                    <td>@request.request.id</td>
+                                                                </tr>
+                                                            }
+                                                            if (request.request.ownerService != null)
+                                                            {
+                                                                <tr>
+                                                                    <td>Владелец сервиса</td>
+                                                                    <td>@request.request.ownerService.id</td>
+                                                                </tr>
+                                                            }
+                                                            if (request.request.dictionaryCode != null)
+                                                            {
+                                                                <tr>
+                                                                    <td>Код справочника</td>
+                                                                    <td>@request.request.dictionaryCode</td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                        @if (request.requestMethodIds != null && request.requestMethodIds.Length > 0)
+                                                        {
+                                                            <tr>
+                                                                <td>Способы запросов при межведомственном взаимодействии без участия СМЭВ</td>
+                                                                <td>
+                                                                    @foreach (var item in request.requestMethodIds)
+                                                                    {
+                                                                        <p>- @item.id</p>
+                                                                    }
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                        @if (request.reasonService != null)
+                                                        {
+                                                            <tr>
+                                                                <td>Основания для запроса</td>
+                                                                <td>@request.reasonService.id</td>
+                                                            </tr>
+                                                        }
+                                                        @if (request.timeRequestMeasure != null)
+                                                        {
+                                                            <tr>
+                                                                <td>Единица измерения срока запроса</td>
+                                                                <td>@request.timeRequestMeasure.id</td>
+                                                            </tr>
+                                                        }
+                                                        @if (request.timeResponseMeasure != null)
+                                                        {
+                                                            <tr>
+                                                                <td>Единица измерения срока ответа</td>
+                                                                <td>@request.timeResponseMeasure.id</td>
+                                                            </tr>
+                                                        }
+                                                        @if (request.attributeRequests != null && request.attributeRequests.Length > 0)
+                                                        {
+                                                            <tr>
+                                                                <td>Атрибуты запроса</td>
+                                                                <td>
+                                                                    @foreach (var attr in request.attributeRequests)
+                                                                    {
+                                                                        <p>- @attr.attribute.id</p>
+                                                                    }
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                        @if (request.attributeResponses != null && request.attributeResponses.Length > 0)
+                                                        {
+                                                            <tr>
+                                                                <td>Атрибуты запроса</td>
+                                                                <td>
+                                                                    @foreach (var attr in request.attributeResponses)
+                                                                    {
+                                                                        <p>- @attr.attribute.id</p>
+                                                                    }
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            @if (request.criteria != null)
+                                            {
+                                                @Html.Partial("~/Views/Reference/Digital_regulations/CriteriaSfPartial.cshtml", request.criteria)
+                                            }
+                                            @if (request.admProcedures != null)
+                                            {
+                                                @Html.Partial("~/Views/Reference/Digital_regulations/AdmProceduresSfPartial.cshtml", request.admProcedures)
+                                            }
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+            </fieldset>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,2196 @@
+﻿@model HuntControl.Domain.Concrete.data_customer_violations
+
+<link href="~/Content/plugins/datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<script src="~/Content/plugins/select2/js/select2.min.js" type="text/javascript"></script>
+<script src="~/Content/plugins/select2/js/i18n/ru.js" type="text/javascript"></script>
+<script src="~/Content/plugins/bootstrap-select/dist/js/bootstrap-select.min.js" type="text/javascript"></script>
+<script src="~/Content/plugins/moment/moment.js"></script>
+<script src="~/Content/plugins/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<link href="~/Content/plugins/clockpicker/dist/jquery-clockpicker.min.css" rel="stylesheet" />
+<script src="~/Content/plugins/clockpicker/dist/jquery-clockpicker.min.js"></script>
+<style>
+    input:disabled, textarea:disabled, input:read-only, textarea:read-only {
+        background-color: #efefef !important;
+    }
+
+    .panel-title.font-14 {
+        margin-left: -10px;
+    }
+
+    .red {
+        color: red !important;
+    }
+
+    .green {
+        color: green !important;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+        $('.select2').select2({
+            language: "ru"
+        });
+
+        var elem = document.querySelector('#res_payment');
+        var init = new Switchery(elem);
+
+                $('input[data-type=dateTime]').datetimepicker({
+            singleDatePicker: true,
+            timePicker: true,
+            timePicker24Hour: true,
+            autoclose: true,
+            format: "dd.mm.yyyy hh:ii",
+            orientation: 'left',
+           
+                });
+
+        $('input[data-type=date]').datepicker({ format: 'dd.mm.yyyy', autoclose: true, language: 'ru', orientation: 'left' });
+        $('input[data-type=time]').clockpicker({ language: 'ru', donetext: 'Выбрать', format: 'hh:mm' });
+
+        if ('@Model.pr_date_law_violation.ToString()' == "") { $("#pr_date_law_violation").val('').trigger('change'); }
+        if ('@Model.pr_date_examination.ToString()' == "") { $("#pr_date_examination").val('').trigger('change'); }
+        if ('@Model.pl_date.ToString()' == "") { $("#pl_date").val('').trigger('change'); }
+
+        function definitionTypeField(typeId) {
+            switch (typeId) {
+                case '1':
+                    $('a[href=#decreeDataTabContainer]').closest('li').removeClass('hidden');
+                    $('a[href=#fsspDataTabContainer]').closest('li').removeClass('hidden');
+                    $('a[href=#pr20NotifDataTabContainer]').closest('li').removeClass('hidden');
+                    $('a[href=#pr20DataTabContainer]').closest('li').removeClass('hidden');
+                    $('a[href=#courtDataTabContainer]').closest('li').removeClass('hidden');
+                    $('a[href=#disDataTabContainer]').closest('li').addClass('hidden');
+
+                    $('#plDataContainer').removeClass('hidden');
+                    break;
+                case '2':
+                    $('a[href=#decreeDataTabContainer]').closest('li').addClass('hidden');
+                    $('a[href=#fsspDataTabContainer]').closest('li').addClass('hidden');
+                    $('a[href=#pr20NotifDataTabContainer]').closest('li').addClass('hidden');
+                    $('a[href=#pr20DataTabContainer]').closest('li').addClass('hidden');
+                    $('a[href=#courtDataTabContainer]').closest('li').removeClass('hidden');
+                    $('a[href=#disDataTabContainer]').closest('li').addClass('hidden');
+
+                    $('#plDataContainer').addClass('hidden');
+                    break;
+                case '3':
+                    $('a[href=#decreeDataTabContainer]').closest('li').addClass('hidden');
+                    $('a[href=#fsspDataTabContainer]').closest('li').addClass('hidden');
+                    $('a[href=#pr20NotifDataTabContainer]').closest('li').addClass('hidden');
+                    $('a[href=#pr20DataTabContainer]').closest('li').addClass('hidden');
+                    $('a[href=#courtDataTabContainer]').closest('li').addClass('hidden');
+                    $('a[href=#disDataTabContainer]').closest('li').removeClass('hidden');
+
+                    $('#plDataContainer').addClass('hidden');
+                    break;
+               case '':
+                    $('a[href=#decreeDataTabContainer]').closest('li').addClass('hidden');
+                    $('a[href=#fsspDataTabContainer]').closest('li').addClass('hidden');
+                    $('a[href=#pr20NotifDataTabContainer]').closest('li').addClass('hidden');
+                    $('a[href=#pr20DataTabContainer]').closest('li').addClass('hidden');
+                    $('a[href=#courtDataTabContainer]').closest('li').addClass('hidden');
+                    $('a[href=#disDataTabContainer]').closest('li').addClass('hidden');
+
+                    $('#plDataContainer').addClass('hidden');
+                    break;
+                default:
+            }
+
+        }
+
+        definitionTypeField($('#def_spr_definition_type_id').val());
+
+        $('#def_spr_definition_type_id').change(function () {
+            definitionTypeField($(this).val());
+        });
+        $('#res_payment').change(function () {
+            if (!elem.checked && $('#def_spr_definition_type_id').val() == 1) {
+                $('a[href=#fsspDataTabContainer]').closest('li').removeClass('hidden');
+                $('a[href=#pr20NotifDataTabContainer]').closest('li').removeClass('hidden');
+                $('a[href=#pr20DataTabContainer]').closest('li').removeClass('hidden');
+                $('a[href=#courtDataTabContainer]').closest('li').removeClass('hidden');
+            } else {
+                if ($('#def_spr_definition_type_id').val() == 2) {
+                    $('a[href=#fsspDataTabContainer]').closest('li').addClass('hidden');
+                    $('a[href=#pr20NotifDataTabContainer]').closest('li').addClass('hidden');
+                    $('a[href=#pr20DataTabContainer]').closest('li').addClass('hidden');
+                    $('a[href=#courtDataTabContainer]').closest('li').removeClass('hidden');
+                }
+                else {
+                    $('a[href=#fsspDataTabContainer]').closest('li').addClass('hidden');
+                    $('a[href=#pr20NotifDataTabContainer]').closest('li').addClass('hidden');
+                    $('a[href=#pr20DataTabContainer]').closest('li').addClass('hidden');
+                    $('a[href=#courtDataTabContainer]').closest('li').addClass('hidden');
+                }
+            }
+        });
+        $('#res_payment').change();
+
+        $('#spr_violations').change(function () {
+        var selected = $(this).val() != null && $(this).val() !== '';
+        if (selected) {
+            $.ajax({
+                url: '@Url.Action("GetSprViolationsPart", "ApplicantPage")',
+                data: { violations_id: $('#spr_violations').val() },
+                success: function (data) {
+                    $("#pr_spr_violations_part_id").html(null).select2({
+                        data: data,
+                    }).prop("disabled", false).val('').trigger('change');
+                }
+            });
+        } else {
+            $('#pr_spr_violations_part_id').prop("disabled", true).val('').trigger('change');
+        }
+        });
+
+        $('#bai_spr_bailiffs_id').change(function () {
+        var selected = $(this).val() != null && $(this).val() !== '';
+        if (selected) {
+            $.ajax({
+                url: '@Url.Action("GetSprBailiffs", "ApplicantPage")',
+                data: { bailiffs_id: $('#bai_spr_bailiffs_id').val() },
+                success: function (data) {
+                    $('#bai_name_bailiffs').val(data.name_bailiffs);
+                    $('#bai_head').val(data.head_bailiffs);
+                    $('#bai_address').val(data.address_bailiffs);
+                }
+            });
+        }
+        else {
+            $('#bai_name_bailiffs').val("");
+            $('#bai_head').val("");
+            $('#bai_address').val("");
+        }
+        });
+        $('#tr_spr_organization_id').change(function () {
+        var selected = $(this).val() != null && $(this).val() !== '';
+        if (selected) {
+            $.ajax({
+                url: '@Url.Action("GetSprOrganizations", "ApplicantPage")',
+                data: { organization_id: $('#tr_spr_organization_id').val() },
+                success: function (data) {
+                    $('#tr_name_organization').val(data.name_organization);
+                }
+            });
+        } else {
+            $('#tr_name_organization').val("");
+        }
+        });
+
+        $('#pr_spr_employees_id_create').change(function () {
+        var selected = $(this).val() != null && $(this).val() !== '';
+        if (selected) {
+            $.ajax({
+                url: '@Url.Action("GetSprEmployees", "ApplicantPage")',
+                data: { employees_id: $('#pr_spr_employees_id_create').val() },
+                success: function (data) {
+                    console.log(data);
+                    $('#pr_name_create').val(data.employees_fio);
+                    $('#pr_job_pos_name').val(data.job_pos_name);
+                }
+            });
+        }
+        else {
+            $('#pr_name_create').val("");
+            $('#pr_job_pos_name').val("");
+        }
+        });
+
+        $('[data-parent-input]').each(function () {
+            var parent_el = $(this);
+            $('[data-child_input]').each(function () {
+                if ($(this).data('child_input') == parent_el.attr("name")) {
+                    if (parent_el.hasClass("select2")) {
+                        if (parent_el.children("option:selected").val() === undefined || parent_el.children("option:selected").val() == "") {
+                            $(this).val("");
+                        }
+                        else {
+                            $(this).val(parent_el.children("option:selected").text());
+                        }
+                    }
+                    else {
+                        if (parent_el.attr("name") == "pr_date_create") {
+                            $(this).val(parent_el.val() + " " + $("#pr_time_create").val());
+                        }
+                        else { $(this).val(parent_el.val()); }
+                    }
+                }
+            }
+            );
+        });
+        $("#tr_spr_organization_result_id").change(function () {
+            if ($(this).val() == 2) { $("#div_tr_payment").removeClass("hidden"); }
+            else { $("#div_tr_payment").addClass("hidden"); }
+        });
+        $("#tr_spr_organization_result_id").change();
+
+        $('[data-relation-input]').each(function () {
+            var $this = $(this);
+            var inputs = $(this).data('relationInput').split(',');
+            var check = false;
+            $.each(inputs, function (index, value) {
+                var input = $('#' + value);
+                if (input.val() != "") {
+                    check = true;
+                }
+            });
+            if (!check) { $this.find("i").removeClass("fa-check green").addClass("fa-times red"); }
+            else { $this.find("i").removeClass("fa-times red").addClass("fa-check green");}
+        });
+    });
+</script>
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myLargeModalLabel">Редактирование нарушения</h4>
+        </div>
+        <div class="modal-body">
+
+            @using (Ajax.BeginForm("SubmitViolationsSave", "ApplicantPage", Model, new AjaxOptions { UpdateTargetId = "customerViolationsTabContainer", OnSuccess = "$('#myModal').modal('hide'); successSave();" }, new { @id = "EditViolationsForm", @class = "form-horizontal" }))
+            {
+                <div class="row">
+                    <div class="col-md-3">
+                        <input type="text" name="data_customer_id" hidden value="@Model.data_customer_id" />
+                        <input type="text" name="id" hidden value="@Model.id" />
+                        <ul class="nav nav-pills nav-stacked m-b-20">
+                            <li class="active">
+                                <a href="#generalDataTabContainer" data-toggle="tab" data-form-name="general" aria-expanded="false" data-relation-input="pr_date_law_violation">
+                                    <i class="fa fa-times font-18 m-r-5"></i> <span>Общие сведения</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#prNotifDataTabContainer" data-toggle="tab" data-form-name="pr_notif" aria-expanded="false" data-relation-input="al_date">
+                                    <i class="fa fa-times font-18 m-r-5"></i> <span>Уведомление</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#protocolDataTabContainer" data-toggle="tab" data-form-name="protocol" aria-expanded="false" data-relation-input="pr_date_create">
+                                    <i class="fa fa-times font-18 m-r-5"></i> <span>Протокол</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#defDataTabContainer" data-toggle="tab" data-form-name="def" aria-expanded="false" data-relation-input="def_date_definition">
+                                    <i class="fa fa-times font-18 m-r-5"></i> <span>Определение</span>
+                                </a>
+                            </li>
+                            <li class="hidden">
+                                <a href="#decreeDataTabContainer" data-toggle="tab" data-form-name="decree" aria-expanded="false" data-relation-input="res_date,res_payment">
+                                    <i class="fa fa-times font-18 m-r-5"></i> <span>Постановление</span>
+                                </a>
+                            </li>
+                            <li class="hidden">
+                                <a href="#pr20NotifDataTabContainer" data-toggle="tab" data-form-name="protocol20notif" aria-expanded="false" data-relation-input="al20_date">
+                                    <i class="fa fa-check font-18 m-r-5"></i> <span>Уведомление 20.25</span>
+                                </a>
+                            </li>
+                            <li class="hidden">
+                                <a href="#pr20DataTabContainer" data-toggle="tab" data-form-name="protocol20" aria-expanded="false" data-relation-input="pr20_date">
+                                    <i class="fa fa-times font-18 m-r-5"></i> <span>Протокол ст.20.25</span>
+                                </a>
+                            </li>
+                            <li class="hidden">
+                                <a href="#fsspDataTabContainer" data-toggle="tab" data-form-name="fssp" aria-expanded="false" data-relation-input="bai_date_sent">
+                                    <i class="fa fa-check font-18 m-r-5"></i> <span>ФССП</span>
+                                </a>
+                            </li>
+                            <li class="hidden">
+                                <a href="#courtDataTabContainer" data-toggle="tab" data-form-name="court" aria-expanded="false" data-relation-input="tr_date_sent">
+                                    <i class="fa fa-times font-18 m-r-5"></i> <span>Орган власти</span>
+                                </a>
+                            </li>
+                            <li class="hidden">
+                                <a href="#disDataTabContainer" data-toggle="tab" data-form-name="disData" aria-expanded="false" data-relation-input="dis_date">
+                                    <i class="fa fa-times font-18 m-r-5"></i> <span>Постановление о прекращении</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="card-box m-b-0" style="height: 500px; overflow-x: hidden;">
+                            <div class="tab-content m-l-10">
+
+                                <div class="tab-pane fade in active" id="generalDataTabContainer">
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_number_case, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                @Html.TextBoxFor(model => model.pr_number_case, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Номер дела" }, { "data-parent-input", "" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_date_in_ogm, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.pr_date_in_ogm, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" }, { "data-parent-input", "" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            <div class="col-md-5 control-label text-left">
+                                                Статья и часть нарушения по КОАП
+                                            </div>
+                                            <div class="col-md-3">
+                                                @Html.DropDownList("spr_violations", ViewBag.Violations as SelectList, "Статья", new Dictionary<string, object> { { "class", "form-control select2" }, { "data-parent-input", "" } })
+                                            </div>
+                                            <div class="col-md-3">
+                                                @Html.DropDownListFor(model => model.pr_spr_violations_part_id, ViewBag.SprViolationsPart as SelectList, "Часть", new Dictionary<string, object> { { "class", "form-control select2" }, { "data-parent-input", "" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_date_law_violation, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-4">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.pr_date_law_violation, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____ __:__" }, { "data-type", "dateTime" }, { "data-parent-input", "" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-clock-o"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_spr_hunting_farm_id, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.DropDownListFor(model => model.pr_spr_hunting_farm_id, ViewBag.HuntingFarms as SelectList, "Выберите охотугодье", new Dictionary<string, object> { { "class", "form-control select2" }, { "data-parent-input", "" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm hidden">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_hunting_farm_name, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr_hunting_farm_name, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_hunting_farm_name) }, { "data-parent-input", "" }, { "data-child_input", "pr_spr_hunting_farm_id" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.al_who_identified, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.DropDownListFor(model => model.al_who_identified, new SelectList(new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Госинспектор" }, new SelectListItem { Value = "2", Text = "Иное лицо" } }, "Value", "Text"), new Dictionary<string, object> { { "class", "select2" }, { "data-style", "btn-white btn-sm" }, { "data-parent-input", "" }, })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_customer_name, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr_customer_name, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_customer_name) }, { "data-parent-input", "" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_birth_date, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.pr_birth_date, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" }, { "data-parent-input", "" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_birth_place, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr_birth_place, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_birth_place) }, { "data-parent-input", "" } })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_customer_address, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr_customer_address, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_customer_address) }, { "data-parent-input", "" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr20_customer_address_legal, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr20_customer_address_legal, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr20_customer_address_legal) }, { "data-parent-input", "" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_place_work, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr_place_work, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_place_work) }, { "data-parent-input", "" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_customer_phone_number, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                @Html.TextBoxFor(model => model.pr_customer_phone_number, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_customer_phone_number) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            <b>   @Html.LabelFor(model => model.pr_spr_employees_id_create, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })</b>
+                                            <div class="col-md-6">
+                                                @Html.DropDownListFor(model => model.pr_spr_employees_id_create, ViewBag.SprEmployees as SelectList, "ФИО составителя", new Dictionary<string, object> { { "class", "form-control select2" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            <b> @Html.LabelFor(model => model.pr_spr_employees_id, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })</b>
+                                            <div class="col-md-6">
+                                                @Html.DropDownListFor(model => model.pr_spr_employees_id, ViewBag.SprEmployees as SelectList, "Выберите ответственного", new Dictionary<string, object> { { "class", "form-control select2" } })
+                                            </div>
+                                        </div>
+                                        <h4 class="panel-title font-14">Документ удостоверяющий личность</h4>
+                                        <hr class="m-t-5">
+                                        <div class="form-group form-group-sm">
+                                            <div class="row">
+                                                @Html.Label("Серия и номер документа", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                                <div class="col-md-2">
+                                                    @Html.TextBoxFor(model => model.pr_doc_serial, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Серия" } })
+                                                </div>
+                                                <div class="col-md-2">
+                                                    @Html.TextBoxFor(model => model.pr_doc_number, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Номер" } })
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group form-group-sm">
+                                            <div class="row">
+                                                @Html.Label("Кем выдан", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                                <div class="col-md-6">
+                                                    @Html.TextBoxFor(model => model.pr_doc_issue_body, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Кем выдан" } })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-group-sm">
+                                            <div class="row">
+                                                @Html.Label("Дата выдачи", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                                <div class="col-md-2">
+                                                    @Html.TextBoxFor(model => model.pr_doc_issue_date, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" } })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <h4 class="panel-title font-14">Охотничий билет</h4>
+                                        <hr class="m-t-5">
+                                        <div class="form-group form-group-sm">
+                                            <div class="row">
+                                                @Html.Label("Серия и номер охотничего билета", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                                <div class="col-md-2">
+                                                    @Html.TextBoxFor(model => model.pr_hunting_lic_serial, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_hunting_lic_serial) }, { "data-parent-input", "" } })
+                                                </div>
+                                                <div class="col-md-2">
+                                                    @Html.TextBoxFor(model => model.pr_hunting_lic_number, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_hunting_lic_number) }, { "data-parent-input", "" } })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-group-sm">
+                                            <div class="row">
+                                                @Html.LabelFor(model => model.pr_hunting_lic_issue_body, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                                <div class="col-md-6">
+                                                    @Html.TextBoxFor(model => model.pr_hunting_lic_issue_body, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_hunting_lic_issue_body) }, { "data-parent-input", "" } })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-group-sm">
+                                            <div class="row">
+                                                @Html.LabelFor(model => model.pr_hunting_lic_issue_date, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                                <div class="col-md-3">
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(model => model.pr_hunting_lic_issue_date, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" }, { "data-parent-input", "" } })
+                                                        <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                @*---увед к прот---*@
+
+                                <div class="tab-pane fade in" id="prNotifDataTabContainer">
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.Label("Номер и дата уведомления", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                @Html.TextBoxFor(model => model.al_number, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.al_number) }, { "data-parent-input", "" } })
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.al_date, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" }, { "data-parent-input", "" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_customer_name, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_customer_name)" data-child_input="pr_customer_name" value="" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_birth_date, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_birth_date)" data-child_input="pr_birth_date" data-type="date" value="" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_customer_address, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_customer_address)" data-child_input="pr_customer_address" value="" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            <div class="col-md-5 control-label text-left">
+                                                Статья и часть нарушения по КОАП
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" data-child_input="spr_violations" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" data-child_input="pr_spr_violations_part_id" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.al_date_invitations, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.al_date_invitations, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" }, { "data-parent-input", "" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.al_date_receiving, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.al_date_receiving, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" }, { "data-parent-input", "" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.al_spr_employees_id, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.DropDownListFor(model => model.al_spr_employees_id, ViewBag.alSprEmployees as SelectList, "Выберите ответственного", new Dictionary<string, object> { { "class", "form-control select2" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*---протокол---*@
+
+                                <div class="tab-pane fade in" id="protocolDataTabContainer">
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.Label("Номер", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                @Html.TextBoxFor(model => model.pr_number_protocol, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_number_protocol) }, { "data-parent-input", "" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.Label("Дата и время составления протокола", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.pr_date_create, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" }, { "data-parent-input", "" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="input-group clockpicker" data-autoclose="true">
+                                                    @Html.TextBoxFor(model => model.pr_time_create, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__:__" }, { "data-type", "time" }, { "type", "time" }, { "data-parent-input", "" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"> <span class="md md-access-time"></span> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_place_protocol, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr_place_protocol, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_place_protocol) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_spr_employees_id_create, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.DropDownListFor(model => model.pr_spr_employees_id_create, ViewBag.SprEmployees as SelectList, "ФИО составителя", new Dictionary<string, object> { { "class", "form-control select2" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_job_pos_name, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr_job_pos_name, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_job_pos_name) }, { "readonly", "readonly" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm hidden">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_name_create, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr_name_create, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_name_create) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_customer_name, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_customer_name)" data-child_input="pr_customer_name" value="" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_birth_date, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_birth_date)" data-child_input="pr_birth_date" value="" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_birth_place, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_birth_place)" data-child_input="pr_birth_place" value="" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_customer_address, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_customer_address)" data-child_input="pr_customer_address" value="" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_customer_phone_number, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_customer_phone_number)" data-child_input="pr_customer_phone_number" value="" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_marital_status, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr_marital_status, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_marital_status) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_dependent, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr_dependent, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_dependent) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_citizenship, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr_citizenship, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_citizenship) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_place_work, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" data-child_input="pr_place_work" value="" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="panel-title font-14">Охотничий билет</h4>
+                                    <hr class="m-t-5">
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.Label("Серия и номер охотничего билета", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_hunting_lic_serial)" data-child_input="pr_hunting_lic_serial" value="" disabled="disabled" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_hunting_lic_number)" data-child_input="pr_hunting_lic_number" value="" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_hunting_lic_issue_body, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_hunting_lic_issue_body)" data-child_input="pr_hunting_lic_issue_body" value="" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_hunting_lic_issue_date, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_hunting_lic_issue_date)" data-child_input="pr_hunting_lic_issue_date" value="" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="panel-title font-14">Разрешение на оружие</h4>
+                                    <hr class="m-t-5">
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_gun_permission_number, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                @Html.TextBoxFor(model => model.pr_gun_permission_number, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Номер" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_gun_permission_issued, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr_gun_permission_issued, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_gun_permission_issued) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_gun_permission_date_stop, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.pr_gun_permission_date_stop, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_document, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr_document, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_document) }, { "data-parent-input", "" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_witnesses1, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr_witnesses1, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_witnesses1) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_witnesses2, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr_witnesses2, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_witnesses1) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_description, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextAreaFor(model => model.pr_description, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_description) }, { "data-parent-input", "" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_motor_transport, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr_motor_transport, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_motor_transport) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="panel-title font-14">Оружие</h4>
+                                    <hr class="m-t-5">
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.Label("Оружие системы и калибр орудия", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                @Html.TextBoxFor(model => model.pr_gun, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_gun) }, { "data-parent-input", "" } })
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.TextBoxFor(model => model.pr_gun_caliber, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_gun_caliber) }, { "data-parent-input", "" } })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_gun_number, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                @Html.TextBoxFor(model => model.pr_gun_number, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_gun_number) }, { "data-parent-input", "" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_no_legal_products, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextAreaFor(model => model.pr_no_legal_products, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_no_legal_products) }, { "data-parent-input", "" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_resistance, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr_resistance, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_resistance) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_article, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextAreaFor(model => model.pr_article, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_article) }, { "data-parent-input", "" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            <div class="col-md-5 control-label text-left">
+                                                Статья и часть нарушения по КОАП
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" data-child_input="spr_violations" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" data-child_input="pr_spr_violations_part_id" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_explanation, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextAreaFor(model => model.pr_explanation, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_explanation) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_attached, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextAreaFor(model => model.pr_attached, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_attached) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_date_examination, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-4">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.pr_date_examination, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____ __:__" }, { "data-type", "dateTime" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_address_consideration, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr_address_consideration, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_address_consideration) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_copy, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.DropDownListFor(model => model.pr_copy, new SelectList(new List<SelectListItem> { new SelectListItem { Value = "", Text = "Не выбрано" }, new SelectListItem { Value = "1", Text = "Получил нарочно" }, new SelectListItem { Value = "2", Text = "Отказался от получения" }, new SelectListItem { Value = "3", Text = "Направлено почтой" } }, "Value", "Text"), new Dictionary<string, object> { { "class", "selectpicker" }, { "data-style", "btn-white btn-sm" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.Label("Номер заказного письма и дата ознакомления", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                @Html.TextBoxFor(model => model.pr_number_letter, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr_number_letter) } })
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.pr_date_receiving, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-clock-o"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_spr_employees_id, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.DropDownListFor(model => model.pr_spr_employees_id, ViewBag.SprEmployees as SelectList, "Выберите ответственного", new Dictionary<string, object> { { "class", "form-control select2" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*---определение---*@
+
+                                <div class="tab-pane fade" id="defDataTabContainer">
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_number_case, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_number_case)" data-child_input="pr_number_case" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.Label("Номер и дата вынесения определения", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                @Html.TextBoxFor(model => model.def_nomer, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.def_nomer) } })
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.def_date_definition, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" }, { "data-parent-input", "" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_date_create, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="__.__.____" data-child_input="pr_date_create" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_customer_name, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_customer_name)" data-child_input="pr_customer_name" value='@Model.pr_customer_name' disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_birth_date, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_birth_date)" data-child_input="pr_birth_date" data-type="date" value='@Model.pr_birth_date' disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            <div class="col-md-5 control-label text-left">
+                                                Статья и часть нарушения по КОАП
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" data-child_input="spr_violations" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" data-child_input="pr_spr_violations_part_id" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.def_spr_definition_type_id, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.DropDownListFor(model => model.def_spr_definition_type_id, ViewBag.SprDefinitionTypes as SelectList, "Вид определения", new Dictionary<string, object> { { "class", "selectpicker" }, { "data-style", "btn-white btn-sm" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hidden" id="plDataContainer" data-form-name="plData">
+                                        <div class="form-group form-group-sm">
+                                            <div class="row">
+                                                @Html.LabelFor(model => model.pl_date, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                                <div class="col-md-4">
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(model => model.pl_date, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____ __:__" }, { "data-type", "dateTime" }, { "data-form", "plData" } })
+                                                        <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-clock-o"></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-group-sm">
+                                            <div class="row">
+                                                @Html.LabelFor(model => model.pl_place, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                                <div class="col-md-6">
+                                                    @Html.TextBoxFor(model => model.pl_place, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pl_place) } })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <hr class="m-t-5">
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.def_date_sent, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.def_date_sent, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.def_date_handing, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.def_date_handing, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.def_head_managing, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.def_head_managing, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.def_head_managing) }, { "data-parent-input", "" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.def_spr_employees_id, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.DropDownListFor(model => model.def_spr_employees_id, ViewBag.defSprEmployees as SelectList, "Выберите ответственного", new Dictionary<string, object> { { "class", "form-control select2" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*---постановление---*@
+
+                                <div class="tab-pane fade" id="decreeDataTabContainer">
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.Label("Номер и дата постановления", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                @Html.TextBoxFor(model => model.res_number, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.res_number) }, { "data-parent-input", "" } })
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.res_date, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" }, { "data-parent-input", "" }, { "data-form", "decree" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_customer_name, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_customer_name)" data-child_input="pr_customer_name" value='@Model.pr_customer_name' disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_birth_date, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_birth_date)" data-child_input="pr_birth_date" data-type="date" value='@Model.pr_birth_date' disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_customer_address, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_customer_address)" data-child_input="pr_customer_address" value='@Model.pr_customer_address' disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_date_law_violation, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_date_law_violation)" data-child_input="pr_date_law_violation" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_hunting_farm_name, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_hunting_farm_name)" data-child_input="pr_hunting_farm_name" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_description, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <textarea class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_description)" data-child_input="pr_description" disabled="disabled"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_gun, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_gun)" data-child_input="pr_gun" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_gun_caliber, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_gun_caliber)" data-child_input="pr_gun_caliber" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_gun_number, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_gun_number)" data-child_input="pr_gun_number" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_no_legal_products, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_no_legal_products)" data-child_input="pr_no_legal_products" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.Label("Номер, дата и время сотавления протокола", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_number_protocol)" data-child_input="pr_number_protocol" disabled="disabled" />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="__.__.____" data-child_input="pr_date_create" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            <div class="col-md-5 control-label text-left">
+                                                Статья и часть нарушения по КОАП
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" data-child_input="spr_violations" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" data-child_input="pr_spr_violations_part_id" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_article, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_article)" data-child_input="pr_article" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.def_date_definition, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="__.__.____" data-child_input="def_date_definition" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.res_amount_fine, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                @Html.TextBoxFor(model => model.res_amount_fine, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.res_amount_fine) }, { "data-parent-input", "" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.res_amount_harm, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                @Html.TextBoxFor(model => model.res_amount_harm, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.res_amount_harm) }, { "data-parent-input", "" } })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.res_date_receiving_copy, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.res_date_receiving_copy, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.res_details_trust, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.res_details_trust, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.res_details_trust) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.Label("Номер и дата отправки заказного письма", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                @Html.TextBoxFor(model => model.res_number_letter, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.res_number_letter) }, { "data-parent-input", "" } })
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.res_date_receiving_letter, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" }, { "data-parent-input", "" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.res_date_receiving, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.res_date_receiving, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.res_date_handing, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.res_date_handing, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" }, { "data-parent-input", "" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.res_date_entry, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.res_date_entry, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" }, { "data-parent-input", "" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="panel-title font-14">Сведения об оплате</h4>
+                                    <hr class="m-t-5">
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.res_payment, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left p-t-0" } })
+                                            <div class="col-md-6">
+                                                @Html.CheckBox("res_payment", Model.res_payment ?? false, new Dictionary<string, object> { { "class", "js-switch extra-small" }, { "data-switchery", "switchery" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.res_payment_date, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.res_payment_date, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.res_payment_mark, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.res_payment_mark, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.res_payment_mark) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.def_head_managing, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.def_head_managing)" data-child_input="def_head_managing" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.res_spr_employees_id, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.DropDownListFor(model => model.res_spr_employees_id, ViewBag.resSprEmployees as SelectList, "Выберите ответственного", new Dictionary<string, object> { { "class", "form-control select2" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*---fssp---*@
+
+                                <div class="tab-pane fade" id="fsspDataTabContainer">
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.Label("Номер и дата направления письма в ФССП", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                @Html.TextBoxFor(model => model.bai_number, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.bai_number) } })
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.bai_date_sent, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" }, { "data-form", "fssp" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.bai_spr_bailiffs_id, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.DropDownListFor(model => model.bai_spr_bailiffs_id, ViewBag.SprBailliffs as SelectList, "Выберите ФССП", new Dictionary<string, object> { { "class", "form-control select2" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @Html.TextBoxFor(model => model.bai_name_bailiffs, new Dictionary<string, object> { { "class", "form-control" }, { "type", "hidden" }, { "placeholder", Html.DisplayNameFor(model => model.bai_name_bailiffs) } })
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.bai_address, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.bai_address, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.bai_address) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.bai_head, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.bai_head, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.bai_head) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.res_date_entry, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.res_date_entry)" data-child_input="res_date_entry" data-type="date" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.Label("Номер и дата постановления", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.res_number)" data-child_input="res_number" disabled="disabled" />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.res_date)" data-child_input="res_date" data-type="date" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_customer_name, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_customer_name)" data-child_input="pr_customer_name" value='@Model.pr_customer_name' disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_birth_date, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_birth_date)" data-child_input="pr_birth_date" data-type="date" value='@Model.pr_birth_date' disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_customer_address, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_customer_address)" data-child_input="pr_customer_address" value='@Model.pr_customer_address' disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            <div class="col-md-5 control-label text-left">
+                                                Статья и часть нарушения по КОАП
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" data-child_input="spr_violations" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" data-child_input="pr_spr_violations_part_id" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.res_amount_fine, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.res_amount_fine)" data-child_input="res_amount_fine" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.res_amount_harm, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.res_amount_harm)" data-child_input="res_amount_harm" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.bai_attached, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextAreaFor(model => model.bai_attached, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.bai_attached) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.bai_head_protection_nature, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.bai_head_protection_nature, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.bai_head_protection_nature) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="panel-title font-14">Результат</h4>
+                                    <hr class="m-t-5">
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.Label("Номер и дата результата", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                @Html.TextBoxFor(model => model.bai_answer_number, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.bai_answer_number) } })
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.bai_answer_date, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.bai_spr_bailiffs_result_id, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.DropDownListFor(model => model.bai_spr_bailiffs_result_id, ViewBag.SprBailiffsResult as SelectList, "Выберите результат", new Dictionary<string, object> { { "class", "form-control select2" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.bai_spr_employees_id, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.DropDownListFor(model => model.bai_spr_employees_id, ViewBag.baiSprEmployees as SelectList, "Выберите ответственного", new Dictionary<string, object> { { "class", "form-control select2" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*---увед к пр 2025---*@
+
+                                <div class="tab-pane fade in" id="pr20NotifDataTabContainer">
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.Label("Номер и дата уведомления", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                @Html.TextBoxFor(model => model.al20_number, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.al20_number) } })
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.al20_date, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" }, { "data-form", "protocol20notif" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_customer_name, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_customer_name)" data-child_input="pr_customer_name" value='@Model.pr_customer_name' disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_birth_date, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_birth_date)" data-child_input="pr_birth_date" data-type="date" value='@Model.pr_birth_date' disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_customer_address, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_customer_address)" data-child_input="pr_customer_address" value='@Model.pr_customer_address' disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.al20_date_invitations, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.al20_date_invitations, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.al20_date_receiving, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.al20_date_receiving, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.al20_spr_employees_id, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.DropDownListFor(model => model.al20_spr_employees_id, ViewBag.al20SprEmployees as SelectList, "Выберите ответственного", new Dictionary<string, object> { { "class", "form-control select2" } })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                @*-------pr20-------*@
+
+                                <div class="tab-pane fade" id="pr20DataTabContainer">
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.Label("Номер и дата протокола", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                @Html.TextBoxFor(model => model.pr20_number, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr20_number) } })
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.pr20_date, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" }, { "data-form", "protocol20" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr20_place, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr20_place, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr20_place) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr20_name_create, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr20_name_create, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr20_name_create) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr20_job_pos_name, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr20_job_pos_name, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr20_job_pos_name) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_customer_name, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_customer_name)" data-child_input="pr_customer_name" value='@Model.pr_customer_name' disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_birth_date, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_birth_date)" data-child_input="pr_birth_date" data-type="date" value='@Model.pr_birth_date' disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_birth_place, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_birth_place)" data-child_input="pr_birth_place" value='@Model.pr_birth_place' disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_place_work, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" data-child_input="pr_place_work" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_customer_address, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_customer_address)" data-child_input="pr_customer_address" value='@Model.pr_customer_address' disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_customer_phone_number, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_customer_phone_number)" data-child_input="pr_customer_phone_number" value='@Model.pr_customer_phone_number' disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr20_inn, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr20_inn, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr20_inn) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr20_customer_address_legal, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr20_customer_address_legal, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr20_customer_address_legal) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr20_document, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr20_document)" data-child_input="pr_document" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.res_amount_fine, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.res_amount_fine)" data-child_input="res_amount_fine" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.res_amount_harm, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.res_amount_harm)" data-child_input="res_amount_harm" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.Label("Номер и дата постановления", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.res_number)" data-child_input="res_number" disabled="disabled" />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.res_date)" data-child_input="res_date" data-type="date" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr20_head_protection_nature, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.pr20_head_protection_nature, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr20_head_protection_nature) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            <div class="col-md-5 control-label text-left">
+                                                Статья и часть нарушения по КОАП
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" data-child_input="spr_violations" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" data-child_input="pr_spr_violations_part_id" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.res_date_entry, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.res_date_entry)" data-child_input="res_date_entry" data-type="date" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.Label("Номер и дата отправки заказного письма", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.res_number_letter)" data-child_input="res_number_letter" disabled="disabled" />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.res_date_receiving_letter)" data-child_input="res_date_receiving_letter" data-type="date" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr20_date_receipt, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.pr20_date_receipt, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr20_explanation, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextAreaFor(model => model.pr20_explanation, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr20_explanation) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr20_attached, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextAreaFor(model => model.pr20_attached, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.pr20_attached) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr20_spr_employees_id, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.DropDownListFor(model => model.pr20_spr_employees_id, ViewBag.pr20SprEmployees as SelectList, "Выберите ответственного", new Dictionary<string, object> { { "class", "form-control select2" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*---ОВ---*@
+
+                                <div class="tab-pane fade" id="courtDataTabContainer">
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.Label("Номер, дата направления", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                @Html.TextBoxFor(model => model.tr_number, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.tr_number) } })
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.tr_date_sent, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" }, { "data-form", "court" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.tr_spr_organization_id, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.DropDownListFor(model => model.tr_spr_organization_id, ViewBag.SprOrganization as SelectList, "Выберите организацию", new Dictionary<string, object> { { "class", "form-control select2" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm hidden">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.tr_name_organization, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.tr_name_organization, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.tr_name_organization) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_customer_name, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_customer_name)" data-child_input="pr_customer_name" value='@Model.pr_customer_name' disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_birth_date, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_birth_date)" data-child_input="pr_birth_date" data-type="date" value='@Model.pr_birth_date' disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.pr_customer_address, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_customer_address)" data-child_input="pr_customer_address" value='@Model.pr_customer_address' disabled="disabled" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            <div class="col-md-5 control-label text-left">
+                                                Статья и часть нарушения по КОАП
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" data-child_input="spr_violations" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" data-child_input="pr_spr_violations_part_id" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.Label("Номер, дата и время составления протокола", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_number_protocol)" data-child_input="pr_number_protocol" disabled="disabled" />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="__.__.____" data-child_input="pr_date_create" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.tr_text, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextAreaFor(model => model.tr_text, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.tr_text) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.Label("Номер дела и дата поступления в ОЖМ", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.pr_number_case)" data-child_input="pr_number_case" disabled="disabled" />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="__.__.____" data-child_input="pr_date_in_ogm" data-type="date" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.tr_head_protection_nature, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextBoxFor(model => model.tr_head_protection_nature, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.tr_head_protection_nature) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="panel-title font-14">Результат</h4>
+                                    <hr class="m-t-5">
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.Label("Номер и дата результата", new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                @Html.TextBoxFor(model => model.tr_answer_number, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.tr_answer_number) } })
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.tr_answer_date, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.tr_spr_organization_result_id, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.DropDownListFor(model => model.tr_spr_organization_result_id, ViewBag.SprOrganizationsResult as SelectList, "Выберите результат", new Dictionary<string, object> { { "class", "form-control select2" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm hidden" id="div_tr_payment">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.tr_payment, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                @Html.TextBoxFor(model => model.tr_payment, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.tr_payment) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.tr_spr_employees_id, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.DropDownListFor(model => model.tr_spr_employees_id, ViewBag.trSprEmployees as SelectList, "Выберите ответственного", new Dictionary<string, object> { { "class", "form-control select2" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*---пост о прекращении---*@
+
+                                <div class="tab-pane fade" id="disDataTabContainer">
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.dis_date, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.dis_date, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" }, { "data-form", "disData" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.dis_number, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-2">
+                                                @Html.TextBoxFor(model => model.dis_number, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.dis_number) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.dis_basis_discontinued, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.TextAreaFor(model => model.dis_basis_discontinued, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.dis_basis_discontinued) } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.dis_date_receiving, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.dis_date_receiving, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.dis_date_receiving_copy, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.dis_date_receiving_copy, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" } })
+                                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.dis_spr_employees_id, new Dictionary<string, object> { { "class", "col-md-5 control-label text-left" } })
+                                            <div class="col-md-6">
+                                                @Html.DropDownListFor(model => model.dis_spr_employees_id, ViewBag.disSprEmployees as SelectList, "Выберите ответственного", new Dictionary<string, object> { { "class", "form-control select2" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel waves-effect waves-light" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Отмена</button>
+            <button type="submit" id="btn_edit_violation" class="btn btn-success waves-effect waves-light"> Сохранить <i class="fa fa-check m-l-5"></i></button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+
+<script>
+    $('[data-parent-input]').change(function () {
+        var parent_el = $(this);
+        $('[data-child_input]').each(function () {
+            if ($(this).data('child_input') == parent_el.attr("name")) {
+                if (parent_el.hasClass("select2")) {
+                    if (parent_el.children("option:selected").val() === undefined || parent_el.children("option:selected").val() == "") {
+                        $(this).val("");
+                    }
+                    else {
+                        $(this).val(parent_el.children("option:selected").text());
+                    }
+                }
+                else {
+                    $(this).val(parent_el.val());
+                }
+            }
+        }
+        );
+    });
+    $('#pr_date_create').change(function () {
+        $('[data-child_input=pr_date_create]').each(function () {
+            $(this).val($('#pr_date_create').val() + " " + $('#pr_time_create').val());
+        });
+    });
+    $('#pr_time_create').change(function () {
+        $('[data-child_input=pr_date_create]').each(function () {
+            $(this).val($('#pr_date_create').val() + " " + $('#pr_time_create').val());
+        });
+    });
+
+    $('#btn_edit_violation').click(function () {
+        ClearDateHideTab();
+        var $form = $("#EditViolationsForm");
+        var $data = null;
+        $data = $form.serialize();
+            $.ajax({
+                url: '@Url.Action("SubmitViolationsSave", "ApplicantPage")',
+                type: 'POST',
+                data: $data,
+                beforeSend: function () {
+                    $('#myModal').block({ message: '<div class="fa fa-spin fa-spinner icon-lg"></div>', overlayCSS: { backgroundColor: "#FFF", cursor: "wait" }, css: { border: 0, padding: 30, backgroundColor: "none" } });
+                },
+                success: function (data) {
+                    successSave();
+                    $('#customerViolationsTabContainer').html(data);
+                    $('#myModal').unblock();
+                    $('#myModal').modal('hide');
+                }
+            });
+    });
+
+    function ClearDateHideTab() {
+        $('a[data-form-name]').each(function () {
+            var tab = $(this);
+            var tabli = $(this).closest('li');
+            if (tabli.hasClass('hidden')) {
+                $("[data-form]").each(function () {
+                    if ($(this).data("form") == tab.data("form-name")) {
+                        $(this).val('');
+                    }
+                });
+            }
+        });
+        $('div[data-form-name]').each(function () {
+            var tab = $(this);
+            if (tab.hasClass('hidden')) {
+                $("[data-form]").each(function () {
+                    if ($(this).data("form") == tab.data("form-name")) {
+                        $(this).val('');
+                    }
+                });
+            }
+        });
+    }
+</script>

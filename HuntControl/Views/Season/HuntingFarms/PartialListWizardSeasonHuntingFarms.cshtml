@@ -1,0 +1,62 @@
+﻿@model HuntControl.WebUI.Models.HuntingFarmViewModel
+<form id="WizardHuntingFarmForm">
+    <div class="card-box p-0" id="huntingFarms">
+        <div class="input-group">
+            <span class="input-group-btn">
+                <button type="button" class="btn waves-effect waves-light btn-link p-l-20-important"><i class="fa fa-search"></i></button>
+            </span>
+            <input type="text" class="text-dark no-border-input search" placeholder="Поиск охотугодий"><ul class="typeahead dropdown-menu"></ul><ul class="typeahead dropdown-menu"></ul>
+        </div>
+        <hr class="m-0">
+        <div class="table-responsive">
+            <table class="table m-b-0">
+                <thead>
+                    <tr>
+                        <th class="number-row p-l-20-important">
+                            <div class="checkbox checkbox-primary checkbox-single m-t-5 m-b-0">
+                                <input type="checkbox" id="checkHuntingFarmAll" value="false">
+                                <label></label>
+                            </div>
+                        </th>
+                        <th class="number-row p-l-0">№</th>
+                        <th>@Html.DisplayNameFor(model => model.HuntingFarmList.First().hunting_farm_name)</th>
+                    </tr>
+                </thead>
+                <tbody class="list">
+                    @{int index = 0;}
+                    @foreach (var item in Model.HuntingFarmList)
+                    {
+                        <tr>
+                            <td class="number-row p-l-20-important">
+                                <div class="checkbox checkbox-primary checkbox-single m-t-5 m-b-0">
+                                    <input type="checkbox" id="checkHuntingFarm[@index]" name="checkHuntingFarm" value="false">
+                                    <label></label>
+                                </div>
+                            </td>
+                            <td class="number-row p-l-0">
+                                <label for="checkHuntingFarm[@index]">@(++Model.PageInfo.NumberRow)</label>
+                            </td>
+                            <td class="name">
+                                @Html.Hidden($"huntingFarms[{index}]", item.id)
+                                <label for="checkHuntingFarm[@index]">@Html.DisplayFor(i => item.hunting_farm_name)</label>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+<script src="~/Content/plugins/list/list.min.js"></script>
+<script>
+    var options = {
+        valueNames: ['name']
+    };
+
+    var userList = new List('huntingFarms', options);
+
+    $("#checkHuntingFarmAll").change(function () {
+        $("[name='checkHuntingFarm']").prop('checked', $(this).is(":checked"));
+    });
+</script>

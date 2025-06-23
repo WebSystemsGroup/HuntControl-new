@@ -1,0 +1,40 @@
+﻿@model IEnumerable<HuntControl.Domain.Concrete.data_customer_hunting_lic_perm_back_animal>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myLargeModalLabel">Животные</h4>
+        </div>
+        <div class="modal-body">
+                <div class="card-box p-0">
+                    <div class="table-responsive">
+                        <table class="table m-b-0">
+                            <thead>
+                                <tr>
+                                    <th class="p-l-20-important">@Html.DisplayNameFor(model => model.spr_animal_id)</th>
+                                    <th>@Html.DisplayNameFor(model => model.count_animal)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ int index = 0; }
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="vertical-middle p-l-20-important">
+                                            @item.spr_animal.animal_name
+                                        </td>
+                                        <td>
+                                            @item.count_animal
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel waves-effect waves-light" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Закрыть</button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

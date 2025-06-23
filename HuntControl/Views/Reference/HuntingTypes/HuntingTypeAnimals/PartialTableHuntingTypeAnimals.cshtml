@@ -1,0 +1,127 @@
+﻿@model HuntControl.WebUI.Models.ReferenceViewModel
+@if (Model.SprHuntingTypeAnimalList.Any())
+{
+    <div class="card-box p-0">
+        <div class="input-group">
+            <span class="input-group-btn">
+                <button type="button" class="btn waves-effect waves-light btn-link p-l-20-important"><i class="fa fa-search"></i></button>
+            </span>
+            <input type="text" id="searchTexthuntingTypeAnimals" class="text-dark no-border-input" placeholder="Поиск животных"><ul class="typeahead dropdown-menu"></ul><ul class="typeahead dropdown-menu"></ul>
+        </div>
+        <hr class="m-0" />
+        <div class="table-responsive">
+            <table class="table" id="huntingTypeAnimalsTable" style="margin-top: 0 !important">
+                <thead>
+                    <tr>
+                        <th class="number-row p-l-20-important">№</th>
+                        <th>@Html.DisplayNameFor(model => model.SprHuntingTypeAnimalList.FirstOrDefault().spr_animal_id)</th>
+                        <th class="text-right p-r-20-important">
+                            <button id="showHuntingTypeAnimalRemoves" type="button" class="link p-r-0 text-custom"><i class="@(ViewBag.IsRemove ? "ion-ios7-trash" : "ion-ios7-trash-outline") m-l-5" style="font-size: 20px;" data-placement="bottom" data-toggle="tooltip" data-original-title="@(ViewBag.IsRemove ? "Скрыть удаленные" : "Показать удаленные")"></i></button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.SprHuntingTypeAnimalList)
+                    {
+                        <tr data-hunting-type-animal-id="@item.id" class="@(item.is_remove == true ? "danger" : "")">
+                            <td class="number-row p-l-20-important">
+                                @((Model.PageInfo.CurrentPage - 1) * Model.PageInfo.ItemsPerPage + ++Model.PageInfo.NumberRow)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(i => item.spr_animal.animal_name)
+                            </td>
+                            <td class="actions">
+                                @if (User.IsInRole("superadmin") || User.IsInRole("admin"))
+                                {
+                                    if (item.is_remove != true)
+                                    {
+                                        <button class="on-default remove-row link"><i class="ion-trash-b"></i></button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="on-default text-custom link" style="font-size: 22px; line-height: 22px;" data-tooltip-info='{ "employees_fio": @Json.Encode(item.employees_fio), "employees_fio_modifi": @Json.Encode(item.employees_fio_modifi ?? "-"), "set_date": "@Html.DisplayFor(i => item.set_date)", "is_remove": @Json.Encode(item.is_remove), "date_remove": "@Html.DisplayFor(i => item.date_remove)", "employees_fio_remove": @Json.Encode(item.employees_fio_remove), "commentt_remove": @Json.Encode(item.commentt_remove)}'>
+                                            <i class="ion-ios7-information-outline"></i>
+                                        </button>
+                                        <button class="on-default recovery-row link" data-placement="top" data-toggle="tooltip" data-original-title="Восстановление"><i class="fa fa-history"></i></button>
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">
+        <span style="color:#00545c;"><strong><i class="icon-info"></i></strong> Нет животных.</span>
+    </div>
+}
+
+<link href="~/Content/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+<script src="~/Content/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/Content/plugins/datatables/dataTables.bootstrap.js"></script>
+<script>
+    $(function () {
+        var oTable = $('#huntingTypeAnimalsTable').DataTable({ dom: 't<"row m-t-10 p-l-20-important p-b-10 m-r-15"<"col-sm-4"i><"col-sm-8"p>>', "ordering": false });
+        $('#searchTexthuntingTypeAnimals').keyup(function () {
+            oTable.search($(this).val()).draw();
+        });
+
+        $('[data-toggle="tooltip"]').tooltip({ trigger: 'hover' });
+        $('button[data-tooltip-info]').tooltip({
+            title: function () {
+                var tooltipInfo = $(this).data('tooltipInfo');
+                return "<div class='text-left'>" +
+                    "<strong>Добавил</strong>: " + tooltipInfo['employees_fio'] + "</br>" +
+                    "<strong>Дата добавления</strong>: " + tooltipInfo['set_date'] + "</br>" +
+                    "<hr class='m-t-5 m-b-5'>" +
+                    "<strong>Изменил</strong>: " + tooltipInfo['employees_fio_modifi'] + "</br>" +
+                    (tooltipInfo['is_remove'] ?
+                        "<hr class='m-t-5 m-b-5'>" +
+                        "<strong>Удалил</strong>: " + tooltipInfo['employees_fio_remove'] + "</br>" +
+                        "<strong>Причина удаления</strong>: " + tooltipInfo['commentt_remove'] + "</br>" +
+                        "<strong>Дата удаления</strong>: " + tooltipInfo['date_remove'] + "</br>" : "") +
+                    "</div>";
+            },
+            html: true,
+            placement: "left"
+        });
+    });
+    $('#showHuntingTypeAnimalRemoves').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableHuntingTypeAnimals", "Reference")',
+            data: { huntingTypeId: '@ViewBag.HuntingTypeId', isRemove: '@(!ViewBag.IsRemove)' },
+            success: function (data) {
+                $('#huntingTypeAnimalsContainer').html(data);
+            }
+        });
+    });
+
+    $('#huntingTypeAnimalsContainer table td button.recovery-row').click(function () {
+        var huntingTypeAnimalId = $(this).closest('tr').data('huntingTypeAnimalId');
+        var paramObject = {
+            url: '@Url.Action("SubmitHuntingTypeAnimalRecovery", "Reference")',
+            params: { huntingTypeAnimalId: huntingTypeAnimalId },
+            onSuccess: function (data) {
+                $('#huntingTypeAnimalsContainer').html(data);
+            }
+        }
+        removeRecovery(paramObject);
+    });
+
+    $('#huntingTypeAnimalsContainer table td button.remove-row').click(function () {
+        var huntingTypeAnimalId = $(this).closest('tr').data('huntingTypeAnimalId');
+        var paramObject = {
+            url: '@Url.Action("SubmitHuntingTypeAnimalDelete", "Reference")',
+            params: { huntingTypeAnimalId: huntingTypeAnimalId },
+            onSuccess: function (data) {
+                $('#huntingTypeAnimalsContainer').html(data);
+            }
+        }
+        removeWithComment(paramObject);
+    });
+</script>

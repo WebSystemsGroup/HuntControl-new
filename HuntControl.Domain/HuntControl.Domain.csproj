@@ -1,0 +1,287 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{03C0E480-950D-4AAE-AE72-1FA8FF7C8DE8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HuntControl.Domain</RootNamespace>
+    <AssemblyName>HuntControl.Domain</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework6.Npgsql, Version=3.0.7.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework6.Npgsql.3.0.7\lib\net45\EntityFramework6.Npgsql.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Npgsql, Version=3.0.7.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Npgsql.3.0.7\lib\net45\Npgsql.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Abstract\IRepository.cs" />
+    <Compile Include="Models\Entities\Functions\CustomerHuntingSeason.cs" />
+    <Compile Include="Models\Entities\Functions\DataCustomerInfoGet.cs" />
+    <Compile Include="Models\Entities\Functions\EpguVisitTimeSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\HuntingCustomerInfoGetResultDto.cs" />
+    <Compile Include="Models\Entities\Functions\SeasonHuntingFarmAccountingResult.cs" />
+    <Compile Include="Models\Entities\Functions\AlertEmployeeSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\MainGeneralInformationResult.cs" />
+    <Compile Include="Models\Entities\Functions\MainCountEpguAndMfcResult.cs" />
+    <Compile Include="Models\Entities\Functions\MainCountHuntingFarmResult.cs" />
+    <Compile Include="Models\Entities\Functions\MainCountIssueGroupTypeResult.cs" />
+    <Compile Include="Models\Entities\Functions\MainCountIssueAndCancelledHuntingLicResult.cs" />
+    <Compile Include="Models\Entities\Functions\FormAnimalSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\FormFurInfoResult.cs" />
+    <Compile Include="Models\Entities\Functions\FormBirdInfoResult.cs" />
+    <Compile Include="Models\Entities\Functions\FormBearInfoResult.cs" />
+    <Compile Include="Models\Entities\Functions\ReportCountViolations.cs" />
+    <Compile Include="Models\Entities\Functions\ReportCountViolationsEmployees.cs" />
+    <Compile Include="Models\Entities\Functions\ReportCountViolationsHuntingFarm.cs" />
+    <Compile Include="Models\Entities\Functions\ReportTotalHuntingFarmResult.cs" />
+    <Compile Include="Models\Entities\Functions\ReportTotalHuntingGroupResult.cs" />
+    <Compile Include="Models\Entities\Functions\ReportHuntingLicPermResult.cs" />
+    <Compile Include="Models\Entities\Functions\ReportHuntingLicNotPermBackResult.cs" />
+    <Compile Include="Models\Entities\Functions\CustomerViolationsSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\SprServicesSubCustomerTypeRecipientSelect.cs" />
+    <Compile Include="Models\Entities\Functions\StatementDocumentSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\ViolationsCustomerSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\ViolationSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\FtpSettings.cs" />
+    <Compile Include="Models\Entities\Functions\CustomerSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\CustomerHuntingLicenseSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\HuntingLicPermsResult.cs" />
+    <Compile Include="Models\Entities\Functions\ReportDataCustomerViolationsReestrResult.cs" />
+    <Compile Include="Models\Entities\Functions\ReportReestrCountServiceResult.cs" />
+    <Compile Include="Models\Entities\Functions\StatementInfoGetResult.cs" />
+    <Compile Include="Models\Entities\Functions\FormUngulateInfoResult.cs" />
+    <Compile Include="Models\Entities\Functions\HuntingBackAnimalSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\HuntingFarmActiveHuntingTypeSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\HuntingFarmSeasonAnimalSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\HuntingFarmActiveGroupTypeSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\HuntingFarmActiveSeasonSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\HuntingLimitFormsGetResult.cs" />
+    <Compile Include="Models\Entities\Functions\HuntingLimitAnimalSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\MainCountViolationsResult.cs" />
+    <Compile Include="Models\Entities\Functions\ReportHuntingLicCancelledReestrResult.cs" />
+    <Compile Include="Models\Entities\Functions\ReportHuntingLicIssuedReestrResult.cs" />
+    <Compile Include="Models\Entities\Functions\HuntingCustomerInfoGetResult.cs" />
+    <Compile Include="Models\Entities\Functions\CaseServicesDocumentFileSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\CaseServicesDocumentSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\CaseServicesRoutesStageNextSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\CaseServicesSmevRequestSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\CaseServicesFileSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\CaseServicesSmevSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\CaseServicesRoutesStageSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\CaseServicesInfoGetResult.cs" />
+    <Compile Include="Models\Entities\Functions\CaseSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\SprServicesSubTariffSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\SprServicesSubSelectResult.cs" />
+    <Compile Include="Models\Entities\Functions\GetCustomerInfoResult.cs" />
+    <Compile Include="Models\Entities\Kcr\Data_Kcr.cs" />
+    <Compile Include="Models\Entities\Kcr\Spr_Kcr.cs" />
+    <Compile Include="Models\Entities\Tables\data_customer_hunting_lic_perm_hunting.cs" />
+    <Compile Include="Models\Entities\Tables\spr_account.cs" />
+    <Compile Include="Models\Entities\Tables\epgu_slot_time_book.cs" />
+    <Compile Include="Models\Entities\Tables\epgu_slot_time.cs" />
+    <Compile Include="Models\Entities\Tables\data_change_log.cs" />
+    <Compile Include="Models\Entities\Tables\data_customer.cs" />
+    <Compile Include="Models\Entities\Tables\data_customer_hunting_lic.cs" />
+    <Compile Include="Models\Entities\Tables\data_customer_hunting_lic_perm_back_animal.cs" />
+    <Compile Include="Models\Entities\Tables\data_customer_hunting_lic_perm_animal.cs" />
+    <Compile Include="Models\Entities\Tables\data_customer_hunting_lic_perm.cs" />
+    <Compile Include="Models\Entities\Tables\data_customer_hunting_lic_perm_back.cs" />
+    <Compile Include="Models\Entities\Tables\data_customer_hunting_lic_perm_payment.cs" />
+    <Compile Include="Models\Entities\Tables\data_customer_violations_files.cs" />
+    <Compile Include="Models\Entities\Tables\data_customer_violations.cs" />
+    <Compile Include="Concrete\EFDbContext.cs" />
+    <Compile Include="Concrete\EFRepository.cs" />
+    <Compile Include="Models\Entities\Tables\data_employees_reminder.cs" />
+    <Compile Include="Models\Entities\Tables\data_services_commentt_recipient.cs" />
+    <Compile Include="Models\Entities\Tables\data_system_errors.cs" />
+    <Compile Include="Models\Entities\Tables\spr_animal.cs" />
+    <Compile Include="Models\Entities\Tables\spr_animal_group_type.cs" />
+    <Compile Include="Models\Entities\Tables\spr_animal_hunting_type_join.cs" />
+    <Compile Include="Models\Entities\Tables\spr_animal_group.cs" />
+    <Compile Include="Models\Entities\Tables\spr_animal_method_account.cs" />
+    <Compile Include="Models\Entities\Tables\spr_animal_location.cs" />
+    <Compile Include="Models\Entities\Tables\spr_organization_result.cs" />
+    <Compile Include="Models\Entities\Tables\spr_bailiffs_result.cs" />
+    <Compile Include="Models\Entities\Tables\spr_hunting_farm_season_animal.cs" />
+    <Compile Include="Models\Entities\Tables\spr_hunting_farm_location.cs" />
+    <Compile Include="Models\Entities\Tables\spr_organization.cs" />
+    <Compile Include="Models\Entities\Tables\spr_bank.cs" />
+    <Compile Include="Models\Entities\Tables\spr_bailiffs.cs" />
+    <Compile Include="Models\Entities\Tables\spr_definition_type.cs" />
+    <Compile Include="Models\Entities\Tables\spr_document_identity.cs" />
+    <Compile Include="Models\Entities\Tables\spr_documents.cs" />
+    <Compile Include="Models\Entities\Tables\spr_employees.cs" />
+    <Compile Include="Models\Entities\Tables\spr_employees_department.cs" />
+    <Compile Include="Models\Entities\Tables\spr_employees_job_pos.cs" />
+    <Compile Include="Models\Entities\Tables\spr_employees_role.cs" />
+    <Compile Include="Models\Entities\Tables\spr_employees_role_join.cs" />
+    <Compile Include="Models\Entities\Tables\spr_hunting_farm_season_forms.cs" />
+    <Compile Include="Models\Entities\Tables\spr_hunting_farm_season.cs" />
+    <Compile Include="Models\Entities\Tables\spr_legal_person.cs" />
+    <Compile Include="Models\Entities\Tables\spr_hunting_farm.cs" />
+    <Compile Include="Models\Entities\Tables\spr_hunting_farm_accounting.cs" />
+    <Compile Include="Models\Entities\Tables\spr_hunting_farm_animal.cs" />
+    <Compile Include="Models\Entities\Tables\spr_hunting_farm_limit.cs" />
+    <Compile Include="Models\Entities\Tables\spr_hunting_farm_type.cs" />
+    <Compile Include="Models\Entities\Tables\spr_hunting_lic_status.cs" />
+    <Compile Include="Models\Entities\Tables\spr_hunting_type.cs" />
+    <Compile Include="Models\Entities\Tables\spr_method_remove.cs" />
+    <Compile Include="Models\Entities\Tables\spr_routes_stage.cs" />
+    <Compile Include="Models\Entities\Tables\spr_routes_stage_next.cs" />
+    <Compile Include="Models\Entities\Tables\spr_season_open_animal.cs" />
+    <Compile Include="Models\Entities\Tables\spr_season_open.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_sub.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_sub_active.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_sub_customer.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_sub_document.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_sub_document_customer.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_sub_failure.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_sub_failure_doc.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_sub_file.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_sub_file_folder.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_sub_result_doc.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_sub_smev_request_join.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_sub_status.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_sub_stop.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_sub_tariff.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_sub_tariff_type.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_sub_type_quality.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_sub_type_quality_join.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_sub_type_recipient.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_sub_way_get.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_sub_way_get_join.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_sub_way_get_result.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_sub_way_get_result_join.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_sub_week.cs" />
+    <Compile Include="Models\Entities\Tables\spr_services_type.cs" />
+    <Compile Include="Models\Entities\Tables\spr_settings.cs" />
+    <Compile Include="Models\Entities\Tables\spr_smev.cs" />
+    <Compile Include="Models\Entities\Tables\spr_smev_request.cs" />
+    <Compile Include="Models\Entities\Tables\spr_smev_type_request.cs" />
+    <Compile Include="Models\Entities\Tables\spr_standards_file.cs" />
+    <Compile Include="Models\Entities\Tables\spr_taxation.cs" />
+    <Compile Include="Models\Entities\Tables\spr_violations.cs" />
+    <Compile Include="Models\Entities\Tables\spr_violations_document.cs" />
+    <Compile Include="Models\Entities\Tables\spr_violations_status.cs" />
+    <Compile Include="Models\Entities\Tables\spr_violations_part.cs" />
+    <Compile Include="Models\Entities\Tables\spr_employees_hunting_farm.cs" />
+    <Compile Include="Models\Functions\Functions.cs" />
+    <Compile Include="Models\Entities\Tables\data_calendar.cs" />
+    <Compile Include="Models\Entities\Tables\data_calendar_day_type.cs" />
+    <Compile Include="Models\Entities\Tables\data_employees_alert.cs" />
+    <Compile Include="Models\Entities\Tables\data_services.cs" />
+    <Compile Include="Models\Entities\Tables\data_services_commentt.cs" />
+    <Compile Include="Models\Entities\Tables\data_services_customer.cs" />
+    <Compile Include="Models\Entities\Tables\data_services_customer_call.cs" />
+    <Compile Include="Models\Entities\Tables\data_services_customer_message.cs" />
+    <Compile Include="Models\Entities\Tables\data_services_document.cs" />
+    <Compile Include="Models\Entities\Tables\data_services_file.cs" />
+    <Compile Include="Models\Entities\Tables\data_services_routes_stage.cs" />
+    <Compile Include="Models\Entities\Tables\data_services_smev_log.cs" />
+    <Compile Include="Models\Entities\Tables\data_services_smev_request.cs" />
+    <Compile Include="Models\Entities\Tables\data_services_smev_request_status.cs" />
+    <Compile Include="Models\Entities\Tables\data_services_view_log.cs" />
+    <Compile Include="Models\Entities\Tables\spr_alert.cs" />
+    <Compile Include="Models\Entities\Tables\spr_employee_alert.cs" />
+    <Compile Include="Models\Entities\Tables\spr_season.cs" />
+    <Compile Include="Models\Entities\Tables\spr_season_animal.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\Entities\Views\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 и x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

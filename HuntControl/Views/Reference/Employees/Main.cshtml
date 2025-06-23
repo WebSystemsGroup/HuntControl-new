@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "Сотрудники";
+}
+
+@Html.MvcSiteMap().SiteMapPath()
+
+<div class="card-box">
+    <ul class="nav nav-pills m-b-15">
+        <li class="active">
+            <a href="#employeesPillContainer" data-toggle="tab" aria-expanded="true">Сотрудники</a>
+        </li>
+        <li class="">
+            <a href="#jobPosPillContainer" data-toggle="tab" aria-expanded="false">Должности</a>
+        </li>
+        <li class="">
+            <a href="#departmentsPillContainer" data-toggle="tab" aria-expanded="false">Отделы</a>
+        </li>
+    </ul>
+    <div class="tab-content br-n pn">
+        <div id="employeesPillContainer" class="tab-pane active">
+            <div id="employeesContainer">
+                @Html.Action("PartialTableEmployees", "Reference")
+            </div>
+        </div>
+        <div id="jobPosPillContainer" class="tab-pane">
+        </div>
+        <div id="departmentsPillContainer" class="tab-pane">
+        </div>
+    </div>
+</div>
+
+
+
+<link href="~/Content/plugins/wizard/wizard.min.css" rel="stylesheet" />
+<script src="~/Content/plugins/wizard/jquery.steps.min.js"></script>
+<script>
+
+    $('a[href="#jobPosPillContainer"]').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableEmployeeJobPos", "Reference")',
+            success: function (data) {
+                $('#jobPosPillContainer').html(data);
+            }
+        });
+    });
+
+    $('a[href="#departmentsPillContainer"]').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableDepartments", "Reference")',
+            success: function (data) {
+                $('#departmentsPillContainer').html(data);
+            }
+        });
+    });
+</script>
+

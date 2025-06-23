@@ -1,0 +1,52 @@
+﻿@model HuntControl.WebUI.Models.EmployeeViewModel
+<div class="row">
+    <div class="col-xs-12">
+        <h3 class="panel-title m-b-5 pull-left">Список ролей</h3>
+        @using (Ajax.BeginForm("PartialModalAddEmployeeRole", "Reference", new { employeeId = ViewBag.EmployeeId }, new AjaxOptions { UpdateTargetId = "secondaryModal", OnSuccess = "$('#secondaryModal').modal('show');" }, new { @class = "form-submit" }))
+        {
+            <button type="submit" class="btn btn-inverse waves-effect waves-light btn-sm m-b-10 btn-block-xs pull-right"> Добавить <i class="fa fa-plus m-l-5"></i></button>
+        }
+    </div>
+</div>
+<div class="card-box p-0">
+    <div class="table-responsive">
+        <table class="table table-hover m-b-0">
+            <thead>
+                <tr>
+                    <th class="number-row p-l-20-important">№</th>
+                    <th>@Html.DisplayNameFor(model => model.SprEmployeeRoleJoins.First().spr_employees_role_id)</th>
+                    <th class="text-right p-r-20-important">
+                        Действия
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.SprEmployeeRoleJoins)
+                {
+                    <tr data-employee-role-id="@item.id">
+                        <td class="number-row p-l-20-important">
+                            @((Model.PageInfo.CurrentPage - 1) * Model.PageInfo.ItemsPerPage + ++Model.PageInfo.NumberRow)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(i => item.spr_employees_role.comment)
+                        </td>
+                        <td class="actions">
+                            @if (User.IsInRole("superadmin"))
+                            {
+                                <button class="on-default remove-row link"><i class="ion-trash-b"></i></button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+
+    $('#employeeRolesContainer table td button.remove-row').click(function () {
+        var employeeRoleId = $(this).closest('tr').data('employeeRoleId');
+        removeData('@Url.Action("SubmitEmployeeRoleDelete", "Reference")', { employeeRoleId: employeeRoleId }, function (data) { $('#employeeRolesContainer').html(data); });
+    });
+</script>
+

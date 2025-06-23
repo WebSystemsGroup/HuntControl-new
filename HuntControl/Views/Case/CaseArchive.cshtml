@@ -1,0 +1,85 @@
+﻿@model HuntControl.WebUI.Models.CaseViewModel
+@{
+    ViewBag.Title = "Обращения";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Content/plugins/select2/js/select2.full.min.js"></script>
+
+@Html.MvcSiteMap().SiteMapPath()
+
+<div class="card-box m-t-10 p-t-10 p-b-10">
+    @using (Ajax.BeginForm("PartialTableCases", "Case", null, new AjaxOptions { UpdateTargetId = "casesTableContainer", LoadingElementId = "loadingAjax" }, new { @class = "form-horizontal" }))
+    {
+        <div class="collapse in" id="collapseExample" style="">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-group-sm form-actions m-b-0">
+                        <div class="row p-l-r-10">
+                            <div class="col-md-3 m-b-10">
+                                <label class="font-12 text-muted p-t-0 m-b-0">Услуга</label>
+                                @Html.DropDownList("subServiceId", ViewBag.SubServices as SelectList, "Все", new Dictionary<string, object> { { "class", "select2 form-control input-sm" } })
+                            </div>
+                            <div class="col-md-3 m-b-10">
+                                <label class="font-12 text-muted p-t-0 m-b-0">Период</label>
+                                <div class="input-daterange input-group" id="date-range">
+                                    <input class="form-control input-sm required" style="padding-left:10px" id="dateStart" name="dateStart" autocomplete="off" placeholder="с" type="text" value="@DateTime.Now.AddMonths(-1).ToShortDateString()" autocomplete="off">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
+                                    <input class="form-control input-sm required" style="padding-left:10px" id="dateStop" name="dateStop" autocomplete="off" placeholder="по" type="text" value="@DateTime.Now.ToShortDateString()">
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-4 m-b-10">
+                                <label class="font-12 text-muted p-t-0 m-b-0">Сотрудник</label>
+                                @Html.DropDownList("employeeId", ViewBag.Employees as SelectList, "Все", new Dictionary<string, object> { { "class", "select2 form-control input-sm" } })
+                            </div>
+                            <div class="col-md-3 m-b-10">
+                                <label class="font-12 text-muted p-t-0 m-b-0">Исполнитель</label>
+                                @Html.DropDownList("employeesIdExecution", ViewBag.Employees as SelectList, "Все", new Dictionary<string, object> { { "class", "select2 form-control input-sm" } })
+                            </div>
+                            <div class="col-md-3 m-b-10">
+                                <label class="font-12 text-muted p-t-0 m-b-0">Статус услуги</label>
+                                @Html.DropDownList("subServiceStatusId", ViewBag.SubServiceStatuses as SelectList, "Все", new Dictionary<string, object> { { "class", "select2 form-control input-sm" } })
+                            </div>
+                            <div class="col-md-3 m-b-10">
+                                <label class="font-12 text-muted p-t-0 m-b-0">Способ обращения</label>
+                                @Html.DropDownList("subServiceWayGetId", ViewBag.SubServiceWayGets as SelectList, "Все", new Dictionary<string, object> { { "class", "select2 form-control input-sm" } })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="m-t-10 m-b-10" />
+        </div>
+
+
+        <div class="row">
+            <a href="#" class="collapse-toggle__ctr collapse-toggle__ctr_utility col-sm-4" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                <!-- Collapsed state -->
+                <span class="collapse-toggle__state _collapsed">
+                    <i class="ti-arrow-circle-down"></i>
+                    <span class="collapse-toggle__state-title collapse-toggle__state-title_utility">Развернуть поиск</span>
+                </span> <!-- Active (open) state -->
+                <span class="collapse-toggle__state _active">
+                    <i class="ti-arrow-circle-up"></i>
+                    <span class="collapse-toggle__state-title collapse-toggle__state-title_utility">Свернуть поиск</span>
+                </span>
+            </a>
+            <div class="col-sm-8 text-right action-btns">
+                <button type="submit" class="btn btn-default waves-effect waves-light btn-sm">
+                    <i class="ion-ios7-search m-r-5"></i>
+                    Найти
+                </button>
+            </div>
+        </div>
+    }
+</div>
+<div id="casesTableContainer">
+    <div class="alert alert-warning">
+        <span style="color: #00545c;"><strong><i class="icon-info"></i></strong> Воспользуйтесь поиском для отображения обращений.</span>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $(".select2").select2();
+         $('#date-range').datepicker({ format: 'dd.mm.yyyy', autoclose: true, language: 'ru', orientation: 'bottom left' });
+    });
+</script>

@@ -1,0 +1,79 @@
+﻿@model IEnumerable<WebAIS.Models.KcrModel.criteriaNFType>
+
+<div class="row justify-content-end">
+    <div class="col-lg-11 accardion-milti-castoner">
+        <div class="accardion-milti-castoner-сontrol">
+            <button type="button" class="btn accardion-milti-castoner-btn-show" data-accardion onclick="showAdccardion(this)">
+                Критерии
+            </button>
+            <i class="fa fa-chevron-left accardion-chevron" aria-hidden="true"></i>
+        </div>
+        <div class="accardion-content-milti-castoner" data-accardion-content style="display: none">
+            <fieldset>
+                @foreach (var criteria in Model)
+                {
+                    <div class="row justify-content-end">
+                        <div class="col-lg-11 accardion-milti-castoner">
+                            <div class="accardion-milti-castoner-сontrol">
+                                <button type="button" class="btn accardion-milti-castoner-btn-show" data-accardion onclick="showAdccardion(this)">
+                                    Критерий
+                                </button>
+                                <i class="fa fa-chevron-left accardion-chevron" aria-hidden="true"></i>
+                            </div>
+                            <div class="accardion-content-milti-castoner" data-accardion-content style="display: none">
+                                <fieldset>
+                                    <div class="row justify-content-center">
+                                        <table class="table">
+                                            <tbody>
+                                            @if (criteria.criterion != null)
+                                            {
+                                                <tr>
+                                                    <td>Наименование</td>
+                                                    <td>@criteria.criterion.name</td>
+                                                </tr>
+                                                if (criteria.criterion.negativeMeaning != null)
+                                                {
+                                                    <tr>
+                                                        <td>Отрицательное значение</td>
+                                                        <td>@criteria.criterion.negativeMeaning</td>
+                                                    </tr>
+                                                }
+                                            }
+                                            @if (criteria.decisionType != null)
+                                            {
+                                                <tr>
+                                                    <td>Дейстивие при не соответствии</td>
+                                                    <td>@criteria.decisionType.name</td>
+                                                </tr>
+                                            }
+                                            @if (criteria.rejectionReason != null)
+                                            {
+                                                <tr>
+                                                    <td>Идентификатор основания для отказа</td>
+                                                    <td>@criteria.rejectionReason.name</td>
+                                                </tr>
+                                            }
+                                            @if (criteria.documentRequirements != null)
+                                            {
+                                                <tr>
+                                                    <td>Требования к документу</td>
+                                                    <td>
+                                                        @foreach (var doc in criteria.documentRequirements)
+                                                        {
+                                                            <p>- @doc.name</p>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </fieldset>
+        </div>
+    </div>
+</div>

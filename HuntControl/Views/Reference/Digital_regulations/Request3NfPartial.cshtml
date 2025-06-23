@@ -1,0 +1,16 @@
+﻿@model WebAIS.Models.KcrModel.request3NFType
+
+@if (Model.name != null)
+{
+    <tr>
+        <td>Вид сведений</td>
+        <td>@Model.name</td>
+    </tr>
+}
+@if (Model.ownerService != null)
+{
+    <tr>
+        <td>Владелец сервиса</td>
+        <td>@Model.ownerService.name</td>
+    </tr>
+}

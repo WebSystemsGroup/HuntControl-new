@@ -1,0 +1,67 @@
+﻿@model HuntControl.WebUI.Models.CalendarViewModel
+
+<link rel="stylesheet" href="~/Content/plugins/fullcalendar/dist/fullcalendar.css">
+<script src="~/Content/plugins/bootstrap-select/dist/js/bootstrap-select.min.js" type="text/javascript"></script>
+
+<div id="calendar">
+</div>
+<div class="modal fade none-border" id="event-modal" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;" data-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><strong>Добавление события</strong></h4>
+            </div>
+            <div class="modal-body">
+                @using (Ajax.BeginForm("SubmitCalendarDayTypeSave", "Reference", Model, new AjaxOptions { UpdateTargetId = "calendarContainer", OnSuccess = "$('#event-modal').modal('hide');" }, new { @id = "ChangeCalendarDay", @class = "form-horizontal" }))
+                {
+                    <div class="form-group form-group-sm">
+                        <div class="row">
+                            <label class="col-md-4 control-label text-right">Тип</label>
+                            <div class="col-md-6">
+                                @Html.DropDownList("dateType", ViewBag.DayType as SelectList, new Dictionary<string, object> { { "class", "selectpicker" }, { "data-style", "btn-white btn-sm" }, { "name", "dateType" } })
+                                @Html.Hidden("dateSelect")
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-cancel waves-effect waves-light" data-dismiss="modal">Закрыть</button>
+                <button type="submit" form="ChangeCalendarDay" class="btn btn-success save-event waves-effect waves-light">Добавить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    var weekends = JSON.parse('@Html.Raw(Json.Encode(Model.DataCalendarList.Where(w => w.date_type == 0).Select(s => new { title = s.data_calendar_day_type.name, start = s.date_.ToString("yyyy-MM-dd") , color = "red" }).ToArray()))');
+    var holydays = JSON.parse('@Html.Raw(Json.Encode(Model.DataCalendarList.Where(w => w.date_type == 2).Select(s => new { title = s.data_calendar_day_type.name, start = s.date_.ToString("yyyy-MM-dd"), color= "green" }).ToArray()))');
+    var dateSelect = new Date();
+    $('.selectpicker').selectpicker();
+    $(function () {
+        $('#calendar').fullCalendar({
+            locale: 'ru',
+            lang: 'ru',
+            height: 800,
+            header: {
+                left: 'prev,next today',
+                right: 'title'
+            },
+            eventSources: [weekends,
+                holydays
+                
+            ],
+            dayClick: function (date) {
+                $('#event-modal').modal('show');
+                $('#ChangeCalendarDay').find("#dateSelect").val(date.format());
+            }
+        });
+    });
+</script>
+<script src="~/Content/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="~/Content/plugins/fullcalendar/dist/moment.min.js"></script>
+<script src="~/Content/plugins/fullcalendar/dist/fullcalendar.min.js"></script>
+<script src="~/Content/plugins/fullcalendar/dist/locale-all.js"></script>
+
+

@@ -1,0 +1,378 @@
+﻿@model WebAIS.StoreProcedure.SModel.case_customer_root_get_smev
+
+<div class="modal-card-head wrap-flex">
+    <nav class="breadcrumb m-b-0">
+        <div class="container">
+            <div class="row-flex">
+                <div class="col-flex"><div class="breadcrumb-item complete">Запрос</div></div>
+                <div class="col-flex"><div class="breadcrumb-item active">Данные</div></div>
+                <div class="col-flex"><div class="breadcrumb-item">Ответ</div></div>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="modal-card-body">
+    <div class="form-vertical smev-request" id="smev-giac-tabs">
+        <ul class="tab-horizontal">
+            <li><a href="#smev-Giac-tab-1">Данные заявителя</a></li>
+            <li><a href="#smev-Giac-tab-2">Данные лица, подлежащего проверке</a></li>
+            <li onclick="getFileSmevDocument()"><a href="#smev-Giac-tab-3">Документы</a></li>
+        </ul>
+        <form id="_GiacForm">
+            <input name="data_services_id" type="hidden" class="data_services_id" />
+            <div id="smev-Giac-tab-1" class="form-content smev-request">
+                <div class="row-flex nomargin-bottom">
+                    <h2 class="col-flex is-offset-5 form-title">Направление запроса</h2>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="addressee">Регион направления запроса</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <select class="select" id="addressee" name="addressee" style="display: none;"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex nomargin-bottom">
+                    <h2 class="col-flex is-offset-4 form-title">Персональные данные заявителя</h2>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="LastName">Фамилия</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input capitalize" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="applicant_fio_LastName" name="applicant.fio.LastName" placeholder="Фамилия" type="text" value="@Model.out_customer_name.Split(' ')[0]">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Имя</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input capitalize" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="applicant_fio_FirstName" name="applicant.fio.FirstName" placeholder="Имя" type="text" value="@Model.out_customer_name.Split(' ')[1]">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="SecondName">Отчество</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input capitalize" data-val="true" data-val-length="" data-validation-allowing="-" id="applicant_fio_SecondName" name="applicant.fio.SecondName" placeholder="Отчество" type="text" value="@Model.out_customer_name.Split(' ')[2]">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="BirthDate">Дата рождения</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control has-addons">
+                            <input class="input" type="text" name="applicant.BirthDate" id="applicant_BirthDate" value="@Model.out_document_birth_date" placeholder="__.__.____" data-inputmask="'mask': '99.99.9999'"
+                                   data-validation="date" data-validation-format="dd.mm.yyyy"
+                                   data-input-datetimepicker="" data-input-datetimepicker-options='{"timepicker":false,"format":"d.m.Y","scrollMonth":false,"scrollInput":false}' />
+                            <span class="icon" style="top:0px;"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="docSnils">СНИЛС</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-validation-allowing="-" id="applicant_Snils" name="applicant.Snils" placeholder="___________" type="text" value="@Model.out_customer_snils" data-inputmask = "'mask': '99999999999'">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Место рождения</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="applicant_BirthPlace" name="applicant.BirthPlace" placeholder="Место рождения" type="text" value="@Model.out_document_birth_place">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="smev-Giac-tab-2" class="form-content smev-request">
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="LastName">Фамилия</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input capitalize" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="personal_fio_LastName" name="personal.fio.LastName" placeholder="Фамилия" type="text" value="@(Model.out_customer_name.Split(' ').Length >= 1 ? Model.out_customer_name.Split(' ')[0] : "")">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Имя</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input capitalize" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="personal_fio_FirstName" name="personal.fio.FirstName" placeholder="Имя" type="text" value="@(Model.out_customer_name.Split(' ').Length >= 2 ? Model.out_customer_name.Split(' ')[1] : "")">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="SecondName">Отчество</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input capitalize" data-val="true" data-val-length="" data-validation-allowing="-" id="personal_fio_SecondName" name="personal.fio.SecondName" placeholder="Отчество" type="text" value="@(Model.out_customer_name.Split(' ').Length >= 3 ? Model.out_customer_name.Split(' ')[2] : "")">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="BirthDate">Дата рождения</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control has-addons">
+                            <input class="input" type="text" name="personal.BirthDate" id="personal_BirthDate" value="@Model.out_document_birth_date" placeholder="__.__.____" data-inputmask="'mask': '99.99.9999'"
+                                   data-validation="date" data-validation-format="dd.mm.yyyy"
+                                   data-input-datetimepicker="" data-input-datetimepicker-options='{"timepicker":false,"format":"d.m.Y","scrollMonth":false,"scrollInput":false}' />
+                            <span class="icon" style="top:0px;"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Место рождения</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="personal_BirthPlace" name="personal.BirthPlace" placeholder="Место рождения" type="text" value="@Model.out_document_birth_place">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="LastName">Серия</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-inputmask = "'mask': '9999'" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="personal_DocSeries" name="personal.DocSeries" placeholder="Серия" type="text" value="@Model.out_document_serial">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="LastName">Номер</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-inputmask = "'mask': '999999'" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="personal_DocNumber" name="personal.DocNumber" placeholder="Номер" type="text" value="@Model.out_document_number">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="LastName">Кем выдан</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="personal_DocIssuer" name="personal.DocIssuer" placeholder="Кем выдан" type="text" value="@Model.out_document_issue_place">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="BirthDate">Дата выдачи</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control has-addons">
+                            <input class="input" type="text" name="personal.DocIssueDate" id="personal_DocIssueDate" value="@Model.out_document_issue_date" placeholder="__.__.____" data-inputmask="'mask': '99.99.9999'"
+                                   data-validation="date" data-validation-format="dd.mm.yyyy"
+                                   data-input-datetimepicker="" data-input-datetimepicker-options='{"timepicker":false,"format":"d.m.Y","scrollMonth":false,"scrollInput":false}' />
+                            <span class="icon" style="top:0px;"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="smev-Giac-tab-3" class="form-content smev-request" style="min-height: 250px;">
+                <div class="row-flex">
+                    <div class="col-flex is-12">
+                        <table class="route-table table-prices smev-doc-files">
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="form-content smev-response" style="display:none;"></div>
+</div>
+<div class="modal-card-foot">
+    <div class="content-footer__action row-flex-right">
+        <button type="button" class="btn btn-danger attach-smev-response" style="display: none;">
+            <span>Прикрепить к услуге</span>
+            <span class="icon">
+                <i class="ion ion-ios-upload-outline"></i>
+            </span>
+        </button>
+        <button type="button" class="btn btn-danger is-form-send smev-send-data" data-url-smev="Smev_GiacAdmOffenceDrugs">
+            <span>Далее</span>
+            <span class="icon">
+                <i class="ion ion-ios-arrow-forward"></i>
+            </span>
+        </button>
+    </div>
+</div>
+<script>
+    flag = true;
+    $(document).ready(function () {
+        $('#addressee').select2({
+            theme: "classic",
+            language: "ru"
+        });
+        $('#smev-giac-tabs .select').niceSelect();
+       // getCustomer($('._glCaseId').val());
+        Dictionary('addressee', 'GiacRegionCodes');
+
+        var modal = $('#modal_smev_card_content');
+        modal.find("input:hidden.data_services_id").val($("#tab-services").find(".r-tabs-state-custom-active").data("serviceId"));
+    });
+    $(document).on('change', 'select.select2DOC', function (event) {
+        var $select = $(this);
+        var $option = $select.find('option:selected').val();
+        var row = $select.closest('tr');
+        if ($option == '') {
+            row.removeClass('active');
+        } else {
+            row.addClass('active');
+        }
+    });
+    function getFileSmevDocument() {
+        var _table = $('#smev-Giac-tab-3').find(".smev-doc-files");
+        _table.empty();
+        $.ajax({
+            url: 'jsonTableDocumentSmev',
+            type: 'POST',
+            data: { id: $("#tab-services").find(".r-tabs-state-custom-active").data("serviceId") },
+            success: function (items) {
+                if (items.length > 0) {
+                    var j = 0;
+                    items.forEach(function (item, i, arr) {
+                        var option = '<tr>' +
+                            '<td>' + ++j + '</td>' +
+                            '<td class="text-clip-cust" style="max-width: 470px;">' + item.out_name + ' </td>' +
+                            '<td>' + (item.out_file_size / 1024).toFixed(2) + ' кБ</td>' +
+                            '<td clss="non-click">' +
+                            '<div class="form-control">' +
+                            '<select type="select" class="select2DOC Giac" name="attachments">' +
+                            '<option value="" selected>Выберите тип</option>' +
+                            '<option title="Заявление" value="' + item.out_id + '|400">Заявление</option>' +
+                            '<option title="Паспорт РФ" value="' + item.out_id + '|401">Паспорт РФ</option>' +
+                            '<option title="Паспорт иност. гр-на" value="' + item.out_id + '|402">Паспорт иност. гр-на</option>' +
+                            '<option title="Вид на жительство" value="' + item.out_id + '|403">Вид на жительство</option>' +
+                            '<option title="Доверенность" value="' + item.out_id + '|404">Доверенность</option>' +
+                            '<option title="Документ,подтв-й родство" value="' + item.out_id + '|405">Документ,подтв-й родство</option>' +
+                            '<option title="Документ,подтв-й факт опеки" value="' + item.out_id + '|406">Документ,подтв-й факт опеки</option>' +
+                            '<option title="Перевод паспорта" value="' + item.out_id + '|407">Перевод паспорта</option>' +
+                            '</select>' +
+                            '</div>' +
+                            '</td>' +
+                            '<td>' +
+                            '<button type="button" data-toggle="modal" data-type="' + item.out_file_ext + '" data-target="#modal_pic" data-pic="' + item.out_id + '"><i class="ion ion-eye"></i> Просмотр</button>' +
+                            '</td>' +
+                            '</tr>';
+                        _table.append(option);
+                    });
+                    $('.select2DOC').niceSelect();
+                }
+                else {
+                    var option = '<tr><td> Документы отсутствуют. Отсканируйте или загрузите документы перед выполнением СМЭВ запроса. </td></tr>';
+                    _table.append(option);
+                }
+            }
+        });
+    };
+    if (typeof ('#modal_smev_card_content') != 'undefined') {
+        $('input[data-inputmask]').inputmask();
+    };
+    if (typeof ('#modal_smev_card_content') != 'undefined') {
+        $.datetimepicker.setLocale('ru');
+        $.each($('[data-input-datetimepicker]'), function () {
+            var $this = $(this);
+            var options = $this.data('input-datetimepicker-options');
+            var avalible_time = $this.data('input-datetimepicker-time');
+
+            if (typeof avalible_time != 'undefined') {
+                options['allowTimes'] = avalible_time.split(',');
+            }
+
+            $this.datetimepicker(options);
+        });
+    };
+    if (typeof ('#_GiacForm') != 'undefined') {
+        $.validate({
+            form : '#registration',
+            lang: 'ru',
+            modules: 'date, security',
+            borderColorOnError: '#e44d32',
+            dateFormat: 'dd-mm-yyyy',
+            addValidClassOnAll: true,
+            validateHiddenInputs: true
+        });
+    };
+    function Dictionary(input_name, type) {
+        var input = $("#" + input_name);
+        $.ajax({
+            url: '/Smev/Smev_GetDictionary',
+            type: 'POST',
+            data: { type: type },
+            success: function (items) {
+                if (items != 'undefined') {
+                    input.empty();
+                    items.Dictionary.forEach(function (item, i, arr) {
+                        input.append('<option value=' + item.Key + '>' + item.Value + '</option>');
+                    });
+                    input.val(items.DefaultKey).niceSelect('update');
+                }
+            }
+        });
+    };
+    function _checkGiacform() {
+        var bl = false;
+        var $form = $('#modal_smev_card_content').find('form');
+        var $sl = $form.find('.smev-doc-files tr.active');
+        if (typeof ('#modal_smev_card_content') != 'undefined') {
+            $.each($('[data-validation]'), function () {
+                var $this = $(this);
+                if ($this.val() != '' && $sl.length > 0 && $sl.val() != 'undefined') {
+                    bl = true;
+                }
+                else {
+                    bl = false;
+                    return false;
+                }
+            });
+        };
+        return bl;
+    };
+    $('#smev-giac-tabs').responsiveTabs({
+        startCollapsed: 'accordion'
+    });
+    $('.smev-send-data').on('click', function (e) {
+        if ($('#modal_smev_card_content').find('form').isValid() && _checkGiacform() && flag) {
+            event.stopPropagation();
+            var btn = $(this);
+            var url = $(this).data('urlSmev');
+            smevSendData(url,btn);
+        }
+        else {
+            $('#modal_smev_card_content').effect("shake", 500);
+            return false;
+        }
+    });
+</script>

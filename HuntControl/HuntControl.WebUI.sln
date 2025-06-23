@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HuntControl.WebUI", "HuntControl.WebUI.csproj", "{5B464970-EB08-4C67-AD57-56F886317BFB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5B464970-EB08-4C67-AD57-56F886317BFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B464970-EB08-4C67-AD57-56F886317BFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B464970-EB08-4C67-AD57-56F886317BFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B464970-EB08-4C67-AD57-56F886317BFB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {23387BD9-13A5-4107-8DEB-2E1F9CDB373E}
+	EndGlobalSection
+EndGlobal

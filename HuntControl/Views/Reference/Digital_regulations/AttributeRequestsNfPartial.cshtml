@@ -1,0 +1,83 @@
+﻿@model IEnumerable<WebAIS.Models.KcrModel.attributeRequestsNFType>
+
+<div class="row justify-content-end">
+    <div class="col-lg-11 accardion-milti-castoner">
+        <div class="accardion-milti-castoner-сontrol">
+            <button type="button" class="btn accardion-milti-castoner-btn-show" data-accardion onclick="showAdccardion(this)">
+                Атрибуты запроса
+            </button>
+            <i class="fa fa-chevron-left accardion-chevron" aria-hidden="true"></i>
+        </div>
+        <div class="accardion-content-milti-castoner" data-accardion-content style="display: none">
+            <fieldset>
+                <div class="row justify-content-center">
+                    @foreach (var attributeRequest in Model)
+                    {
+                        <div class="row justify-content-end">
+                            <div class="col-lg-11 accardion-milti-castoner">
+                                <div class="accardion-milti-castoner-сontrol">
+                                    <button type="button" class="btn accardion-milti-castoner-btn-show" data-accardion onclick="showAdccardion(this)">
+                                        Атрибут
+                                    </button>
+                                    <i class="fa fa-chevron-left accardion-chevron" aria-hidden="true"></i>
+                                </div>
+                                <div class="accardion-content-milti-castoner" data-accardion-content style="display: none">
+                                    <fieldset>
+                                        <div class="row justify-content-center">
+                                            <table class="table">
+                                                <tbody>
+                                                    @if (attributeRequest.attribute != null)
+                                                    {
+                                                        <tr>
+                                                            <td>Идентификатор записи</td>
+                                                            <td>@attributeRequest.attribute.name</td>
+                                                        </tr>
+                                                    }
+                                                    @if (attributeRequest.isDecisionMakingSpecified)
+                                                    {
+                                                        <tr>
+                                                            <td>Принимается решение?</td>
+                                                            <td>@(attributeRequest.isDecisionMaking ? "да" : "нет")</td>
+                                                        </tr>
+                                                    }
+                                                    @if (attributeRequest.isRegistryEntrySpecified)
+                                                    {
+                                                        <tr>
+                                                            <td>Происходит запись в реестр?</td>
+                                                            <td>@(attributeRequest.isRegistryEntry ? "да" : "нет")</td>
+                                                        </tr>
+                                                    }
+                                                    @if (attributeRequest.isAssessmentProcedureSpecified)
+                                                    {
+                                                        <tr>
+                                                            <td>Процедура оценки?</td>
+                                                            <td>@(attributeRequest.isAssessmentProcedure ? "да" : "нет")</td>
+                                                        </tr>
+                                                    }
+                                                    @if (attributeRequest.isInterdepartmentalInteractionSpecified)
+                                                    {
+                                                        <tr>
+                                                            <td>Межведомственное взаимодействие?</td>
+                                                            <td>@(attributeRequest.isInterdepartmentalInteraction ? "да" : "нет")</td>
+                                                        </tr>
+                                                    }
+                                                    @if (attributeRequest.isInteractionWithApplicantSpecified)
+                                                    {
+                                                        <tr>
+                                                            <td>Взаимодействие с заявителем?</td>
+                                                            <td>@(attributeRequest.isInteractionWithApplicant ? "да" : "нет")</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>

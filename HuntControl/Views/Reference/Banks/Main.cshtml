@@ -1,0 +1,10 @@
+﻿
+@{
+    ViewBag.Title = "Справочник банков";
+}
+@Html.MvcSiteMap().SiteMapPath()
+
+
+<div id="banksContainer">
+    @Html.Action("PartialTableBanks", "Reference")
+</div>

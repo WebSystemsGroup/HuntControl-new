@@ -1,0 +1,65 @@
+﻿@{
+    ViewBag.Title = "Сезон охоты";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.MvcSiteMap().SiteMapPath()
+
+
+<div class="card-box">
+    <ul class="nav nav-pills m-b-10">
+        <li class="active">
+            <a href="#seasonsPillContainer" data-toggle="tab" aria-expanded="true">Сезоны охоты</a>
+        </li>
+        <li class="">
+            <a href="#accountingsPillContainer" data-toggle="tab" aria-expanded="false">Учетные данные</a>
+        </li>
+    </ul>
+    <hr class="m-t-0" />
+    <div class="tab-content">
+        <div id="seasonsPillContainer" class="tab-pane fade in active">
+            @Html.Action("HuntingFarms", "Season")
+        </div>
+        <div id="accountingsPillContainer" class="tab-pane fade">
+        </div>
+    </div>
+</div>
+
+<link href="~/Content/plugins/wizard/wizard.min.css" rel="stylesheet" />
+<script src="~/Content/plugins/wizard/jquery.steps.min.js"></script>
+<script>
+    $('a[href="#seasonsPillContainer"]').click(function () {
+        $('#seasonsPillContainer').load('@Url.Action("HuntingFarms", "Season")');
+    });
+    $('a[href="#accountingsPillContainer"]').click(function () {
+        $('#accountingsPillContainer').load('@Url.Action("AccountingData", "Season")');
+    });
+
+    //выбор сезона
+    $(document).on("click", "#huntingFarmSeasonContainer tbody > tr:not(.group) > td:not(.actions)", function () {
+        var huntingFarmSeasonId = $(this).closest('tr').data('huntingFarmSeasonId');
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableSeasonAnimals", "Reference")',
+            data: { huntingFarmSeasonId: huntingFarmSeasonId },
+            success: function (data) {
+                $("#huntingFarmSeasonAnimalContainer").html(data);
+                $("#wizardSeason").steps('next');
+            }
+        });
+    });
+
+    //выбор животного
+    $(document).on("click", "#huntingFarmSeasonAnimalContainer tbody > tr:not(.group) > td:not(.actions)", function () {
+        var seasonAnimalId = $(this).closest('tr').data('seasonAnimalId');
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableHuntingFarmLimits", "Reference")',
+            data: { seasonAnimalId: seasonAnimalId },
+            success: function (data) {
+                $("#huntingFarmLimitContainer").html(data);
+                $("#wizardSeason").steps('next');
+            }
+        });
+    });
+</script>

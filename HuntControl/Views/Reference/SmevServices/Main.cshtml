@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "Сервисы СМЭВ";
+}
+
+@Html.MvcSiteMap().SiteMapPath()
+
+<div class="panel panel-default">
+    <div class="panel-body app-content">
+        <div class="icons-tab-steps wizard-circle">
+
+            <!-- Step 1 -->
+            <h6><i class="step-icon"></i> Сервисы СМЭВ</h6>
+            <fieldset>
+                <div id="smevServicesTableContainer">@Html.Action("PartialTableSmevServices", "Reference")</div>
+            </fieldset>
+
+            <!-- Step 2 -->
+            <h6><i class="step-icon"></i>Запросы СМЭВ</h6>
+            <fieldset>
+                <div id="smevServiceRequestsTableContainer">
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>
+
+
+
+<link href="~/Content/plugins/wizard/wizard.min.css" rel="stylesheet" />
+<script src="~/Content/plugins/wizard/jquery.steps.min.js"></script>
+<script>
+    $(function () {
+        $(".icons-tab-steps").steps({ enablePagination: false, headerTag: "h6", bodyTag: "fieldset", transitionEffect: "fade", titleTemplate: '<span class="step"></span> #title#', labels: { finish: "Submit" }, onFinished: function () { alert("Form submitted.") } });
+    });
+</script>
+

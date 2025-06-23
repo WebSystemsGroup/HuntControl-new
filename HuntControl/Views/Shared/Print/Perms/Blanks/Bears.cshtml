@@ -1,0 +1,315 @@
+﻿@model HuntControl.Domain.Concrete.FormBearInfoResult
+@{
+    var customerName = Model.out_customer_name.Split(' ');
+}
+<style>
+    /* ====================== Общие стили ====================== */
+    *,
+    *:before,
+    *:after {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    .page {
+        margin: 0;
+        font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        font-style: italic;
+    }
+
+    .page {
+        position: relative;
+        display: block;
+        margin: 0 auto;
+        margin-bottom: 0.5cm;
+        /*background: url(001.jpg);*/
+        background-size: cover;
+        /*box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);*/
+    }
+
+    .left {
+        position: absolute;
+        top: -2mm;
+        left: -1mm;
+        width: 11cm;
+        bottom: .9cm;
+    }
+
+    .center {
+        position: absolute;
+        top: -2mm;
+        left: 10.6cm;
+        width: 11cm;
+        bottom: .9cm;
+    }
+
+    .subject {
+        margin-top: 1cm;
+        text-align: center;
+    }
+
+    .organization-name {
+        margin-top: .3cm;
+        text-align: center;
+    }
+
+    .bear-type {
+        margin-top: 2.9cm;
+        text-align: center;
+    }
+
+    .hunting-times {
+        margin-left: 1.42cm;
+    }
+
+    .hunting-times-1 {
+        margin-top: 0.4cm;
+    }
+
+    .hunting-times .date {
+        display: inline-block;
+        vertical-align: middle;
+        width: 3.5cm;
+    }
+
+    .center .hunting-times .date {
+        width: 3.5cm;
+    }
+
+    .hunting-times .date + .date {
+        margin-left: 1.15cm;
+    }
+
+    .center .hunting-times .date + .date {
+        margin-left: 1.25cm;
+    }
+
+    .hunting-times .date .day {
+        margin-right: .5cm;
+    }
+
+    .hunting-times .date .year {
+        float: right;
+    }
+
+    .hunting-times-2 {
+        margin-top: .08cm;
+    }
+
+    .hunting-type {
+        margin-top: .50cm;
+        line-height: 1;
+        text-indent: 3.15cm;
+    }
+
+    .hunting-area-name {
+        height: 2.45cm;
+        margin-top: .1cm;
+        margin-left: .6cm;
+        margin-right: .6cm;
+        margin-bottom: 0;
+        text-indent: 2.5cm;
+        line-height: .5cm;
+    }
+
+    .hunting-area-name::first-line {
+        line-height: 1cm;
+    }
+
+    .animal-info {
+        height: .95cm;
+        margin-top: 0.3cm;
+        margin-left: .6cm;
+        text-indent: 5.5cm;
+        margin-bottom: 0;
+        line-height: 0.5cm;
+        text-align: end;
+        margin-right: 0.6cm;
+    }
+
+    .permission-status {
+        margin-top: .45cm;
+        text-align: end;
+        line-height: 0.5;
+        margin-right: 0.6cm;
+        text-indent: 4cm;
+    }
+
+    .permission-status::first-line {
+        line-height: 1cm;
+    }
+
+    .hunting-ticket {
+        margin-top: .7cm;
+        margin-left: 3.7cm;
+    }
+
+    .hunting-ticket .serial {
+        margin-right: .9cm;
+    }
+
+    .hunting-ticket-date {
+        width: 4.5cm;
+        margin-top: .18cm;
+        margin-left: 3.7cm;
+    }
+
+    .hunting-ticket-date .day {
+        margin-right: .7cm;
+    }
+
+    .hunting-ticket-date .year {
+        float: right;
+    }
+
+    .hunter-signature {
+        margin-top: 0.3cm;
+        margin-left: 2.4cm;
+    }
+
+    .authorized-person {
+        margin-top: 0.60cm;
+        margin-left: 3.7cm;
+    }
+
+    .permission-date {
+        display: inline-block;
+        vertical-align: bottom;
+        width: 3.1cm;
+        margin-top: 0.90cm;
+        margin-left: 1cm !important;
+    }
+
+    .center .permission-date {
+        margin-left: 0cm;
+    }
+
+    .permission-date .day {
+        margin-right: .4cm;
+    }
+
+    .permission-date .year {
+        float: right;
+    }
+
+    .authorized-person-signature {
+        display: inline-block;
+        margin-left: 2.8cm;
+        vertical-align: bottom;
+    }
+
+    @@media print {
+        .page {
+            margin: 0;
+        }
+    }
+
+
+    @@page {
+        size: A4 landscape;
+    }
+</style>
+<div class="page">
+    <section class="left">
+        <div class="subject">@Model.out_region_name</div>
+        <div class="organization-name">@Model.out_organization_name</div>
+        <div class="bear-type">@Model.out_animal_name</div>
+        <div class="hunting-times hunting-times-1">
+            <div class="date">
+                <span class="day">@(Model.out_date_start?.ToString("dd"))</span>
+                <span class="month">@(Model.out_date_start?.ToString("MMMM"))</span>
+                <span class="year">@(Model.out_date_start?.ToString("yy"))</span>
+            </div>
+            <div class="date">
+                <span class="day">@(Model.out_date_stop?.ToString("dd"))</span>
+                <span class="month">@(Model.out_date_stop?.ToString("MMMM"))</span>
+                <span class="year">@(Model.out_date_stop?.ToString("yy"))</span>
+            </div>
+        </div>
+        <div class="hunting-times hunting-times-2">
+            <div class="date">
+                <span class="day">&nbsp;</span>
+                <span class="month">&nbsp;</span>
+                <span class="year">&nbsp;</span>
+            </div>
+            <div class="date">
+                <span class="day">&nbsp;</span>
+                <span class="month">&nbsp;</span>
+                <span class="year">&nbsp;</span>
+            </div>
+        </div>
+        <div class="hunting-type">@Model.out_hunting_type_name</div>
+        <p class="hunting-area-name">@Model.out_hunting_farm_name</p>
+        <p class="animal-info">@($"{Model.out_animal_name}, {Model.out_animal_sex}, {Model.out_animal_age}")</p>
+        <p class="permission-status">@Model.out_customer_name</p>
+        <div class="hunting-ticket">
+            <span class="serial">@Model.out_hunting_lic_serial</span>
+            <span class="number">@Model.out_hunting_lic_number</span>
+        </div>
+        <div class="hunting-ticket-date">
+            <span class="day">@(Model.out_hunting_lic_issue_date?.ToString("dd"))</span>
+            <span class="month">@(Model.out_hunting_lic_issue_date?.ToString("MMMM"))</span>
+            <span class="year">@(Model.out_hunting_lic_issue_date?.ToString("yy"))</span>
+        </div>
+        <div class="hunter-signature">&nbsp;</div>
+        <div class="authorized-person">@Model.out_fio_given</div>
+        <div class="permission-date">
+            <span class="day">@(Model.out_date_given?.ToString("dd"))</span>
+            <span class="month">@(Model.out_date_given?.ToString("MMMM"))</span>
+            <span class="year">@(Model.out_date_given?.ToString("yy"))</span>
+        </div>
+        <div class="authorized-person-signature">&nbsp;</div>
+    </section>
+    <section class="center">
+        <div class="subject">@Model.out_region_name</div>
+        <div class="organization-name">@Model.out_organization_name</div>
+        <div class="bear-type">@Model.out_animal_name</div>
+        <div class="hunting-times hunting-times-1">
+            <div class="date">
+                <span class="day">@(Model.out_date_start?.ToString("dd"))</span>
+                <span class="month">@(Model.out_date_start?.ToString("MMMM"))</span>
+                <span class="year">@(Model.out_date_start?.ToString("yy"))</span>
+            </div>
+            <div class="date">
+                <span class="day">@(Model.out_date_stop?.ToString("dd"))</span>
+                <span class="month">@(Model.out_date_stop?.ToString("MMMM"))</span>
+                <span class="year">@(Model.out_date_stop?.ToString("yy"))</span>
+            </div>
+        </div>
+        <div class="hunting-times hunting-times-2">
+            <div class="date">
+                <span class="day">&nbsp;</span>
+                <span class="month">&nbsp;</span>
+                <span class="year">&nbsp;</span>
+            </div>
+            <div class="date">
+                <span class="day">&nbsp;</span>
+                <span class="month">&nbsp;</span>
+                <span class="year">&nbsp;</span>
+            </div>
+        </div>
+        <div class="hunting-type">@Model.out_hunting_type_name</div>
+        <p class="hunting-area-name">@Model.out_hunting_farm_name</p>
+        <p class="animal-info">@($"{Model.out_animal_name}, {Model.out_animal_sex}, {Model.out_animal_age}")</p>
+        <p class="permission-status">@Model.out_customer_name</p>
+        <div class="hunting-ticket">
+            <span class="serial">@Model.out_hunting_lic_serial</span>
+            <span class="number">@Model.out_hunting_lic_number</span>
+        </div>
+        <div class="hunting-ticket-date">
+            <span class="day">@(Model.out_hunting_lic_issue_date?.ToString("dd"))</span>
+            <span class="month">@(Model.out_hunting_lic_issue_date?.ToString("MMMM"))</span>
+            <span class="year">@(Model.out_hunting_lic_issue_date?.ToString("yy"))</span>
+        </div>
+        <div class="hunter-signature">&nbsp;</div>
+        <div class="authorized-person">@Model.out_fio_given</div>
+        <div class="permission-date">
+            <span class="day">@(Model.out_date_given?.ToString("dd"))</span>
+            <span class="month">@(Model.out_date_given?.ToString("MMMM"))</span>
+            <span class="year">@(Model.out_date_given?.ToString("yy"))</span>
+        </div>
+        <div class="authorized-person-signature">&nbsp;</div>
+    </section>
+</div>

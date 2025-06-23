@@ -1,0 +1,32 @@
+﻿@model HuntControl.WebUI.Models.StatisticsViewModel
+
+<canvas id="hunticLicForHunticFarmChart" width="400" height="100"></canvas>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+<script>
+    var ctx = document.getElementById('hunticLicForHunticFarmChart').getContext('2d');
+     var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'bar',
+
+            // The data for our dataset
+            data: {
+                labels:  ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+                datasets: [{
+                    label: "ЕПГУ",
+                    backgroundColor: 'rgb(2, 99, 178)',
+                    borderColor: 'rgb(2, 99, 178)',
+                    data: @Json.Encode(Model.MainCountHuntingFarmList.Select(s => s.out_count).ToArray())
+                }]
+            },
+
+            // Configuration options go here
+            options: {
+                title: {
+                    display: true,
+                    text: 'Электронные услуги'
+                }
+            }
+        });
+</script>
+

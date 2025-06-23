@@ -1,0 +1,660 @@
+﻿@model HuntControl.WebUI.Models.CaseViewModel
+<link href="~/Content/plugins/animate.less/animate.min.css" rel="stylesheet" type="text/css">
+<link href="~/Content/plugins/switchery/dist/switchery.min.css" rel="stylesheet">
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<script src="~/Content/plugins/switchery/dist/switchery.min.js"></script>
+<script src="~/Content/plugins/bootstrap-select/dist/js/bootstrap-select.min.js" type="text/javascript"></script>
+<script src="~/Content/plugins/notifyjs/dist/notify.min.js"></script>
+<script src="~/Content/plugins/notifications/notify-metro.js"></script>
+<script>
+    $(document).ready(function () {
+        jQuery("#principalForm").validate().settings.ignore = "";
+        if (@Model.Recipient == 1912196) {
+            jQuery("#customerForm").validate().settings.ignore = "";
+            disableForm();
+            var init = new Switchery($('#principalSwitch')[0], $('#principalSwitch').data());
+
+            $('#principalSwitch').change(function () {
+                if (document.querySelector('#principalSwitch').checked) {
+                    enableForm();
+                } else {
+                    disableForm();
+                }
+            });
+        } else {
+            jQuery("#legalForm").validate().settings.ignore = "";
+        }
+
+        $('.selectpicker').selectpicker();
+        $('input[data-type=date]').datepicker({ format: 'dd.mm.yyyy', autoclose: true, language: 'ru' });
+        $('input[data-type=doc-serial]').inputmask("9999", {
+            "oncomplete": function () {
+                var dataForm = $(this).data('form');
+                $('input[data-form=' + dataForm + '][data-type=doc-number]').focus();
+            },
+            clearIncomplete: true
+        });
+        $('input[data-type=doc-number]').inputmask("999999", {
+            "oncomplete": function () {
+                var dataForm = $(this).data('form');
+                var docSerial = $('input[data-form=' + dataForm + '][data-type=doc-serial]').val();
+                var docNumber = $('input[data-form=' + dataForm + '][data-type=doc-number]').val();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetCustomerDataInfo", "Case")',
+                    data: { customerDocSerial: docSerial, customerDocNumber: docNumber },
+                    success: function (data) {
+                        if (data.out_customer_fio != null) {
+                            $.Notification.notify('success', 'top right', 'Найдены данные заявителя');
+                            let fioArray = data?.out_customer_fio?.split(' ');
+                            $('input[data-form=' + dataForm + '][name="' + dataForm + '.customer_fio.lastName"]').val(fioArray[0] ? fioArray[0] : '');
+                            $('input[data-form=' + dataForm + '][name="' + dataForm + '.customer_fio.firstName"]').val(fioArray[1] ? fioArray[1] : '');
+                            $('input[data-form=' + dataForm + '][name="' + dataForm + '.customer_fio.secondName"]').val(fioArray[2] ? fioArray[2] : '');
+                            $('select[data-form=' + dataForm + '][name="'+dataForm+'.customer_sex"]').val(data.out_customer_sex).change();
+                            $('input[data-form=' + dataForm + '][name="'+dataForm+'.customer_snils"]').val(data.out_customer_snils);
+                            $('input[data-form=' + dataForm + '][name="'+dataForm+'.customer_address"]').val(data.out_customer_address);
+                            $('input[data-form=' + dataForm + '][name="'+dataForm+'.customer_address_actual"]').val(data.out_customer_address_actual);
+                            $('input[data-form=' + dataForm + '][name="'+dataForm+'.customer_email"]').val(data.out_customer_email);
+                            $('input[data-form=' + dataForm + '][name="'+dataForm+'.customer_tel2"]').val(data.out_customer_tel2);
+                            $('input[data-form=' + dataForm + '][name="'+dataForm+'.customer_tel1"]').val(data.out_customer_tel1);
+                            $('input[data-form=' + dataForm + '][name="'+dataForm+'.customer_inn"]').val(data.out_customer_inn);
+                            $('input[data-form=' + dataForm + '][name="'+dataForm+'.document_code"]').val(data.out_customer_doc_code);
+                            $('input[data-form=' + dataForm + '][name="'+dataForm+'.document_issue_body"]').val(data.out_customer_doc_issue_body);
+                            $('input[data-form=' + dataForm + '][name="'+dataForm+'.document_issue_date"]').val(moment(data.out_customer_doc_issue_date).format("DD.MM.YYYY"));
+                            $('input[data-form=' + dataForm + '][name="'+dataForm+'.document_birth_place"]').val(data.out_customer_doc_birth_place);
+                            $('input[data-form=' + dataForm + '][name="'+dataForm+'.document_birth_date"]').val(moment(data.out_customer_doc_birth_date).format("DD.MM.YYYY"));
+                            $('input[data-form=' + dataForm + '][name="'+dataForm+'.spr_document_identity_id"]').val(data.out_spr_document_identity_id);
+                        }
+                    }
+                });
+            },
+            clearIncomplete: true
+        });
+        $('input[data-type=doc-code]').inputmask({
+            mask: '999-999',
+            clearIncomplete: true
+        });
+        $('input[data-type=doc-snils]').inputmask({
+            mask: '999-999-999 99',
+            clearIncomplete: true
+        });
+
+        function disableForm() {
+            $('[data-form=principal]').prop('disabled', true);
+            $('[data-form=principal].selectpicker').selectpicker('refresh');
+        }
+
+        function enableForm() {
+            $('[data-form=principal]').prop('disabled', false);
+            $('[data-form=principal].selectpicker').selectpicker('refresh');
+        }
+
+        $('button[data-type=btnGetSnils]').on('click', function () {
+            var button = $(this);
+            var dataForm = button.data('form');
+            var customerFioElement = $('input[data-form=' + dataForm + '][name="'+dataForm+'.customer_fio"]');
+            var customerSexElement = $('select[data-form=' + dataForm + '][name="'+dataForm+'.customer_sex"]');
+            var customerBirthDateElement = $('input[data-form=' + dataForm + '][name="'+dataForm+'.document_birth_date"]');
+            if (customerFioElement.valid() > 0 && customerBirthDateElement.valid() > 0) {
+                var customerFio = customerFioElement.val();
+                var customerSex = customerSexElement.val();
+                var customerBirthDate = customerBirthDateElement.val();
+                var arr = customerFio.split(' ');
+                $.ajax({
+                    url: '@Url.Action("GetCustomerSnils", "Case")',
+                    type: 'POST',
+                    data:
+                    {
+                        FirstName: arr[1],
+                        LastName: arr[2],
+                        SecondName: arr[0],
+                        gender: customerSex,
+                        birthDate: customerBirthDate,
+                    },
+                    success: function (snils) {
+                        $('input[data-form=' + dataForm + '][data-type=doc-snils]').val(snils);
+                        $('input[data-form=' + dataForm + '][data-type=doc-snils]').prop('disabled', false);
+                        $.Notification.notify('success', 'top right', 'Найден СНИЛС', snils);
+                    },
+                    beforeSend: function () {
+                        $('input[data-form=' + dataForm + '][data-type=doc-snils]').prop('disabled', true);
+                        button.find('i').addClass("fa-spin");
+                    },
+                    complete: function () {
+                        button.find('i').removeClass("fa-spin");
+                    },
+                    error: function (data) {
+                        $.Notification.notify('error', 'top right', data.responseText);
+                    }
+                });
+            } else {
+                if (customerFioElement.valid() == 0) {
+                    customerFioElement.addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                        $(this).removeClass('shake animated');
+                    });
+                }
+                if (customerBirthDateElement.valid() == 0) {
+                    customerBirthDateElement.closest('.input-group').addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                        $(this).removeClass('shake animated');
+                    });
+                }
+            }
+        });
+
+        $('button[data-type=btnGetInn]').on('click', function () {
+            var button = $(this);
+            var dataForm = button.data('form');
+            var customerFioElement = $('input[data-form=' + dataForm + '][name="'+dataForm+'.customer_fio"]');
+            var docSerialElement = $('input[data-form=' + dataForm + '][name="'+dataForm+'.document_serial"]');
+            var docNumberElement = $('input[data-form=' + dataForm + '][name="'+dataForm+'.document_number"]');
+            var docIdentityElement = $('select[data-form=' + dataForm + '][name="'+dataForm+'.spr_document_identity_id"]');
+            var docIssueDateElement = $('input[data-form=' + dataForm + '][name="'+dataForm+'.document_issue_date"]');
+            var customerBirthDateElement = $('input[data-form=' + dataForm + '][name="'+dataForm+'.document_birth_date"]');
+
+            if (customerFioElement.valid() > 0 && customerBirthDateElement.valid() > 0 && docSerialElement.valid() > 0 && docNumberElement.valid() > 0 && docIssueDateElement.valid() > 0) {
+                var docIdentity = docIdentityElement.val();
+                var customerFio = customerFioElement.val();
+                var docSerial = docSerialElement.val();
+                var docNumber = docNumberElement.val();
+                var docIssueDate = docIssueDateElement.val();
+                var customerBirthDate = customerBirthDateElement.val();
+                var arr = customerFio.split(' ');
+                $.ajax({
+                    url: '@Url.Action("GetCustomerInn", "Case")',
+                    type: 'post',
+                    data:
+                    {
+                        firstname: arr[1],
+                        lastname: arr[0],
+                        secondname: arr[2],
+                        documenttype: docIdentity,
+                        documentseries: docSerial,
+                        documentnumber: docNumber,
+                        documentdate: docIssueDate,
+                        birthdate: customerBirthDate,
+                    },
+                    success: function (inn) {
+                        $('input[data-form=' + dataForm + '][data-type=doc-inn]').val(inn);
+                        $('input[data-form=' + dataForm + '][data-type=doc-inn]').prop('disabled', false);
+                        $.Notification.notify('success', 'top right', 'Найден ИНН', inn);
+                    },
+                    beforeSend: function () {
+                        $('input[data-form=' + dataForm + '][data-type=doc-inn]').prop('disabled', true);
+                        button.find('i').addClass("fa-spin");
+                    },
+                    complete: function () {
+                        button.find('i').removeClass("fa-spin");
+                    },
+                    error: function (data) {
+                        $.Notification.notify('error', 'top right', data.responseText);
+                    }
+                });
+            }
+            else {
+                if (customerFioElement.valid() == 0) {
+                    customerFioElement.addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                        $(this).removeClass('shake animated');
+                    });
+                }
+                if (docSerialElement.valid() == 0) {
+                    docSerialElement.addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                        $(this).removeClass('shake animated');
+                    });
+                }
+                if (docNumberElement.valid() == 0) {
+                    docNumberElement.addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                        $(this).removeClass('shake animated');
+                    });
+                }
+                if (docIssueDateElement.valid() == 0) {
+                    docIssueDateElement.closest('.input-group').addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                        $(this).removeClass('shake animated');
+                    });
+                }
+                if (customerBirthDateElement.valid() == 0) {
+                    customerBirthDateElement.closest('.input-group').addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                        $(this).removeClass('shake animated');
+                    });
+                }
+            }
+        });
+    });
+</script>
+
+<ul class="nav nav-tabs nav_tab_bordered m-t-10">
+    @if (Model.Recipient == 1912196)
+    {
+        <li class="active">
+            <a href="#customerDataTabContainer" data-toggle="tab" aria-expanded="false">
+                <span class="visible-xs">Заявитель</span>
+                <span class="hidden-xs">Данные заявителя</span>
+            </a>
+        </li>
+        <li>
+            <a href="#principalDataTabContainer" data-toggle="tab" aria-expanded="false">
+                <span class="visible-xs m-r-5 pull-left">Дов.</span>
+                <span class="hidden-xs m-r-5">Данные доверителя</span>
+                <input id="principalSwitch" type="checkbox" class="m-l-5" data-plugin="switchery" data-color="#81c868" value="true" data-size="small" data-class="m-l-5" />
+            </a>
+        </li>
+    }
+    else
+    {
+        <li class="active">
+            <a href="#legalDataTabContainer" data-toggle="tab" aria-expanded="false">
+                <span class="visible-xs"><i class="fa fa-user"></i></span>
+                <span class="hidden-xs">Юридические данные</span>
+            </a>
+        </li>
+        <li>
+            <a href="#principalDataTabContainer" data-toggle="tab" aria-expanded="false">
+                <span class="visible-xs"><i class="fa fa-envelope-o"></i></span>
+                <span class="hidden-xs">Данные представителя</span>
+            </a>
+        </li>
+    }
+</ul>
+<div class="tab-content">
+    @if (Model.Recipient == 1912196)
+    {
+        <div class="tab-pane active" id="customerDataTabContainer">
+            <form id="customerForm">
+                @Html.Hidden("customer.spr_services_sub_tr_id", Model.Recipient)
+
+                <h3 class="panel-title">Документ удостоверяющий личность</h3>
+                <hr class="m-t-0">
+                <div class="row m-b-20">
+                    <div class="col-lg-7 col-lg-offset-1">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6 col-md-2">
+                                    <label>Серия</label>
+                                    @Html.TextBox("customer.document_serial", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__ __" }, { "data-form", "customer" }, { "data-type", "doc-serial" }, { "required", "required" } })
+                                </div>
+                                <div class="col-sm-6 col-md-2">
+                                    <label>Номер</label>
+                                    @Html.TextBox("customer.document_number", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "______" }, { "data-form", "customer" }, { "data-type", "doc-number" }, { "required", "required" } })
+                                </div>
+                                <div class="col-sm-6 col-md-4">
+                                    <label>Дата выдачи</label>
+                                    <div class="input-group">
+                                        @Html.TextBox("customer.document_issue_date", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-form", "customer" }, { "data-type", "date" }, { "required", "required" } })
+                                        <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-4">
+                                    <label>Код подразделения</label>
+                                    @Html.TextBox("customer.document_code", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "___-___" }, { "data-form", "customer" }, { "data-type", "doc-code" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Кем выдан</label>
+                            @Html.TextBox("customer.document_issue_body", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите кем выдан документ" }, { "data-form", "customer" } })
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="panel-title">Персональные данные</h3>
+                <hr class="m-t-0">
+                <div class="row m-b-20">
+                    <div class="col-lg-7 col-lg-offset-1">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="form-group col-lg-4">
+                                    <label>Фамилия</label>
+                                    @Html.TextBox("customer.customer_fio.lastName", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Фамилия" }, { "data-form", "customer" }, { "required", "required" } })
+                                </div>
+                                <div class="form-group col-lg-4">
+                                    <label>Имя</label>
+                                    @Html.TextBox("customer.customer_fio.firstName", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Имя" }, { "data-form", "customer" }, { "required", "required" } })
+                                </div>
+                                <div class="form-group col-lg-4">
+                                    <label>Отчество</label>
+                                    @Html.TextBox("customer.customer_fio.secondName", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Отчество" }, { "data-form", "customer" }, { "required", "required" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6 col-md-4">
+                                    <label>Пол</label>
+                                    @Html.DropDownList("customer.customer_sex", new SelectList(new List<SelectListItem> { new SelectListItem { Text = "Мужской", Value = "МУЖ" }, new SelectListItem { Text = "Женский", Value = "ЖЕН" } }, "Value", "Text"), new Dictionary<string, object> { { "class", "selectpicker" }, { "data-style", "btn-white" }, { "data-form", "customer" } })
+                                </div>
+
+                                <div class="col-sm-6 col-md-4">
+                                    <label>Дата рождения</label>
+                                    <div class="input-group">
+                                        @Html.TextBox("customer.document_birth_date", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-form", "customer" }, { "data-type", "date" }, { "required", "required" } })
+                                        <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6 col-md-4">
+                                    <label>Регион рождения</label>
+                                    <select class="form-control select2" required id="customer_birthRegionCode" name="customer.birthRegionCode" data-placeholder="Регион регистрации" data-style="btn-white" data-form="customer"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Место рождения</label>
+                            @Html.TextBox("customer.document_birth_place", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите место рождения" }, { "data-form", "customer" } })
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6 col-md-4 col-lg-5">
+                                    <label>СНИЛС</label>
+                                    <div class="input-group">
+                                        @Html.TextBox("customer.customer_snils", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "СНИЛС" }, { "data-form", "customer" }, { "data-type", "doc-snils" } })
+                                        <span class="input-group-btn">
+                                            <button type="button" data-type="btnGetSnils" data-form="customer" class="btn waves-effect waves-light btn-default"><i class="fa fa-globe font-18"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-4 col-lg-5">
+                                    <label>ИНН</label>
+                                    <div class="input-group">
+                                        @Html.TextBox("customer.customer_inn", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "ИНН" }, { "data-form", "customer" }, { "data-type", "doc-inn" } })
+                                        <span class="input-group-btn">
+                                            <button type="button" data-type="btnGetInn" data-form="customer" class="btn waves-effect waves-light btn-default"><i class="fa fa-globe font-18"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="panel-title">Контакты</h3>
+                <hr class="m-t-0">
+                <div class="row m-b-20">
+                    <div class="col-lg-7 col-lg-offset-1">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Тип регистрации</label>
+                                    <select class="form-control select2" required id="customer_registrationType" name="customer.registrationType" data-placeholder="Тип регистрации" data-style="btn-white" data-form="customer"></select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Регион регистрации</label>
+                                    <select class="form-control select2" required id="customer_regionCode" name="customer.regionCode" data-placeholder="Регион регистрации" data-style="btn-white" data-form="customer"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Адрес регистрации</label>
+                                    @Html.TextBox("customer.customer_address", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Адрес регистрации" }, { "data-form", "customer" } })
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Адрес проживания</label>
+                                    @Html.TextBox("customer.customer_address_actual", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите место проживания" }, { "data-form", "customer" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6 col-md-3 col-lg-4">
+                                    <label>Телефон</label>
+                                    @Html.TextBox("customer.customer_tel1", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "+7(___) ___-____" }, { "data-form", "customer" }, { "data-type", "phone-number" } })
+                                </div>
+                                <div class="col-sm-6 col-md-3 col-lg-4">
+                                    <label>Телефон 2</label>
+                                    @Html.TextBox("customer.customer_tel2", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "+7(___) ___-____" }, { "data-form", "customer" }, { "data-type", "phone-number" } })
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <label>E-mail</label>
+                                    @Html.TextBox("customer.customer_email", "", new Dictionary<string, object> { { "class", "form-control" }, { "data-form", "customer" } })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+</form>
+        </div>
+    }
+    else
+    {
+        <div class="tab-pane active" id="legalDataTabContainer">
+            <form id="legalForm">
+                @Html.Hidden("customer.spr_services_sub_tr_id", Model.Recipient)
+                @*<div class="form-group">
+                        <div class="row">
+                            <label class="col-md-4 control-label text-right">Тип заявителя</label>
+                            <div class="col-md-6">
+                                @Html.DropDownList("spr_document_identity_id", ViewBag.IdentityDocuments as SelectList, new Dictionary<string, object> { { "class", "selectpicker" }, { "data-style", "btn-white" }, { "data-form", "legalCustomer" } })
+                            </div>
+                        </div>
+                    </div>*@
+
+                <div class="row m-b-20">
+                    <div class="col-lg-7 col-lg-offset-1">
+                        <div class="form-group">
+                            <label>Наименование организации</label>
+                            @Html.TextBox("customer.customer_name_legal", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Полное наименование организации" }, { "data-form", "legalCustomer" }, { "required", "required" } })
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6 col-md-4">
+                                    <label>ОГРН</label>
+                                    @Html.TextBox("customer.customer_ogrn_legal", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите ОГРН" }, { "data-form", "legalCustomer" } })
+                                </div>
+                                <div class="col-sm-6 col-md-4">
+                                    <label>ИНН</label>
+                                    @Html.TextBox("customer.customer_inn_legal", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите ИНН" }, { "data-form", "legalCustomer" } })
+                                </div>
+                                <div class="col-md-4">
+                                    <label>КПП</label>
+                                    @Html.TextBox("customer.customer_kpp_legal", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите КПП" }, { "data-form", "legalCustomer" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Юридический адрес</label>
+                            <div class="input-group">
+                                @Html.TextBox("customer.customer_address", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите адрес" }, { "data-form", "legalCustomer" }, { "required", "required" } })
+                                <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-map-marker"></i></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>ФИО руководителя</label>
+                            @Html.TextBox("customer.customer_name_director", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите ФИО руководителя" }, { "data-form", "legalCustomer" } })
+                        </div>
+                        <div class="form-group">
+                            <label>Должность руководителя</label>
+                            @Html.TextBox("customer.customer_director_job", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите должность руководителя" }, { "data-form", "legalCustomer" } })
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    }
+
+    <div class="tab-pane" id="principalDataTabContainer">
+        <form id="principalForm">
+            @Html.Hidden("principal.spr_services_sub_tr_id", 1912196)
+
+            <h3 class="panel-title">Документ удостоверяющий личность</h3>
+            <hr class="m-t-0">
+            <div class="row m-b-20">
+                <div class="col-lg-7 col-lg-offset-1">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-2">
+                                <label>Серия</label>
+                                @Html.TextBox("principal.document_serial", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__ __" }, { "data-form", "principal" }, { "data-type", "doc-serial" }, { "required", "required" } })
+                            </div>
+                            <div class="col-sm-6 col-md-2">
+                                <label>Номер</label>
+                                @Html.TextBox("principal.document_number", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "______" }, { "data-form", "principal" }, { "data-type", "doc-number" }, { "required", "required" } })
+                            </div>
+                            <div class="col-sm-6 col-md-4">
+                                <label>Дата выдачи</label>
+                                <div class="input-group">
+                                    @Html.TextBox("principal.document_issue_date", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-form", "principal" }, { "data-type", "date" }, { "required", "required" } })
+                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4">
+                                <label>Код подразделения</label>
+                                @Html.TextBox("principal.document_code", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "___-___" }, { "data-form", "principal" }, { "data-type", "doc-code" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Кем выдан</label>
+                        @Html.TextBox("principal.document_issue_body", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите кем выдан документ" }, { "data-form", "principal" } })
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="panel-title">Персональные данные</h3>
+            <hr class="m-t-0">
+            <div class="row m-b-20">
+                <div class="col-lg-7 col-lg-offset-1"> 
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="form-group col-lg-4">
+                                <label>Фамилия</label>
+                                @Html.TextBox("principal.customer_fio.lastName", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Фамилия" }, { "data-form", "principal" }, { "required", "required" } })
+                            </div>
+                            <div class="form-group col-lg-4">
+                                <label>Имя</label>
+                                @Html.TextBox("principal.customer_fio.firstName", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Имя" }, { "data-form", "principal" }, { "required", "required" } })
+                            </div>
+                            <div class="form-group col-lg-4">
+                                <label>Отчество</label>
+                                @Html.TextBox("principal.customer_fio.secondName", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Отчество" }, { "data-form", "principal" }, { "required", "required" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-4">
+                                <label>Пол</label>
+                                @Html.DropDownList("principal.customer_sex", new SelectList(new List<SelectListItem> { new SelectListItem { Text = "Мужской", Value = "МУЖ" }, new SelectListItem { Text = "Женский", Value = "ЖЕН" } }, "Value", "Text"), new Dictionary<string, object> { { "class", "selectpicker" }, { "data-style", "btn-white" }, { "data-form", "principal" } })
+                            </div>
+
+                            <div class="col-sm-6 col-md-4">
+                                <label>Дата рождения</label>
+                                <div class="input-group">
+                                    @Html.TextBox("principal.document_birth_date", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-form", "principal" }, { "data-type", "date" }, { "required", "required" } })
+                                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 col-md-4">
+                                <label>Регион рождения</label>
+                                <select class="form-control select2 selectpicker" required id="principal_birthRegionCode" name="principal.birthRegionCode" data-placeholder="Регион регистрации" data-style="btn-white" data-form="principal"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Место рождения</label>
+                        @Html.TextBox("principal.document_birth_place", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите место рождения" }, { "data-form", "principal" } })
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-4 col-lg-5">
+                                <label>СНИЛС</label>
+                                <div class="input-group">
+                                    @Html.TextBox("principal.customer_snils", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "СНИЛС" }, { "data-form", "principal" }, { "data-type", "doc-snils" } })
+                                    <span class="input-group-btn">
+                                        <button type="button" data-type="btnGetSnils" data-form="principal" class="btn waves-effect waves-light btn-default"><i class="fa fa-globe font-18"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4 col-lg-5">
+                                <label>ИНН</label>
+                                <div class="input-group">
+                                    @Html.TextBox("principal.customer_inn", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "ИНН" }, { "data-form", "principal" }, { "data-type", "doc-inn" } })
+                                    <span class="input-group-btn">
+                                        <button type="button" data-type="btnGetInn" data-form="principal" class="btn waves-effect waves-light btn-default"><i class="fa fa-globe font-18"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="panel-title">Контакты</h3>
+            <hr class="m-t-0">
+            <div class="row m-b-20">
+                <div class="col-lg-7 col-lg-offset-1">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label>Тип регистрации</label>
+                                <select class="form-control select2" required id="principal_registrationType" name="principal.registrationType" data-placeholder="Тип регистрации" data-style="btn-white" data-form="principal"></select>
+                            </div>
+                            <div class="col-sm-6">
+                                <label>Регион регистрации</label>
+                                <select class="form-control select2" required id="principal_regionCode" name="principal.regionCode" data-placeholder="Регион регистрации" data-style="btn-white" data-form="principal"></select>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label>Адрес регистрации</label>
+                                @Html.TextBox("principal.customer_address", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите место рождения" }, { "data-form", "principal" } })
+                            </div>
+                            <div class="col-sm-6">
+                                <label>Адрес проживания</label>
+                                @Html.TextBox("principal.customer_address_actual", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите место проживания" }, { "data-form", "principal" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3 col-lg-4">
+                                <label>Телефон</label>
+                                @Html.TextBox("principal.customer_tel1", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "+7(___) ___-____" }, { "data-form", "principal" }, { "data-type", "phone-number" } })
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-4">
+                                <label>Телефон 2</label>
+                                @Html.TextBox("principal.customer_tel2", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "+7(___) ___-____" }, { "data-form", "principal" }, { "data-type", "phone-number" } })
+                            </div>
+                            <div class="col-md-6 col-lg-4">
+                                <label>E-mail</label>
+                                @Html.TextBox("principal.customer_email", "", new Dictionary<string, object> { { "class", "form-control" }, { "data-form", "principal" } })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>  
+    Dictionary('customer_birthRegionCode', 'IbdSearchRegions');
+    Dictionary('principal_birthRegionCode', 'IbdSearchRegions');
+    Dictionary('principal_regionCode', 'IbdSearchRegions');
+    Dictionary('customer_regionCode', 'IbdSearchRegions');
+    Dictionary('principal_registrationType', 'IbdSearchRegistrationTypes');
+    Dictionary('customer_registrationType', 'IbdSearchRegistrationTypes');
+
+    function Dictionary(inputName, type) {
+        var input = $("#" + inputName);
+        $.ajax({
+            url: '@Url.Action("SmevGetDictionary", "Smev")',
+            type: 'POST',
+            data: { type: type },
+            success: function (items) {
+                if (items != 'undefined') {
+                    input.empty();
+                    items.Dictionary.forEach(function (item, i, arr) {
+                        input.append('<option value=' + item.Key + '>' + item.Value + '</option>');
+                    });
+                    input.val(items.DefaultKey).selectpicker();
+                }
+            }
+        });
+    };
+</script>

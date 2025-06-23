@@ -1,0 +1,101 @@
+﻿@*<div class="row">
+    <div class="col-sm-12">
+        <h3 class="panel-title font-18">Количество нарушений по охотугодьям</h3>
+    </div>
+</div>*@
+<div class="card-box m-t-10 p-t-10 p-b-10">
+    @using (Ajax.BeginForm("PartialTableCountViolationsHuntingFarm", "Report", new AjaxOptions { UpdateTargetId = "reportCountViolationsHuntingFarm", LoadingElementId = "loadingAjax" }, new { @class = "form-horizontal" }))
+    {
+        <div class="collapse in" id="collapseExample" style="">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-actions form-group-sm  m-b-0">
+                        <div class="row p-l-r-10 m-b-10 m-t-10">
+                            <div class="col-md-4 m-b-10">
+                                <label class="font-12 text-muted p-t-0 m-b-0">Период</label>
+                                <div class="input-daterange input-group" id="date-range">
+                                    <input class="form-control input-sm required" id="startDate" name="startDate" placeholder="с" type="text" value="" autocomplete="off">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
+                                    <input class="form-control input-sm required" id="stopDate" name="stopDate" placeholder="по" type="text" value="">
+                                </div>
+                            </div>
+                            <div class="col-md-2 m-b-10">
+                                <label class="font-12 text-muted p-t-0 m-b-0">Статья</label>
+                                @Html.DropDownList("sprViolationsId", ViewBag.Violations as SelectList, "Все", new Dictionary<string, object> { { "class", "select2 form-control input-sm" } })
+                            </div>
+                            <div class="col-md-3 m-b-10">
+                                <label class="font-12 text-muted p-t-0 m-b-0">Отдел</label>
+                                @Html.DropDownList("sprEmployeesDepartmentId", ViewBag.Departments as SelectList, "Все", new Dictionary<string, object> { { "class", "select2 form-control input-sm" } })
+                            </div>
+                            <div class="col-md-3 m-b-10">
+                                <label class="font-12 text-muted p-t-0 m-b-0">Сотрудник</label>
+                                @Html.DropDownList("sprEmployeesId", ViewBag.Employees as SelectList, "Все", new Dictionary<string, object> { { "class", "select2 form-control input-sm" } })
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+            </div>
+            <hr class="m-t-10 m-b-10" />
+        </div>
+
+
+        <div class="row">
+            <a href="#" class="collapse-toggle__ctr collapse-toggle__ctr_utility col-sm-4" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                <!-- Collapsed state -->
+                <span class="collapse-toggle__state _collapsed">
+                    <i class="ti-arrow-circle-down"></i>
+                    <span class="collapse-toggle__state-title collapse-toggle__state-title_utility">Развернуть поиск</span>
+                </span> <!-- Active (open) state -->
+                <span class="collapse-toggle__state _active">
+                    <i class="ti-arrow-circle-up"></i>
+                    <span class="collapse-toggle__state-title collapse-toggle__state-title_utility">Свернуть поиск</span>
+                </span>
+                <span class=" m-l-15">Найдено записей:</span><span id="report_count" class="p-l-r-10" style="color:#1d8a71">0</span>
+            </a>
+            <div class="col-sm-8 text-right action-btns">
+                <button type="submit" class="btn btn-default waves-effect waves-light btn-sm m-r-5">
+                    <i class="ion-ios7-search"></i>
+                    Просмотр
+                </button>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle waves-effect waves-light btn-sm" data-toggle="dropdown" aria-expanded="false"> Действия <span class="caret"></span></button>
+                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                        <li><a onclick="printTable()"><i class="fa fa-print m-r-5"></i> Печать</a></li>
+                        <li><a onclick="downloadTableExcel()"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Скачать в Excel</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<script src="~/Content/plugins/select2/js/select2.full.min.js"></script>
+<script src="~/Content/plugins/print/printThis.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".select2").select2();
+        $('#date-range').datepicker({ format: 'dd.mm.yyyy', autoclose: true, language: 'ru', orientation: 'bottom left' });
+
+        $('#sprEmployeesDepartmentId').change(function () {
+            $.ajax({
+                url: '@Url.Action("GetSprEmployeesFromDepartment", "Report")',
+                data: { departmentId: $('#sprEmployeesDepartmentId').val() },
+                success: function (data) {
+                    $("#sprEmployeesId").html(null).prepend($('<option>').text("Все").attr('value', '')).select2({
+                        data: data,
+                    }).prop("disabled", false).val('').trigger('change');
+                }
+            });
+        });
+    });
+
+    function printTable() {
+        var form = $('.form-horizontal').serialize();
+        var url = '@Url.Action("PartialPrintCountViolationsHuntingFarm", "Report")';
+        printAjax(url, form);
+    }
+
+    function downloadTableExcel() {
+        location.href = '@Url.Action("DownloadExcelReportCountViolationsHuntingFarm", "Report")?' + $('.form-horizontal').serialize();
+    }
+</script>
+

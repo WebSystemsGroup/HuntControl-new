@@ -1,0 +1,50 @@
+﻿@model HuntControl.WebUI.Models.StatisticsViewModel
+<canvas id="eServicesChart" width="400" height="100"></canvas>
+
+<script src="~/Content/plugins/Chart.js/Chart.min.js"></script>
+<script>
+
+    var ctx = document.getElementById('eServicesChart').getContext('2d');
+     var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'bar',
+
+            // The data for our dataset
+            data: {
+                labels:  ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+                datasets: [{
+                    label: "ЕПГУ",
+                    backgroundColor: 'rgb(2, 99, 178)',
+                    borderColor: 'rgb(2, 99, 178)',
+                    data: @Json.Encode(Model.MainCountEpguAndMfcList.Select(s => s.out_count_epgu).ToArray())
+                },{
+                    label: "МФЦ",
+                        backgroundColor: '#df975b',
+                        borderColor: '#df975b',
+                    data: @Json.Encode(Model.MainCountEpguAndMfcList.Select(s => s.out_count_mfc).ToArray())
+                },{
+                    label: "Лично",
+                        backgroundColor: 'rgb(129, 200, 104)',
+                        borderColor: 'rgb(129, 200, 104)',
+                    data: @Json.Encode(Model.MainCountEpguAndMfcList.Select(s => s.out_count_personally).ToArray())
+                }]
+            },
+
+            // Configuration options go here
+            options: {
+                layout: {
+                    padding: {
+                        left: 0,
+                        right: 0,
+                        top: 50,
+                        bottom: 0
+                    }
+                },
+                legend: {
+                    display: true,
+                    position: 'bottom'
+                }
+            }
+        });
+</script>
+

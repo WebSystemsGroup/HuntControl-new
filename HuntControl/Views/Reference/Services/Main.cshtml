@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "Услуги";
+}
+
+@Html.MvcSiteMap().SiteMapPath()
+
+<div class="panel panel-default">
+    <div class="panel-body app-content">
+        <div class="icons-tab-steps wizard-circle">
+
+            <!-- Step 1 -->
+            <h6><i class="step-icon icon-cube"></i>Услуги</h6>
+            <fieldset>
+                <div id="servicesContainer">@Html.Action("PartialTableServices", "Reference")</div>
+            </fieldset>
+
+            <!-- Step 2 -->
+            <h6><i class="step-icon icon-paintbucket"></i>Подуслуги</h6>
+            <fieldset>
+                <div id="subServicesContainer">
+                </div>
+            </fieldset>
+
+            <!-- Step 3 -->
+            <h6><i class="step-icon icon-paintbucket"></i>Дополнительно</h6>
+            <fieldset style="min-height: 300px;">
+                <div id="additionallyContainer">
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>
+
+
+
+<link href="~/Content/plugins/wizard/wizard.min.css" rel="stylesheet" />
+<script src="~/Content/plugins/wizard/jquery.steps.min.js"></script>
+<script>
+    $(function () {
+        $(".icons-tab-steps").steps({ enablePagination: false, headerTag: "h6", bodyTag: "fieldset", transitionEffect: "fade", titleTemplate: '<span class="step"></span> #title#', labels: { finish: "Submit" }, onFinished: function () { alert("Form submitted.") } });
+    });
+</script>
+

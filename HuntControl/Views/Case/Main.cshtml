@@ -1,0 +1,339 @@
+﻿@model HuntControl.Domain.Concrete.CaseServicesInfoGetResult
+
+@{
+    ViewBag.Title = "Обращение";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section styles
+{
+    <link href="~/Content/plugins/jquery.filer/css/jquery.filer.css" rel="stylesheet" />
+    <link href="~/Content/plugins/jquery.filer/css/themes/jquery.filer-dragdropbox-theme.css" rel="stylesheet" />
+}
+
+@Html.MvcSiteMap().SiteMapPath()
+
+<div class="row">
+    <input type="hidden" value="@Model.out_data_services_id" class="_glCaseId" />
+    <div class="col-md-7">
+        <div class="card-box case-card-box">
+            <h4 class="m-b-20">
+                <i class="ti-pencil-alt vertical-middle m-r-5"></i> <span class="vertical-middle">Обращение</span>
+            </h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="customer-list">
+                        <div class="m-b-20">
+                            <h4>Номер</h4>
+                            <span class="customer-list-info">#@(ViewBag.InfoId)</span>
+                        </div>
+                        <div class="m-b-15">
+                            <h4>Дата и время</h4>
+                            <span class="customer-list-info">@Html.DisplayFor(model => Model.out_date_enter)</span>
+                        </div>
+                        <div class="m-b-15">
+                            <h4>Услуга</h4>
+                            <h1 class="customer-service-title" title="@(Model.out_service_name)">@(Model.out_service_name ?? "-")</h1>
+                        </div>
+                        <div>
+                            <h4>Принял</h4>
+                            <span class="customer-list-info">@(Model.out_employees_fio ?? "-")</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="customer-list">
+                        <div class="m-b-15">
+                            <h4>Статус</h4>
+                            <span class="label @(Model.out_status_name == "Исполнено" ? "label-success" : "label-warning") label-sm">@(Model.out_status_name)</span>
+                        </div>
+                        <div class="m-b-15">
+                            <h4>Регламентная дата</h4>
+                            <span class="customer-list-info">@Html.DisplayFor(model => Model.out_date_finish_total)</span>
+                        </div>
+                        <div class="m-b-15">
+                            @if (Model.out_employees_fio_execution != null)
+                            {
+                                <h4>Исполнитель</h4>
+                                <span class="customer-list-info">@(Model.out_employees_fio_execution ?? "-")</span>
+                            }
+                        </div>
+                        <div>
+                            @if (Model.out_date_finish_fact != null)
+                            {
+                                <h4>Дата исполнения</h4>
+                                <span class="customer-list-info">@Html.DisplayFor(model => Model.out_date_finish_fact)</span>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="case-widget-days">
+                <span class="list-item__counter day @((Model.out_count_day < 0 ? "text-danger" : "text-custom"))">@(Model.out_count_day_total ?? 0)</span>
+                <h6>Осталось дней</h6>
+            </div>
+        </div>
+
+        <div class="card-box">
+            <hr class="m-t-0 visible-xs" />
+            <ul class="nav nav-pills m-b-10">
+                <li class="active">
+                    <a href="#routeStagesPillContainer" data-toggle="tab" aria-expanded="true">Этапы</a>
+                </li>
+                <li class="">
+                    <a href="#commenttsPillContainer" data-toggle="tab" aria-expanded="false">Примечания</a>
+                </li>
+                <li class="">
+                    <a href="#documentsPillContainer" data-toggle="tab" aria-expanded="false">Документы</a>
+                </li>
+                <li class="">
+                    <a href="#smevPillContainer" data-toggle="tab" aria-expanded="false">СМЭВ</a>
+                </li>
+                @*<li class="">
+                <a href="#blanksPillContainer" data-toggle="tab" aria-expanded="false">Бланки</a>
+            </li>
+        <li class="">
+            <a href="#customersPillContainer" data-toggle="tab" aria-expanded="false">Заявители</a>
+        </li>*@
+                <li class="">
+                    <a href="#changeLogsPillContainer" data-toggle="tab" aria-expanded="false">История изменений</a>
+                </li>
+            </ul>
+            <hr class="m-t-0" />
+            <div class="tab-content">
+                <div id="routeStagesPillContainer" class="tab-pane fade in active">
+                    @Html.Action("PartialTableRouteStages", "Case", new { serviceId = Model.out_data_services_id })
+                </div>
+                <div id="documentsPillContainer" class="tab-pane fade">
+                </div>
+                @*<div id="blanksPillContainer" class="tab-pane fade">
+            </div>
+        <div id="customersPillContainer" class="tab-pane fade">
+        </div>*@
+                <div id="smevPillContainer" class="tab-pane fade">
+                </div>
+                <div id="commenttsPillContainer" class="tab-pane fade">
+                </div>
+                <div id="changeLogsPillContainer" class="tab-pane fade">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card-box case-card-box">
+            <h4 class="m-b-20">
+                <i class="ti-user vertical-middle m-r-5"></i> <span class="vertical-middle">Заявитель</span>
+            </h4>
+            <div class="case-print-icon">
+
+
+                @if (User.IsInRole("superadmin"))
+                {
+                    using (Ajax.BeginForm("PartialModalEditCustomer", "Case", new { customerId = Model.out_data_services_customer_id }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                    {
+                        <button class="on-default edit-row link"><i class="ion-edit"></i></button>
+                    }
+
+                }
+
+                <button type="button" class="btn btn-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="ion-printer"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right">
+                    <li><a href="#" onclick="printStatement('@Url.Action("PartialPrintStatement","Case")', { serviceId: '@Model.out_data_services_id', infoId:'@ViewBag.InfoId' })">Заявление</a></li>
+                </ul>
+            </div>
+            <div class="customer-list">
+                <div class="m-b-15">
+                    <h4>ФИО</h4>
+                    <span class="customer-list-info" title="@(Model.out_customer_name)">@(Model.out_customer_name ?? "-")</span>
+                
+
+                   
+                    </div>
+                    <div class="m-b-15">
+                        <h4>Адрес заявителя</h4>
+                        <span class="customer-list-info" title="@(Model.out_customer_address)">@(Model.out_customer_address ?? "-")</span>
+                    </div>
+                    <div class="m-b-15">
+                        <h4>Контакты</h4>
+                        <span class="customer-list-info m-b-10"><i class="md md-phone vertical-middle m-r-5"></i>@(Model.out_customer_tel1 ?? "-")</span>
+                        <span class="customer-list-info m-b-10"><i class="md md-phone vertical-middle m-r-5"></i>@(Model.out_customer_tel2 ?? "-")</span>
+                        <span class="customer-list-info"><i class="md md-mail vertical-middle m-r-5"></i>@(Model.out_customer_email ?? "-")</span>
+                    </div>
+                    <div class="m-b-15">
+                        <h4>Способ обращения</h4>
+                        <span class="customer-list-info">@Model.out_name_way</span>
+                    </div>
+                    @if (Model.out_visit_time != null)
+                    {
+                        <div class="m-b-15">
+                            <h4>Дата и время визита</h4>
+                            <span class="customer-list-info">@Model.out_visit_time</span>
+                        </div>
+                    }
+
+                </div>
+                @if (Model.out_data_customer_id != null)
+                {
+                    <hr>
+                    <div class="text-center">
+                        <div class="m-b-15">
+                            <h4 class="text-success"><strong>Физическое лицо найдено</strong></h4>
+                        </div>
+                        <a href="#" onclick="window.open('@Url.Action("Main","ApplicantPage")#@Model.out_data_customer_id')"><u>Перейти в ФЛ</u></a>
+                    </div>
+                }
+                else
+                {
+                    <hr>
+                    <div class="text-center">
+                        <div class="m-b-15">
+                            <h4 class="text-danger"><strong>Физическое лицо не найдено</strong></h4>
+                        </div>
+                        <div class="m-b-15">
+                            @using (Ajax.BeginForm("ModalSearch", "Case", new { search = Model.out_customer_name }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }))
+                            {
+                                <button class="on-default edit-row link"><u>Ручной поиск</u></button>
+                            }
+                        </div>
+                        @using (Ajax.BeginForm("PartialModalAddCustomer", "ApplicantPage", new { docSerial = Model.out_doc_serial, docNUmber = Model.out_doc_number }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                        {
+                            <button type="submit" class="btn btn-inverse waves-effect waves-light"><i class="ion-person-add m-r-5"></i>Добавить ФЛ</button>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <script src="~/Content/plugins/print/printThis.js"></script>
+    <script>
+        function printStatement(url, params) {
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: params,
+                success: function (data) {
+                    $(data).printThis({
+                        debug: false,
+                        importCSS: true,
+                        importStyle: true,
+                        printContainer: true,
+                        loadCSS: "",
+                        pageTitle: "",
+                        removeInline: false,
+                        printDelay: 333,
+                        header: null,
+                        formValues: true
+                    });
+                }
+            });
+        }
+        $('a[href="#documentsPillContainer"]').click(function () {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("PartialDocuments", "Case")',
+                data: { serviceId: '@Model.out_data_services_id' },
+                success: function (data) {
+                    $('#documentsPillContainer').html(data);
+                }
+            });
+        });
+        @*$('a[href="#blanksPillContainer"]').click(function () {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("PartialBlanks", "Case")',
+                data: { serviceId: '@Model.out_data_services_id' },
+                success: function (data) {
+                    $('#blanksPillContainer').html(data);
+                }
+            });
+        });*@
+        $('a[href="#customersPillContainer"]').click(function () {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("PartialTableCustomers", "Case")',
+                data: { serviceId: '@Model.out_data_services_id' },
+                success: function (data) {
+                    $('#customersPillContainer').html(data);
+                }
+            });
+        });
+        $('a[href="#smevPillContainer"]').click(function () {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("PartialTableSmevRequests", "Case")',
+                data: { serviceId: '@Model.out_data_services_id' },
+                success: function (data) {
+                    $('#smevPillContainer').html(data);
+                }
+            });
+        });
+        $('a[href="#commenttsPillContainer"]').click(function () {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("PartialTableCommentts", "Case")',
+                data: { serviceId: '@Model.out_data_services_id' },
+                success: function (data) {
+                    $('#commenttsPillContainer').html(data);
+                }
+            });
+        });
+        $('a[href="#changeLogsPillContainer"]').click(function () {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("PartialTableChangeLogs", "Case")',
+                data: { serviceId: '@Model.out_data_services_id' },
+                success: function (data) {
+                    $('#changeLogsPillContainer').html(data);
+                }
+            });
+        });
+
+        $('#searchTextIndividual').keyup(function (e) {
+            if (e.which == 13) {
+                $('#searchIndividualBtn').click();
+            }
+        });
+        $('#searchIndividualBtn').click(function () {
+            $.ajax({
+                url: '@Url.Action("PartialIndividualList", "ApplicantPage")',
+                type: 'Post',
+                data: { search: $('#searchTextIndividual').val() },
+                success: function (data) {
+                    var divBlock;
+                    if (data !== '') {
+                        divBlock = individualListBlock(data)
+                    }
+                    else {
+                        divBlock = '<div class="alert alert-warning">';
+                        divBlock += '<span style="color: #00545c;"><strong><i class="icon-info"></i></strong> Поиск не дал результатов.</span>';
+                        divBlock += '</div>';
+                    }
+                    $('#mainContainer').html(divBlock);
+                }
+            });
+        }).focus();
+
+        function individualListBlock(data) {
+            var divBlock = '<div class="row">';
+            divBlock += '<div class="col-md-4">';
+            divBlock += '<div id="individualListContainer">';
+            divBlock += data;
+            divBlock += '</div>';
+            divBlock += '</div>';
+            divBlock += '<div class="col-md-8">';
+            divBlock += '<div id="individualPageContainer">';
+            divBlock += '<div class="alert alert-warning">';
+            divBlock += '<span style="color: #00545c;"><strong><i class="icon-info"></i></strong> Выберите физ.лицо из списка.</span>';
+            divBlock += '</div>';
+            divBlock += '</div>';
+            divBlock += '</div>';
+            divBlock += '</div>';
+            return divBlock;
+    }
+
+
+    </script>

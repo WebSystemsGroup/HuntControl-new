@@ -1,0 +1,77 @@
+﻿@model HuntControl.WebUI.Models.StatisticsViewModel
+<div id="">
+    <div class="row">
+        <div class="col-md-6">
+            <canvas id="hunticLicForGroupChart" width="100" height="100"></canvas>
+        </div>
+        <div class="col-md-6">
+            <canvas id="hunticLicForHunticFarmChart" width="100" height="100"></canvas>
+        </div>
+    </div>
+</div>
+<script src="~/Content/plugins/Chart.js/Chart.min.js"></script>
+
+<script>
+    var typeName = JSON.parse('@Html.Raw(Json.Encode(Model.MainCountIssueGroupTypeList.Select(s => s.out_group_type_name).ToArray()))');
+    var farmName = JSON.parse('@Html.Raw(Json.Encode(Model.MainCountHuntingFarmList.OrderByDescending(s=>s.out_count).Take(10).Select(s => s.out_hunting_farm_name).ToArray()))');
+ var ctx = document.getElementById('hunticLicForGroupChart').getContext('2d');
+     var chart = new Chart(ctx, {
+            // The type of chart we want to create
+         type: 'horizontalBar',
+
+            // The data for our dataset
+            data: {
+                labels: typeName,
+                datasets: [{
+                    label: "Количество выданных разрешений",
+                    backgroundColor: 'rgb(2, 99, 178)',
+                    borderColor: 'rgb(2, 99, 178)',
+                    data: @Json.Encode(Model.MainCountIssueGroupTypeList.Select(s => s.out_count).ToArray())
+                }]
+            },
+
+            // Configuration options go here
+            options: {
+                title: {
+                    display: true,
+                    text: 'По видам групп'
+                },
+                legend: {
+                    display: false,
+                    labels: {
+                    }
+                }
+            }
+    });
+
+    var ctx1 = document.getElementById('hunticLicForHunticFarmChart').getContext('2d');
+     var chart2 = new Chart(ctx1, {
+             // The type of chart we want to create
+         type: 'horizontalBar',
+
+            // The data for our dataset
+            data: {
+                labels: farmName,
+                datasets: [{
+                    label: "Количество выданных разрешений",
+                    backgroundColor: 'rgb(2, 99, 178)',
+                    borderColor: 'rgb(2, 99, 178)',
+                    data: @Json.Encode(Model.MainCountHuntingFarmList.Select(s => s.out_count).ToArray())
+                }]
+            },
+
+            // Configuration options go here
+            options: {
+                title: {
+                    display: true,
+                    text: 'По охотоугодьям'
+                },
+                legend: {
+                    display: false,
+                    labels: {
+                    }
+                }
+            }
+        });
+</script>
+

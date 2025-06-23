@@ -1,0 +1,252 @@
+﻿@model HuntControl.WebUI.Models.SmevRequestFormModel
+<link href="~/Content/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css">
+<link href="~/Content/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
+<link href="~/Content/plugins/multiselect/css/multi-select.css" rel="stylesheet" type="text/css">
+<link href="~/Content/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" rel="stylesheet">
+<link href="~/Content/plugins/switchery/dist/switchery.min.css" rel="stylesheet">
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<script src="~/Content/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+<script src="~/Content/plugins/switchery/dist/switchery.min.js"></script>
+<script src="~/Content/plugins/bootstrap-select/dist/js/bootstrap-select.min.js" type="text/javascript"></script>
+
+<script src="~/Content/plugins/select2/js/select2.min.js" type="text/javascript"></script>
+<script src="~/Content/plugins/multiselect/js/jquery.multi-select.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+        $('input[data-type=date]').datepicker({ format: 'dd.mm.yyyy', autoclose: true, language: 'ru' });
+
+        $('input[data-type=doc-snils]').inputmask({
+            mask: '999-999-999 99',
+            clearIncomplete: true
+        });
+    });
+</script>
+
+<form class="form-horizontal" id="gisGmpForm">
+    @Html.Hidden("dataServicesId", ViewBag.ServiceId as object)
+    <div class="form-group form-group-sm">
+        <div class="row">
+            <label class="col-md-4 control-label text-right">Тип запроса экспорта</label>
+            <div class="col-md-6">
+                <select class="form-control select2" id="TemplateType" name="TemplateType" data-style="btn-white btn-sm">
+                    <option value="Charge">Запрос неоплаченных начислений</option>
+                    <option value="ChargeStatus">Запрос начислений и статусов квитирования</option>
+                    <option value="Quittance">Запрос последнего результата квитирования</option>
+                    <option value="AllQuitance">Запрос всех результатов квитирования, включая аннулированные</option>
+                    <option value="Payment">Запрос всех активных (неаннулированных) платежей</option>
+                    <option value="PaymentModified">Запрос всех платежей, имеющих статус уточнения или статус аннулирования</option>
+                    <option value="PaymentUnmatched">Запрос всех активных (неаннулированных) платежей, которым в системе не поставлена в соответствие (не создана) ни одна квитанция</option>
+                    <option value="PaymentCancelled">Запрос аннулированных платежей</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="form-group form-group-sm">
+        <div class="row">
+            <label class="col-md-4 control-label text-right">Критерий запроса</label>
+            <div class="col-md-6">
+                <select class="form-control select2" id="RequestType" name="RequestType">
+                    <option value="SupplierBill">Уникальный идентификатор начисления</option>
+                    <option value="PayerId">Идентификатор плательщика</option>
+                    <option value="PayerFlData">Данные плательщика (физическое лицо)</option>
+                    <option value="PayerIpData">Данные плательщика (индивидуальный предприниматель)</option>
+                    <option value="PayerUlResidentData">Данные плательщика (юридическое лицо - резидент)</option>
+                    <option value="PayerUlNonResidentData">Данные плательщика (юридическое лицо - нерезидент)</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="form-group form-group-sm param" data-SupplierBill>
+        <div class="row">
+            <label class="col-md-4 control-label text-right">УИН</label>
+            <div class="col-md-6">
+                @Html.TextBox("SupplierBillId", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите УИН" } })
+            </div>
+            <div class="col-md-1" data-SupplierBill>
+                *
+            </div>
+        </div>
+    </div>
+    <div class="form-group form-group-sm param hidden" data-PayerId>
+        <div class="row">
+            <label class="col-md-4 control-label text-right">Идентификатор плательщика</label>
+            <div class="col-md-6">
+                @Html.TextBox("PayerId", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите УИН" } })
+            </div>
+        </div>
+    </div>
+    <div class="form-group form-group-sm param hidden" data-PayerFlData>
+        <div class="row">
+            <label class="col-md-4 control-label text-right">Гражданство по классификатору ОКСМ</label>
+            <div class="col-md-6">
+                <select class="form-control select2" id="CitizenshipOksm" name="CitizenshipOksm" data-style="btn-white btn-sm"></select>
+            </div>
+        </div>
+    </div>
+    <div class="form-group form-group-sm param hidden" data-PayerFlData>
+        <div class="row">
+            <label class="col-md-4 control-label text-right">Серия и номер паспорта</label>
+            <div class="col-md-6">
+                @Html.TextBox("PayerPassportSeriesNumber", Model.DocumentSerial + Model.DocumentNumber, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__ __ ______" }, { "data-type", "PayerPassportSeriesNumber" } })
+            </div>
+        </div>
+    </div>
+    <div class="form-group form-group-sm param hidden" data-PayerFlData data-PayerIpData>
+        <div class="row">
+            <label class="col-md-4 control-label text-right">ИНН ФЛ</label>
+            <div class="col-md-6">
+                @Html.TextBox("PayerInnFl", Model.CustomerInn, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "____________" }, { "data-type", "PayerInnFl" } })
+            </div>
+            <div class="col-md-1 hidden" data-PayerIpData>
+                *
+            </div>
+            </div>
+        </div>
+    <div class="form-group form-group-sm param hidden" data-PayerFlData>
+        <div class="row">
+            <label class="col-md-4 control-label text-right">СНИЛС</label>
+            <div class="col-md-3">
+                @Html.TextBox("PayerSnils", Model.CustomerSnils, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "СНИЛС" }, { "data-type", "doc-snils" } })
+            </div>
+        </div>
+    </div>
+    <div class="form-group form-group-sm param hidden" data-PayerFlData>
+        <div class="row">
+            <label class="col-md-4 control-label text-right">Мобильный номер</label>
+            <div class="col-md-3">
+                @Html.TextBox("PayerMobile", Model.CustomerTel1, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "+7(___)_______" }, { "data-type", "PayerMobile" } })
+            </div>
+        </div>
+    </div>
+    <div class="form-group form-group-sm param hidden" data-PayerFlData>
+        <div class="row">
+            <label class="col-md-4 control-label text-right">Свидетельство о рождении</label>
+            <div class="col-md-3">
+                @Html.TextBox("PayerBirthCertificate", "", new Dictionary<string, object> { { "class", "form-control" } })
+            </div>
+        </div>
+    </div>
+    <div class="form-group form-group-sm param hidden" data-PayerFlData>
+        <div class="row">
+            <label class="col-md-4 control-label text-right">Водительское удостоверение</label>
+            <div class="col-md-3">
+                @Html.TextBox("PayerDrivingLicense", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__ __ ______" }, { "data-type", "PayerDrivingLicense" } })
+            </div>
+        </div>
+    </div>
+    <div class="form-group form-group-sm param hidden" data-PayerUlResidentData data-PayerUlNonResidentData>
+        <div class="row">
+            <label class="col-md-4 control-label text-right">ИНН ЮЛ</label>
+            <div class="col-md-3">
+                @Html.TextBox("PayerInnUl", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__________" }, { "data-type", "PayerInnUl" } })
+            </div>
+            <div class="col-md-1 param hidden" data-PayerUlResidentData data-PayerUlNonResidentData>
+                *
+            </div>
+            </div>
+        </div>
+    <div class="form-group form-group-sm param hidden" data-PayerUlResidentData data-PayerUlNonResidentData>
+        <div class="row">
+            <label class="col-md-4 control-label text-right">КПП ЮЛ</label>
+            <div class="col-md-3">
+                @Html.TextBox("PayerKpp", "", new Dictionary<string, object> { { "class", "form-control" } })
+            </div>
+            <div class="col-md-1 param hidden" data-PayerUlResidentData data-PayerUlNonResidentData>
+                *
+            </div>
+        </div>
+    </div>
+    <div class="form-group form-group-sm param hidden" data-PayerUlNonResidentData>
+        <div class="row">
+            <label class="col-md-4 control-label text-right">КИО ЮЛ</label>
+            <div class="col-md-3">
+                @Html.TextBox("PayerKio", "", new Dictionary<string, object> { { "class", "form-control" } })
+            </div>
+            <div class="col-md-1 param hidden" data-PayerUlNonResidentData>
+                *
+            </div>
+        </div>
+    </div>
+    <div class="form-group form-group-sm">
+        <div class="row">
+            <label class="col-md-4 control-label text-right">Начальная - конечная даты фильтра результатов</label>
+            <div class="col-md-3">
+                <div class="input-group">
+                    @Html.TextBox("TimeFrameBegin", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" } })
+                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-group">
+                    @Html.TextBox("TimeFrameEnd", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-type", "date" } })
+                    <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+<div class="actions clearfix text-right">
+    <button type="button" id="nextSmevRequestDataSend" class="btn btn-default waves-effect waves-light btn-block-xs m-l-5"> Далее <i class="ion-chevron-right m-l-5"></i></button>
+</div>
+<script>
+    $(function () {
+        $('input[data-type=PayerPassportSeriesNumber]').inputmask({
+            mask: '9999999999',
+            clearIncomplete: true
+        });
+        $('input[data-type=PayerInnFl]').inputmask({
+            mask: '999999999999',
+            clearIncomplete: true
+        });
+        $('input[data-type=doc-snils]').inputmask({
+            mask: '99999999999',
+            clearIncomplete: true
+        });
+        $('input[data-type=PayerMobile]').inputmask({
+            mask: '+7(999)9999999',
+            clearIncomplete: true
+        });
+        $('input[data-type=PayerDrivingLicense]').inputmask({
+            mask: '9999999999',
+            clearIncomplete: true
+        });
+        $('input[data-type=PayerInnUl]').inputmask({
+            mask: '9999999999',
+            clearIncomplete: true
+        });
+        $('input[data-type=date]').inputmask({
+            mask: '99.99.9999',
+            clearIncomplete: true
+        });
+
+        Dictionary('CitizenshipOksm', 'FkCitizenshipCodes');
+        $('.select2').select2();
+    });
+    function Dictionary(inputName, type) {
+        var input = $("#" + inputName);
+        $.ajax({
+            url: '@Url.Action("SmevGetDictionary", "Smev")',
+            type: 'POST',
+            data: { type: type },
+            success: function (items) {
+                if (items != 'undefined') {
+                    input.empty();
+                    items.Dictionary.forEach(function (item, i, arr) {
+                        input.append('<option value=' + item.Key + '>' + item.Value + '</option>');
+                    });
+                    input.val(items.DefaultKey).selectpicker();
+                }
+            }
+        });
+    };
+
+     $('button#nextSmevRequestDataSend').click(function () {
+         var Form = $('#gisGmpForm');
+         smevSendData('@Url.Action("Smev_GisGmpExport", "Smev")', Form.serialize());
+     });
+
+</script>

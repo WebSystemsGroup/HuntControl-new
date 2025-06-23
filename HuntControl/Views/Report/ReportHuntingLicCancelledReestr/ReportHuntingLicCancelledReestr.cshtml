@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "Реестр аннулированных охотбилетов";
+
+}
+
+@Html.MvcSiteMap().SiteMapPath()
+
+<div id="filterReportHuntingLicCancelledReestrContainer">
+    @Html.Action("PartialFilterReportHuntingLicCancelledReestr")
+</div>
+
+<div id="reportHuntingLicCancelledReestr">
+    <div class="alert alert-warning">
+        <span style="color:#00545c;"><strong><i class="icon-info"></i></strong> Воспользуйтесь фильтром.</span>
+    </div>
+</div>
+

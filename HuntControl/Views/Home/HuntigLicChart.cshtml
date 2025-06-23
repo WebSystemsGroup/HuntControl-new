@@ -1,0 +1,46 @@
+﻿@model HuntControl.WebUI.Models.StatisticsViewModel
+
+<canvas id="huntigLicChart" width="400" height="100"></canvas>
+
+
+<script src="~/Content/plugins/Chart.js/Chart.min.js"></script>
+<script>
+    var months = JSON.parse('@Html.Raw(Json.Encode(Model.MainCountIssueAndCancelledHuntingLicList.Select(s => s.out_month).ToArray()))');
+    var ctx = document.getElementById('huntigLicChart').getContext('2d');
+     var chart = new Chart(ctx, {
+            // The type of chart we want to create
+         type: 'bar',
+            // The data for our dataset
+            data: {
+                labels: months,
+                datasets: [{
+                    label: "Выданные",
+                    backgroundColor: 'rgb(129, 200, 104)',
+                    borderColor: 'rgb(129, 200, 104)',
+                    data: @Json.Encode(Model.MainCountIssueAndCancelledHuntingLicList.Select(s => s.out_count_issue).ToArray())
+                },{
+                    label: "Анулированные",
+                        backgroundColor: 'rgb(255, 189, 74)',
+                        borderColor: 'rgb(255, 189, 74)',
+                    data: @Json.Encode(Model.MainCountIssueAndCancelledHuntingLicList.Select(s => s.out_count_cancelled).ToArray())
+                }]
+            },
+
+            // Configuration options go here
+            options: {
+                layout: {
+                    padding: {
+                        left: 0,
+                        right: 0,
+                        top: 50,
+                        bottom: 0
+                    }
+                },
+                legend: {
+                    display: true,
+                    position: 'bottom'
+                }
+            }
+        });
+</script>
+

@@ -1,0 +1,53 @@
+﻿@model HuntControl.Domain.Concrete.spr_services_sub_document_customer
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<script src="~/Content/plugins/bootstrap-select/dist/js/bootstrap-select.min.js" type="text/javascript"></script>
+<script>
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+    });
+</script>
+@using (Ajax.BeginForm("SubmitCustomerDocumentSave", "Reference", Model, new AjaxOptions { UpdateTargetId = "customerDocumentsContainer", OnSuccess = "successAdd();$('#collapseEditCustomerDocument').collapse('hide'); $('#documentAddBtn').show();" }, new { @id = "AddCustomerDocumentForm", @class = "form-horizontal" }))
+{
+    <div class="row m-b-15">
+        <div class="col-sm-12">
+            <hr class="m-t-0" />
+        </div>
+        <div class="col-sm-6">
+            <h3 class="panel-title">Добавление документа</h3>
+        </div>
+        <div class="col-sm-6 text-right">
+            <button type="button" class="btn btn-cancel waves-effect waves-light m-r-5" onclick="$('#collapseEditCustomerDocument').collapse('hide'); $('#documentAddBtn').show(); $('#customerDocumentsContainer table tr').removeClass('warning');"><i class="fa fa-times m-r-5"></i> Отмена</button>
+            <button type="submit" class="btn btn-success waves-effect waves-light" form="AddCustomerDocumentForm"> Сохранить <i class="fa fa-check m-l-5"></i></button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-group form-group-sm">
+                <div class="col-md-4">
+                    @Html.LabelFor(model => model.spr_documents_id, new { @class = "font-13" })
+                    @Html.DropDownListFor(model => model.spr_documents_id, ViewBag.Documents as SelectList, "Выберите документ", new Dictionary<string, object> { { "class", "selectpicker" }, { "data-style", "btn-white btn-sm" } })
+                </div>
+                <div class="col-md-3">
+                    @Html.LabelFor(model => model.document_needs, new { @class = "font-13" })
+                    @Html.DropDownListFor(model => model.document_needs, new SelectList(new List<SelectListItem> { new SelectListItem() { Text = "Да", Value = "0" }, new SelectListItem() { Text = "Нет", Value = "1" }, new SelectListItem() { Text = "При наличии", Value = "2" } }, "Value", "Text"), new Dictionary<string, object> { { "class", "selectpicker" }, { "data-style", "btn-white btn-sm" } })
+                </div>
+                <div class="col-md-2">
+                    @Html.LabelFor(model => model.document_type, new { @class = "font-13" })
+                    @Html.DropDownListFor(model => model.document_type, new SelectList(new List<SelectListItem> { new SelectListItem() { Text = "Оригинал", Value = "0" }, new SelectListItem() { Text = "Копия", Value = "1" } }, "Value", "Text"), new Dictionary<string, object> { { "class", "selectpicker" }, { "data-style", "btn-white btn-sm" } })
+                </div>
+                <div class="col-md-3">
+                    @Html.LabelFor(model => model.document_count, new { @class = "font-13" })
+                    @Html.TextBoxFor(model => model.document_count, new { @class = "form-control", @placeholder = "Количество копий" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <hr class="m-t-0" />
+        </div>
+    </div>
+}

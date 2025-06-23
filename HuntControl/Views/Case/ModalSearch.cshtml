@@ -1,0 +1,85 @@
+﻿@model HuntControl.WebUI.Models.ApplicantPageViewModel
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Ручной поиск</h4>
+        </div>
+        <div class="modal-body">
+            <div class="input-group m-b-20">
+                <input type="text" id="search" name="search" class="form-control text-dark" placeholder="Поиск физ. лица" style="padding-left: 40px;" value="@ViewBag.Search">
+                <span style="position:absolute; top:7px; left: 15px; z-index: 2; font-size: 18px;"><i class="ion-ios7-search"></i></span>
+
+                <span class="input-group-btn">
+                    <button type="button" id="searchIndividualBtn" class="btn btn-inverse waves-effect waves-light">Найти</button>
+                </span>
+            </div>
+            <div id="mainContainer">
+                @if (Model.CustomerSelectList.Any())
+                {
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tbody>
+                                @foreach (var item in Model.CustomerSelectList)
+                                {
+                                    <tr>
+                                        <td class="p-l-20-important text-uppercase">
+                                            <span class="individual-name">@item.out_customer_name</span><br>
+                                            <span class="text-muted font-12"><i class="ion-location m-r-5"></i>@item.out_actual_address</span><br>
+                                        </td>
+                                        <td>
+                                            <span class="text-muted font-12"><i class="md md-phone vertical-middle m-r-5"></i>@item.out_phone_number1</span><br>
+                                            <span class="text-muted font-12"><i class="md md-phone vertical-middle m-r-5"></i>@item.out_phone_number1</span><br>
+                                            <span class="text-muted font-12"><i class="md md-mail vertical-middle m-r-5"></i>test@mail.ru</span>
+                                        </td>
+                                        <td class="vertical-middle text-right">
+                                            <a href="#" onclick="window.open('@Url.Action("Main","ApplicantPage")#@item.out_id')"><u>ФЛ</u> ></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning">
+                        <span style="color: #00545c;"><strong><i class="icon-info"></i></strong> Поиск не дал результатов.</span>
+                    </div>
+                }
+                <div class="row p-t-10 p-l-20-important p-r-20-important p-b-10">
+                    <div class="col-sm-12">
+                        <div class="dataTables_paginate paging_simple_numbers" id="datatable-editable_paginate">
+                            @Html.PageLinks(Model.PageInfo, x => Ajax.ActionLink(x.NameLink, "ModalSearch", "Case", new { search = Model.Search }, new AjaxOptions { UpdateTargetId = "mainContainer" }))
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel waves-effect waves-light btn-block-xs" data-dismiss="modal">Закрыть</button>
+        </div>
+    </div>
+</div>
+<script>
+    $('#searchIndividualBtn').click(function searchBtn() {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ModalShowSearchIndividualPage", "Case")',
+                data: { search: document.getElementById('search').value },
+                success: function (data) {
+                    // заменяем содержимое присланным частичным представлением
+                    $('#mainContainer').html(data);
+                }
+            });
+    });
+    document.onkeyup = function (e) {
+        e = e || window.event;
+        if (e.keyCode === 13) {
+            document.getElementById("searchIndividualBtn").click();
+        }
+        return false;
+    }
+</script>

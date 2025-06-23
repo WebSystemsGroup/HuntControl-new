@@ -1,0 +1,173 @@
+﻿@model IEnumerable<HuntControl.Domain.Concrete.data_customer_hunting_lic_perm_animal>
+<script src="~/Content/plugins/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js" type="text/javascript"></script>
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myLargeModalLabel">Нормы на животного</h4>
+        </div>
+        <div class="modal-body">
+            @using (Ajax.BeginForm("SubmitHuntingFarmAnimalSave", "ApplicantPage", Model, new AjaxOptions { OnSuccess = "$('#myModal').modal('hide'); successEdit();" }, new { @id = "EditAnimalLimitsForm", @class = "form-horizontal" }))
+            {
+                <div class="card-box p-0">
+                    <div class="table-responsive">
+                        <table class="table m-b-0">
+                            <thead>
+                                <tr>
+                                    <th class="p-l-20-important">@Html.DisplayNameFor(model => model.spr_animal_id)</th>
+                                    <th>Пол</th>
+                                    <th>Возраст</th>
+                                    <th>@Html.DisplayNameFor(model => model.limit_day)</th>
+                                    <th>@Html.DisplayNameFor(model => model.limit_season)</th>
+                                    <th class="text-right p-r-20-important">
+                                        <button id="showLimitRemoves" type="button" class="link p-r-0 text-custom"><i class="@(ViewBag.IsRemove ? "ion-ios7-trash" : "ion-ios7-trash-outline") m-l-5" style="font-size: 20px;" data-placement="bottom" data-toggle="tooltip" data-original-title="@(ViewBag.IsRemove ? "Скрыть удаленные" : "Показать удаленные")"></i></button>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ int index = 0; }
+                                @foreach (var item in Model)
+                                {
+                                    <tr data-animal-limit-id="@item.id" class="@(item.is_remove == true ? "danger" : "")">
+                                        <td class="vertical-middle p-l-20-important">
+                                            @item.spr_animal.animal_name
+                                            <input type="hidden" name="huntingLicPermAnimals[@index].id" value="@item.id">
+                                        </td>
+                                        <td class="vertical-middle" style="width: 50px;">
+                                            @if (item.animal_sex == 0)
+                                            {
+                                                @Html.Label("-");
+                                            }
+                                            else if (item.animal_sex == 1)
+                                            {
+                                                @Html.Label("СМЦ");
+                                            }
+                                            else if (item.animal_sex == 2)
+                                            {
+                                                @Html.Label("СМК");
+                                            }
+                                            else
+                                            {
+                                                @item.animal_sex;
+                                            }
+                                        </td>
+                                        <td class="vertical-middle" style="width: 50px;">
+                                            @if (item.animal_age == 0)
+                                            {
+                                                @Html.Label("-");
+                                            }
+                                            else if (item.animal_age == 1)
+                                            {
+                                                @Html.Label("<1");
+                                            }
+                                            else if (item.animal_age == 2)
+                                            {
+                                                @Html.Label(">1");
+                                            }
+                                        </td>
+                                        <td style="width: 150px;">
+                                            <input type="text" data-bts-max="@item.limit_day" class="form-control input-sm touchspin" name="huntingLicPermAnimals[@index].limit_day" value="@item.limit_day">
+                                        </td>
+                                        <td style="width: 150px;">
+                                            <input type="text" data-bts-max="@item.limit_season" class="form-control input-sm touchspin" name="huntingLicPermAnimals[@index].limit_season" value="@item.limit_season">
+                                        </td>
+                                        <td class="actions vertical-middle-important">
+                                            
+                                                @if (item.is_remove != true)
+                                                {
+                                                    <button class="on-default remove-row link" data-placement="top" data-toggle="tooltip" data-original-title="Удаление"><i class="ion-trash-b"></i></button>
+                                                }
+                                                else
+                                                {
+                                                    <button class="on-default recovery-row link" data-placement="top" data-toggle="tooltip" data-original-title="Восстановление"><i class="fa fa-history"></i></button>
+                                                }
+                                            
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+            <div id="collapseEditAnimalLimit" class="panel-collapse collapse" aria-expanded="false">
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-right">
+                    <button type="button" class="btn btn-inverse waves-effect waves-light btn-sm" id="animalLimitEditBtn"> Добавить <i class="fa fa-plus m-l-5"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel waves-effect waves-light" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Закрыть</button>
+            <button type="submit" form="EditAnimalLimitsForm" class="btn btn-success waves-effect waves-light"> Сохранить <i class="fa fa-check m-l-5"></i></button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+
+<script>
+    $(function () {
+        $('input.touchspin').TouchSpin({});
+        $('[data-toggle="tooltip"]').tooltip({ trigger: 'hover' });
+    });
+    $('input[data-bts-max]').change(function () {
+        if ($(this).data("bts-max") > 0) {
+            if ($(this).val() <= 0) {
+                $(this).val("1");
+                alert("Значение 0 недопустимо")
+            }
+        }
+    });
+    $('#showLimitRemoves').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialModalAnimalLimit", "ApplicantPage")',
+            data: { huntingLicPermId: '@ViewBag.HuntingLicPermId', isRemove: '@(!ViewBag.IsRemove)' },
+            success: function (data) {
+                $('#myModal').html(data);
+            }
+        });
+    });
+
+    $('#EditAnimalLimitsForm table td button.remove-row').click(function (e) { 
+        e.preventDefault();
+        var animalLimitId = $(this).closest('tr').data('animalLimitId');
+        var paramObject = {
+            url: '@Url.Action("SubmitModalAnimalLimitDelete", "ApplicantPage")',
+            params: { animalLimitId: animalLimitId },
+            onSuccess: function (data) {
+                $('#myModal').html(data);
+            }
+        }
+        removeWithComment(paramObject);
+    });
+
+    $('#EditAnimalLimitsForm table td button.recovery-row').click(function (e) {
+        e.preventDefault();
+        var animalLimitId = $(this).closest('tr').data('animalLimitId');       
+        var paramObject = {
+            url: '@Url.Action("SubmitModalAnimalLimitRecovery", "ApplicantPage")',
+            params: { animalLimitId: animalLimitId },
+            onSuccess: function (data) {
+                $('#myModal').html(data);
+            }
+        }
+        removeRecovery(paramObject);
+    });
+
+    $('button#animalLimitEditBtn').on('click', function () {
+        $(this).hide();
+        $.ajax({
+            type: 'POST',
+            async: false,
+            url: '@Url.Action("PartialTableEditAnimalLimits", "ApplicantPage")',
+            data: { huntingLicPermId: '@ViewBag.HuntingLicPermId'},
+            success: function (data) {
+                $('#collapseEditAnimalLimit').html(data);
+            }
+        });
+        $('#collapseEditAnimalLimit').collapse('show');
+        $('#collapseEditAnimalLimit').addClass('warning');
+    });
+
+</script>

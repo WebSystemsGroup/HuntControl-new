@@ -1,0 +1,81 @@
+﻿@model HuntControl.WebUI.Models.AnimalViewModel
+
+<div class="card-box p-0">
+    <div class="input-group">
+        <span class="input-group-btn">
+            <button type="button" class="btn waves-effect waves-light btn-link p-l-20-important"><i class="fa fa-search"></i></button>
+        </span>
+        <input type="text" id="searchTextAnimals" class="text-dark no-border-input" placeholder="Поиск животных" value="@ViewBag.Serach"><ul class="typeahead dropdown-menu"></ul><ul class="typeahead dropdown-menu"></ul>
+    </div>
+    <hr class="m-0">
+    <div class="table-responsive">
+        <table class="table table-hover m-b-0">
+            <thead>
+                <tr>
+                    <th class="number-row p-l-20-important">№</th>
+                    <th>@Html.DisplayNameFor(model => model.AnimalList.First().animal_name)</th>                  
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.AnimalList)
+                {
+                    <tr data-animal-id="@item.id">
+                        <td class="number-row p-l-20-important text-nowrap">
+                            @((Model.PageInfo.CurrentPage - 1) * Model.PageInfo.ItemsPerPage + ++Model.PageInfo.NumberRow)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(i => item.animal_name)<br />
+                            <span class="text-muted font-12">@Html.DisplayFor(i => item.spr_animal_group_type.group_type_name)</span>
+                        </td>                        
+                        <td class="actions">
+                            <button type="button" class="on-default text-custom link" style="font-size: 22px;line-height: 22px;" data-tooltip-info='{"group_type_name": "@item.spr_animal_group_type.group_type_name", "animal_name": "@item.animal_name", "employees_fio": "@item.employees_fio", "set_date": "@item.set_date", "is_remove": "@item.is_remove", "employees_fio_remove": "@item.employees_fio_remove", "commentt_remove": "@item.commentt_remove", "date_remove": "@item.date_remove"}'>
+                                <i class="ion-ios7-information-outline"></i>
+                            </button>                            
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <hr class="m-0">
+
+    <div class="row p-t-10 p-l-r-10 p-b-10">
+        <div class="col-sm-4">
+            <div class="dataTables_info" id="datatable_info" role="status" aria-live="polite"> @((Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage > Model.PageInfo.TotalItems) ? Model.PageInfo.TotalItems : Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage) из @Model.PageInfo.TotalItems</div>
+        </div>
+        <div class="col-sm-8">
+            <div class="dataTables_paginate paging_simple_numbers" id="datatable-editable_paginate">
+                @Html.PageLinks(Model.PageInfo, x => Ajax.ActionLink(x.NameLink, "PartialAnimalList", "Season", new { page = x.CurrentPage, sprAnimalGroupTypeId = ViewBag.SprAnimalGroupTypeId, search=ViewBag.Search }, new AjaxOptions { UpdateTargetId = "animalsContainer" }))
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip({ trigger: 'hover' });
+        $('button[data-tooltip-info]').tooltip({
+            title: function () {
+                var tooltipInfo = $(this).data('tooltipInfo');
+                return "<div class='text-left'>" +
+                    "<strong>Группа видов</strong>: " + tooltipInfo['group_type_name'] + "</br>" +
+                    "<strong>Наименование</strong>: " + tooltipInfo['animal_name'] + "</br>" +
+                    (tooltipInfo['is_remove'] === 'True' ? "<strong>Удалил</strong>: " + tooltipInfo['employees_fio_remove'] + "</br>" + "<strong>Дата удаления</strong>: " + tooltipInfo['date_remove'] + "</br>" + "<strong>Причина удаления</strong>: " + tooltipInfo['commentt_remove'] + "</br>" : "<strong>Добавил</strong>: " + tooltipInfo['employees_fio'] + "</br>" + "<strong>Дата добавления</strong>: " + tooltipInfo['set_date'] + "</br>") +
+                    "</div>";
+            },
+            html: true,
+            placement: "left"
+        });
+    });
+
+    $('#searchTextAnimals').change(function () {
+        $.ajax({
+            url: '@Url.Action("PartialAnimalList", "Season")',
+            type: 'Post',
+            data: { search: $(this).val(), sprAnimalGroupTypeId:'@ViewBag.SprAnimalGroupTypeId' },
+            success: function (data) {
+                $('#animalsContainer').html(data);
+            }
+        });
+    });    
+</script>

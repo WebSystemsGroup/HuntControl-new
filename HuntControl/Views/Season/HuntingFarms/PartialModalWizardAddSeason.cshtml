@@ -1,0 +1,198 @@
+﻿@model HuntControl.Domain.Concrete.spr_hunting_farm_season
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myLargeModalLabel">Мастер добавления сезона охоты</h4>
+        </div>
+        <div class="modal-body app-content">
+
+            <div class="wizard-circle wizard_add_accounting" id="wizardAddSeason">
+                <!-- Step 1 -->
+                <h6>Данные</h6>
+                <fieldset class="p-0">
+                    <div id="seasonWizardContainer">
+                        <form id="WizardSeasonForm">
+                            <div class="form-group form-group-sm">
+                                <div class="row">
+                                    @Html.LabelFor(model => model.spr_animal_group_type_id, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                    <div class="col-md-5">
+                                        @Html.DropDownListFor(model => model.spr_animal_group_type_id, ViewBag.AnimalGroupTypes as SelectList, "Выберите группу видов", new Dictionary<string, object> { { "class", "form-control select2 input-sm" } })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <div class="row">
+                                    @Html.Label("Дата", new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                    <div class="col-md-5">
+                                        <div class="input-daterange input-group" id="date-range">
+                                            @Html.TextBox("date_start", DateTime.Now, "{0:dd.MM.yyyy}", new { @class = "form-control input-sm" })
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
+                                            @Html.TextBox("date_stop", DateTime.Now.AddMonths(1), "{0:dd.MM.yyyy}", new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </fieldset>
+
+                <!-- Step 2 -->
+                <h6>Животные</h6>
+                <fieldset class="p-0">
+                    <div id="animalsWizardContainer" class="hunting_farms_container">
+                    </div>
+                </fieldset>
+
+                <!-- Step 3 -->
+                <h6>Охотугодья</h6>
+                <fieldset class="p-0">
+                    <div id="huntingFarmsWizardContainer" class="hunting_farms_container">
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        @*<div class="modal-footer">
+            <button type="button" class="btn btn-cancel waves-effect waves-light btn-block-xs" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Отмена</button>
+        </div>*@
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+
+<script src="~/Content/plugins/select2/js/select2.full.min.js"></script>
+<script>
+    //$("#WizardSeasonForm").validate().settings.ignore = ".bs-select-hidden";
+    $(function() {
+        $("#wizardAddSeason").steps({
+        headerTag: "h6",
+        bodyTag: "fieldset",
+        transitionEffect: "fade",
+        titleTemplate: '<span class="step"></span> #title#',
+        labels: { previous: "Назад", next: "Далее", finish: "Сохранить" },
+        onStepChanging: function (event, currentIndex, newIndex) {
+            var result = true;
+            var wizardSeasonForm = $('#WizardSeasonForm');
+            var wizardAnimalForm = $('#WizardAnimalForm');
+            $.validator.unobtrusive.parse(document);
+
+            if (newIndex === 1 && currentIndex === 0) {
+                if (wizardSeasonForm.valid()) {
+                    $.ajax({
+                        type: 'POST',
+                        async: false,
+                        url: '@Url.Action("PartialListWizardAnimals", "Season")',
+                        data: { animalGroupTypeId: $('#spr_animal_group_type_id').val(), dateStart: $('#date_start').val(), dateStop: $('#date_stop').val() },
+                        success: function (data) {
+                            $("#animalsWizardContainer").html(data);
+                            result = true;
+                        },
+                        error: function () {
+                            result = false;
+                        }
+                        });
+                }
+                else
+                    result = false;
+            }
+            else if (newIndex === 2 && currentIndex === 1) {
+                var formData = new FormData();
+                var indexFormData = 0;
+                $("[name='checkAnimal']").each(function (i) {
+                    if($(this).is(":checked"))
+                    {
+                        var animalId = $(this).closest("tr").find("[name='animalSeasons[" + i + "].spr_animal_id']").val();
+                        var dateStart = $(this).closest("tr").find("[name='animalSeasons[" + i + "].date_start']").val();
+                        var dateStop = $(this).closest("tr").find("[name='animalSeasons[" + i + "].date_stop']").val();
+                        formData.append('animalSeasons[' + indexFormData + '].spr_animal_id', animalId);
+                        formData.append('animalSeasons[' + indexFormData + '].date_start', dateStart);
+                        formData.append('animalSeasons[' + indexFormData++ + '].date_stop', dateStop);
+                    }
+                });
+                if (wizardAnimalForm.valid() && indexFormData > 0) {
+                    $.ajax({
+                        type: 'POST',
+                        async: false,
+                        url: '@Url.Action("PartialListWizardSeasonHuntingFarms", "Season")',
+                        data: formData,
+                        processData: false, // Не обрабатываем файлы (Don't process the files)
+                        contentType: false, // Так jQuery скажет серверу что это строковой запрос
+                        success: function (data) {
+                            $("#huntingFarmsWizardContainer").html(data);
+                            result = true;
+                        },
+                        error: function () {
+                            result = false;
+                        }
+                    });
+                }
+                else
+                    result = false;
+            }
+            return result;
+        },
+        onStepChanged: function (event, currentIndex, priorIndex) {
+            if (currentIndex < priorIndex) {
+                var theSteps = $('.steps ul').find('.current');
+                $(theSteps).next('li').removeClass('done').addClass('disabled');
+            }
+        },
+        onFinishing: function () {
+            var result = true;
+            var wizardSeasonForm = $('#WizardSeasonForm');
+            var formData = new FormData(wizardSeasonForm[0]);
+            var indexFormData = 0;
+            $("[name='checkHuntingFarm']").each(function (i) {
+                if($(this).is(":checked"))
+                {
+                    var huntingFarmId = $(this).closest("tr").find("[name='huntingFarms[" + i + "]']").val();
+                    formData.append('huntingFarms[' + indexFormData++ + ']', huntingFarmId);
+                }
+            });
+            var indexAnimalFormData = 0;
+            $("[name='checkAnimal']").each(function (i) {
+                if($(this).is(":checked"))
+                {
+                    var animalId = $(this).closest("tr").find("[name='animalSeasons[" + i + "].spr_animal_id']").val();
+                    var dateStart = $(this).closest("tr").find("[name='animalSeasons[" + i + "].date_start']").val();
+                    var dateStop = $(this).closest("tr").find("[name='animalSeasons[" + i + "].date_stop']").val();
+                    formData.append('animalSeasons[' + indexAnimalFormData + '].spr_animal_id', animalId);
+                    formData.append('animalSeasons[' + indexAnimalFormData + '].date_start', dateStart);
+                    formData.append('animalSeasons[' + indexAnimalFormData++ + '].date_stop', dateStop);
+                }
+            });
+            $.validator.unobtrusive.parse(document);
+            if (!wizardSeasonForm.valid()) {
+                return false;
+            }
+            $.ajax({
+                type: 'POST',
+                async: false,
+                url: '@Url.Action("WizardSeasonSave", "Season")',
+                data: formData,
+                processData: false, // Не обрабатываем файлы (Don't process the files)
+                contentType: false, // Так jQuery скажет серверу что это строковой запрос
+                success: function (data) {
+                    swal({
+                        type: 'success',
+                        title: 'Готово!',
+                        html: 'Учетные данные успешно добавлены.'
+                    });
+                    $('#myModal').modal("hide");
+                    result = true;
+                },
+                error: function (data) {
+                    result = false;
+                }
+            });
+            return result;
+        }
+        });
+        $('#seasonWizardContainer #date-range').datepicker({ format: 'dd.mm.yyyy', toggleActive: true, autoclose: true, language: 'ru', orientation: 'bottom right' });
+
+    });
+
+    $(".select2").select2();
+    $("select").on("select2:close",
+        function(e) {
+            $(this).valid();
+        });
+</script>

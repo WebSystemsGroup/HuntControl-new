@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "Реестр выданных разрешений на охоту";
+
+}
+
+@Html.MvcSiteMap().SiteMapPath()
+
+
+
+
+<div id="filterReportHuntingLicPerm">
+    @Html.Action("PartialFilterHuntingLicPerm")
+</div>
+
+
+
+<div id="reportHuntingLicPerm">
+    <div class="alert alert-warning">
+        <span style="color:#00545c;"><strong><i class="icon-info"></i></strong> Воспользуйтесь фильтром.</span>
+    </div>
+</div>
+

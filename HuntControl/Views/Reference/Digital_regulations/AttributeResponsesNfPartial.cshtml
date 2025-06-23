@@ -1,0 +1,31 @@
+﻿@model IEnumerable<WebAIS.Models.KcrModel.attributeResponsesNFType>
+
+<div class="row justify-content-end">
+    <div class="col-lg-11 accardion-milti-castoner">
+        <div class="accardion-milti-castoner-сontrol">
+            <button type="button" class="btn accardion-milti-castoner-btn-show" data-accardion onclick="showAdccardion(this)">
+                Атрибуты ответа
+            </button>
+            <i class="fa fa-chevron-left accardion-chevron" aria-hidden="true"></i>
+        </div>
+        <div class="accardion-content-milti-castoner" data-accardion-content style="display: none">
+            <fieldset>
+                <div class="row justify-content-center">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>Идентификатор записи</td>
+                                <td>
+                                    @foreach (var item in Model)
+                                    {
+                                        <p>- @item.attribute.name</p>
+                                    }
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>

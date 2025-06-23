@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "Количество нарушений по статьям";
+
+}
+
+@Html.MvcSiteMap().SiteMapPath()
+
+
+<div id="filterReportCountViolationsHuntingFarmContainer">
+    @Html.Action("PartialFilterCountViolations")
+</div>
+
+<div id="reportCountViolations">
+    <div class="alert alert-warning">
+        <span style="color:#00545c;"><strong><i class="icon-info"></i></strong> Воспользуйтесь фильтром.</span>
+    </div>
+</div>
+

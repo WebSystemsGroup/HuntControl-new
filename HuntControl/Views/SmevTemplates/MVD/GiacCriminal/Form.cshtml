@@ -1,0 +1,623 @@
+﻿@model HuntControl.WebUI.Models.SmevRequestFormModel
+<link href="~/Content/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css">
+<link href="~/Content/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
+<link href="~/Content/plugins/multiselect/css/multi-select.css" rel="stylesheet" type="text/css">
+<link href="~/Content/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" rel="stylesheet">
+<link href="~/Content/plugins/switchery/dist/switchery.min.css" rel="stylesheet">
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<script src="~/Content/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+<script src="~/Content/plugins/switchery/dist/switchery.min.js"></script>
+<script src="~/Content/plugins/bootstrap-select/dist/js/bootstrap-select.min.js" type="text/javascript"></script>
+
+<script src="~/Content/plugins/select2/js/select2.min.js" type="text/javascript"></script>
+<script src="~/Content/plugins/multiselect/js/jquery.multi-select.js"></script>
+<ul class="nav nav-tabs m-t-10">
+    <li class="active">
+        <a href="#applicantDataTabContainer" data-toggle="tab" aria-expanded="false">
+            <span>Данные заявителя</span>
+        </a>
+    </li>
+    <li class="">
+        <a href="#personalDataTabContainer" data-toggle="tab" aria-expanded="false">
+            <span>Данные лица, подлежащего проверке</span>
+        </a>
+    </li>
+    <li class="">
+        <a href="#smevDocumentsDataTabContainer" data-toggle="tab" aria-expanded="false">
+            <span>Документы</span>
+        </a>
+    </li>
+</ul>
+
+<div class="tab-content m-b-20" style="overflow: auto; max-height: 500px; height: 500px;">
+
+    @* ДАННЫЕ ЗАЯВИТЕЛЯ *@
+    <div class="tab-pane fade in active" id="applicantDataTabContainer">
+        <form class="form-horizontal" id="applicantForm">
+            <h3 class="panel-title">Направление запроса</h3>
+            <hr class="m-t-0">
+            @Html.Hidden("dataServicesId", ViewBag.ServiceId as object)
+            <div class="form-group form-group-sm">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Регион направления запроса</label>
+                    <div class="col-md-6">
+                        <select class="form-control select2" id="addressee" name="addressee" data-style="btn-white btn-sm"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Кол-во экземпляров справки</label>
+                    <div class="col-md-6">
+                        @Html.TextBox("exemplars", "1", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Кол-во экземпляров справки" }, { "data-form", "applicant" }, { "required", "required" } })
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="panel-title">Персональные данные заявителя</h3>
+            <hr class="m-t-0">
+
+            <div class="form-group form-group-sm">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Тип заявителя</label>
+                    <div class="col-md-6">
+                        <select class="form-control select2" id="applicantApplicantType" name="applicant.ApplicantType" data-style="btn-white btn-sm"></select>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group form-group-sm">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Фамилия</label>
+                    <div class="col-md-6">
+                        @Html.TextBox("applicant.fio.LastName", Model.CustomerName.Split(' ').Length > 0 ? Model.CustomerName.Split(' ')[0] : "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Фамилия" }, { "data-form", "applicant" }, { "required", "required" } })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Имя</label>
+                    <div class="col-md-6">
+                        @Html.TextBox("applicant.fio.FirstName", Model.CustomerName.Split(' ').Length > 1 ? Model.CustomerName.Split(' ')[1] : "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Имя" }, { "data-form", "applicant" }, { "required", "required" } })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Отчество</label>
+                    <div class="col-md-6">
+                        @Html.TextBox("applicant.fio.SecondName", Model.CustomerName.Split(' ').Length > 2 ? Model.CustomerName.Split(' ')[2] : "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Отчество" }, { "data-form", "applicant" }, { "required", "required" } })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Дата рождения</label>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            @Html.TextBox("applicant.BirthDate", Model.DocumentBirthDate, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-form", "applicant" }, { "data-type", "date" }, { "required", "required" } })
+                            <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">СНИЛС</label>
+                    <div class="col-md-3">
+                        @Html.TextBox("applicant.Snils", Model.CustomerSnils, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "СНИЛС" }, { "data-form", "applicant" }, { "data-type", "doc-snils" } })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Место рождения</label>
+                    <div class="col-md-6">
+                        @Html.TextBox("applicant.BirthPlace", Model.DocumentBirthPlace, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите место рождения" }, { "data-form", "applicant" } })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Тип адреса</label>
+                    <div class="col-md-6">
+                        @Html.DropDownList("applicant.AddressType", new SelectList(new List<SelectListItem> { new SelectListItem() { Value = "Место жительства", Text = "Место жительства" }, new SelectListItem { Value = "Место пребывания", Text = "Место пребывания" } }, "Value", "Text"), new Dictionary<string, object> { { "class", "selectpicker" }, { "data-style", "btn-white btn-sm" }, { "data-form", "applicant" } })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Адрес</label>
+                    <div class="col-md-6">
+                        @Html.TextBox("applicant.Address", "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите адрес" }, { "data-form", "applicant" }, { "required", "required" } })
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    @* ДАННЫЕ ЛИЦА, ПОДЛЕЖАЩЕГО ПРОВЕРКЕ *@
+
+    <div class="tab-pane fade" id="personalDataTabContainer">
+        <form class="form-horizontal" id="personalForm">
+
+            <div class="form-group form-group-sm">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Фамилия</label>
+                    <div class="col-md-6">
+                        @Html.TextBox("personal.fio.LastName", Model.CustomerName.Split(' ').Length > 0 ? Model.CustomerName.Split(' ')[0] : "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Фамилия" }, { "data-form", "applicant" }, { "required", "required" } })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Имя</label>
+                    <div class="col-md-6">
+                        @Html.TextBox("personal.fio.FirstName", Model.CustomerName.Split(' ').Length > 1 ? Model.CustomerName.Split(' ')[1] : "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Имя" }, { "data-form", "applicant" }, { "required", "required" } })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Отчество</label>
+                    <div class="col-md-6">
+                        @Html.TextBox("personal.fio.SecondName", Model.CustomerName.Split(' ').Length > 2 ? Model.CustomerName.Split(' ')[2] : "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Отчество" }, { "data-form", "applicant" }, { "required", "required" } })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Дата рождения</label>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            @Html.TextBox("personal.BirthDate", Model.DocumentBirthDate, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-form", "personal" }, { "data-type", "date" }, { "required", "required" } })
+                            <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Место рождения</label>
+                    <div class="col-md-6">
+                        @Html.TextBox("personal.BirthPlace", Model.DocumentBirthPlace, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите место рождения" }, { "data-form", "applicant" } })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Тип документа</label>
+                    <div class="col-md-6">
+                        <select class="form-control select2" id="personalDocumentCode" name="personal.DocumentCode" data-style="btn-white btn-sm"></select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Серия и номер</label>
+                    <div class="col-md-3">
+                        @Html.TextBox("personal.DocSeries", Model.DocumentSerial, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "____" }, { "data-form", "personal" }, { "data-type", "doc-serial" }, { "required", "required" } })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.TextBox("personal.DocNumber", Model.DocumentNumber, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "______" }, { "data-form", "personal" }, { "data-type", "doc-number" }, { "required", "required" } })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Кем выдан</label>
+                    <div class="col-md-6">
+                        @Html.TextBox("personal.DocIssuer", Model.DocumentIssuePlace, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите кем выдан документ" }, { "data-form", "personal" } })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Дата выдачи</label>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            @Html.TextBox("personal.DocIssueDate", Model.DocumentIssueDate, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-form", "personal" }, { "data-type", "date" }, { "required", "required" } })
+                            <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right p-t-0">Предыдущие ФИО лица, подлежащего проверке</label>
+                    <div class="col-md-6">
+                        <input name="PreviousNames" type="text" value="" data-role="tagsinput" placeholder="Введите ФИО" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right p-t-0">Регионы, где проживал, пребывал, проходил службу</label>
+                    <div class="col-md-6">
+                        <select class="select2 select2-multiple" id="personalRegions" name="personal.Regions" multiple="multiple" data-placeholder="Выберите регион ..."></select>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    @* ДОКУМЕНТЫ *@
+
+    <div class="tab-pane fade" id="smevDocumentsDataTabContainer">
+        <form class="form-horizontal" id="documentsForm">
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-striped smev-doc-files" id="smevDocTable">
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="actions clearfix text-right">
+    <button type="button" id="nextSmevRequestDataSend" class="btn btn-default waves-effect waves-light btn-block-xs m-l-5"> Далее <i class="ion-chevron-right m-l-5"></i></button>
+</div>
+
+<script>
+    $(document).on('change', 'select.select2DOC', function (event) {
+        var $select = $(this);
+        var $option = $select.find('option:selected').val();
+        var row = $select.closest('tr');
+        if ($option == '') {
+            row.removeClass('success');
+        } else {
+            row.addClass('success');
+        }
+    });
+
+    $(function () {
+
+        jQuery("#applicantForm").validate().settings.ignore = "";
+        jQuery("#personalForm").validate().settings.ignore = "";
+        $('.selectpicker').selectpicker();
+        $('input[data-type=date]').datepicker({ format: 'dd.mm.yyyy', autoclose: true, language: 'ru' });
+        $('input[data-type=doc-serial]').inputmask("9999", {
+            "oncomplete": function () {
+                var dataForm = $(this).data('form');
+                $('input[data-form=' + dataForm + '][data-type=doc-number]').focus();
+            },
+            clearIncomplete: true
+        });
+        $('input[data-type=doc-snils]').inputmask({
+            mask: '99999999999',
+            clearIncomplete: true
+        });
+
+        $('button#nextSmevRequestDataSend').click(function () {
+            var applicantForm = $('#applicantForm');
+            var personalForm = $('#personalForm');
+            var documentsForm = $('#documentsForm');
+
+            if (!applicantForm.valid()) {
+                $('.nav-tabs a[href="#applicantDataTabContainer"]').tab('show');
+                $('#applicantDataTabContainer').addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                    $(this).removeClass('shake animated');
+                });
+            }
+            else if (!personalForm.valid()) {
+                $('.nav-tabs a[href="#personalDataTabContainer"]').tab('show');
+                $('#personalDataTabContainer').addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                    $(this).removeClass('shake animated');
+                });
+            } else {
+                smevSendData('@Url.Action("SmevGetGiacCriminal","Smev")', applicantForm.serialize() + '&' + personalForm.serialize() + '&' + documentsForm.serialize());
+                //$(".icons-tab-steps").steps('next');
+            }
+        });
+
+
+        var table = $('#smevDocumentsDataTabContainer #smevDocTable');
+        table.empty();
+        $.ajax({
+            url: '@Url.Action("GetServiceDocuments", "Case")',
+            type: 'POST',
+            data: { infoId: '@ViewBag.InfoId' },
+            success: function (items) {
+                if (items.length > 0) {
+                    var j = 0;
+                    items.forEach(function (item, i, arr) {
+                        var option = '<tr>' +
+                            '<td>' + ++j + '</td>' +
+                            '<td class="text-clip-cust" style="max-width: 350px; font-size:12px;">' + item.out_document_name + ' </td>' +
+                            '<td class="text-nowrap font-13">' + (item.out_file_size / 1024).toFixed(2) + ' кБ</td>' +
+                            '<td clss="non-click">' +
+                            '<select type="select" class="select2DOC Giac font-13" name="attachments">' +
+                            '<option value="" selected>Выберите тип</option>' +
+                            '<option title="Заявление" value="' + item.out_id + '|400">Заявление</option>' +
+                            '<option title="Паспорт РФ" value="' + item.out_id + '|401">Паспорт РФ</option>' +
+                            '<option title="Паспорт иност. гр-на" value="' + item.out_id + '|402">Паспорт иност. гр-на</option>' +
+                            '<option title="Вид на жительство" value="' + item.out_id + '|403">Вид на жительство</option>' +
+                            '<option title="Доверенность" value="' + item.out_id + '|404">Доверенность</option>' +
+                            '<option title="Документ,подтв-й родство" value="' + item.out_id + '|405">Документ,подтв-й родство</option>' +
+                            '<option title="Документ,подтв-й факт опеки" value="' + item.out_id + '|406">Документ,подтв-й факт опеки</option>' +
+                            '<option title="Перевод паспорта" value="' + item.out_id + '|407">Перевод паспорта</option>' +
+                            '</select>' +
+                            '</td>' +
+                            '<td>' +
+                            '<button class="btn-link-preview font-13" type="button" data-toggle="modal" data-type="' + item.out_file_ext + '" data-target="#modal_pic" data-pic="' + item.out_id + '"><i class="ion ion-eye"></i> Просмотр</button>' +
+                            '</td>' +
+                            '</tr>';
+                        table.append(option);
+                    });
+                    $('.select2DOC').niceSelect();
+                }
+                else {
+                    var option = '<tr><td> Документы отсутствуют. Отсканируйте или загрузите документы перед выполнением СМЭВ запроса. </td></tr>';
+                    table.append(option);
+                }
+            }
+        });
+
+
+        Dictionary('personalRegions', 'GiacRegionCodesSmall');
+        Dictionary('addressee', 'GiacRegionCodes');
+        Dictionary('applicantApplicantType', 'GiacApplicantTypes');
+        Dictionary('personalDocumentCode', 'PrimaryDocumentCodes');
+        Dictionary('applicantAddressType', 'GiacAddressTypes');
+
+        $('.select2').select2();
+
+    });
+
+    function Dictionary(inputName, type) {
+        var input = $("#" + inputName);
+        $.ajax({
+            url: '@Url.Action("SmevGetDictionary", "Smev")',
+            type: 'POST',
+            data: { type: type },
+            success: function (items) {
+                if (items != 'undefined') {
+                    input.empty();
+                    items.Dictionary.forEach(function (item, i, arr) {
+                        input.append('<option value=' + item.Key + '>' + item.Value + '</option>');
+                    });
+                    input.val(items.DefaultKey).selectpicker();
+                }
+            }
+        });
+    };
+
+</script>
+
+@*<script>
+        flag = true;
+        $(document).ready(function () {
+            $("#personal_Regions").select2({
+                placeholder: "Регионы",
+                theme: "classic",
+                language: "ru"
+            });
+            $("#personal_PreviousNames").select2({
+                placeholder: "Ф.И.О.",
+                theme: "classic",
+                tags: true,
+                minimumResultsForSearch: -1,
+                language: "ru",
+                allowClear: true,
+                showSearchBox: false
+            });
+            $('#addressee').select2({
+                theme: "classic",
+                language: "ru"
+            });
+            $('#smev-giac-tabs .select').niceSelect();
+            // getCustomer($('._glCaseId').val());
+            Dictionary('personal_Regions', 'GiacRegionCodesSmall');
+            Dictionary('addressee', 'GiacRegionCodes');
+            Dictionary('personal_DocumentCode', 'PrimaryDocumentCodes');
+            Dictionary('applicant_ApplicantType', 'GiacApplicantTypes');
+            Dictionary('applicant_AddressType', 'GiacAddressTypes');
+
+            var modal = $('#modal_smev_card_content');
+            modal.find("input:hidden.data_services_id").val($("#tab-services").find(".r-tabs-state-custom-active").data("serviceId"));
+        });
+        $(document).on('change', 'select.select2DOC', function (event) {
+            var $select = $(this);
+            var $option = $select.find('option:selected').val();
+            var row = $select.closest('tr');
+            if ($option == '') {
+                row.removeClass('active');
+            } else {
+                row.addClass('active');
+            }
+        });
+        function getFileSmevDocument() {
+            var _table = $('#smev-Giac-tab-3').find(".smev-doc-files");
+            _table.empty();
+            $.ajax({
+                url: 'jsonTableDocumentSmev',
+                type: 'POST',
+                data: { id: $("#tab-services").find(".r-tabs-state-custom-active").data("serviceId") },
+                success: function (items) {
+                    if (items.length > 0) {
+                        var j = 0;
+                        items.forEach(function (item, i, arr) {
+                            var option = '<tr>' +
+                                '<td>' + ++j + '</td>' +
+                                '<td class="text-clip-cust" style="max-width: 470px;">' + item.out_name + ' </td>' +
+                                '<td>' + (item.out_file_size / 1024).toFixed(2) + ' кБ</td>' +
+                                '<td clss="non-click">' +
+                                '<div class="form-control">' +
+                                '<select type="select" class="select2DOC Giac" name="attachments">' +
+                                '<option value="" selected>Выберите тип</option>' +
+                                '<option title="Заявление" value="' + item.out_id + '|400">Заявление</option>' +
+                                '<option title="Паспорт РФ" value="' + item.out_id + '|401">Паспорт РФ</option>' +
+                                '<option title="Паспорт иност. гр-на" value="' + item.out_id + '|402">Паспорт иност. гр-на</option>' +
+                                '<option title="Вид на жительство" value="' + item.out_id + '|403">Вид на жительство</option>' +
+                                '<option title="Доверенность" value="' + item.out_id + '|404">Доверенность</option>' +
+                                '<option title="Документ,подтв-й родство" value="' + item.out_id + '|405">Документ,подтв-й родство</option>' +
+                                '<option title="Документ,подтв-й факт опеки" value="' + item.out_id + '|406">Документ,подтв-й факт опеки</option>' +
+                                '<option title="Перевод паспорта" value="' + item.out_id + '|407">Перевод паспорта</option>' +
+                                '</select>' +
+                                '</div>' +
+                                '</td>' +
+                                '<td>' +
+                                '<button type="button" data-toggle="modal" data-type="' + item.out_file_ext + '" data-target="#modal_pic" data-pic="' + item.out_id + '"><i class="ion ion-eye"></i> Просмотр</button>' +
+                                '</td>' +
+                                '</tr>';
+                            _table.append(option);
+                        });
+                        $('.select2DOC').niceSelect();
+                    }
+                    else {
+                        var option = '<tr><td> Документы отсутствуют. Отсканируйте или загрузите документы перед выполнением СМЭВ запроса. </td></tr>';
+                        _table.append(option);
+                    }
+                }
+            });
+        };
+        if (typeof ('#modal_smev_card_content') != 'undefined') {
+            $('input[data-inputmask]').inputmask();
+        };
+        if (typeof ('#modal_smev_card_content') != 'undefined') {
+            $.datetimepicker.setLocale('ru');
+            $.each($('[data-input-datetimepicker]'), function () {
+                var $this = $(this);
+                var options = $this.data('input-datetimepicker-options');
+                var avalible_time = $this.data('input-datetimepicker-time');
+
+                if (typeof avalible_time != 'undefined') {
+                    options['allowTimes'] = avalible_time.split(',');
+                }
+
+                $this.datetimepicker(options);
+            });
+        };
+        if (typeof ('#_GiacForm') != 'undefined') {
+            $.validate({
+                form: '#registration',
+                lang: 'ru',
+                modules: 'date, security',
+                borderColorOnError: '#e44d32',
+                dateFormat: 'dd-mm-yyyy',
+                addValidClassOnAll: true,
+                validateHiddenInputs: true
+            });
+        };
+        function getCustomer(id) {
+            $.ajax({
+                url: '/Smev/jsonGetCustomer',
+                type: 'POST',
+                data: { id: id },
+                success: function (items) {
+                    if (items.parent != null) {
+                        $('#declarantInfo_fio_LastName').val(items.parent.customer_fio.split(' ')[0]);
+                        $('#declarantInfo_fio_FirstName').val(items.parent.customer_fio.split(' ')[1]);
+                        $('#declarantInfo_fio_SecondName').val(items.parent.customer_fio.split(' ')[2]);
+                        $('#declarantInfo_BirthDate').val(moment(items.parent.document_birth_date).format("DD.MM.YYYY"));
+                        $('#declarantInfo_IdentitySerial').val(items.parent.document_serial);
+                        $('#declarantInfo_IdentityNumber').val(items.parent.document_number);
+                        $('#declarantInfo_IdentityPlace').val(items.parent.document_issue_body);
+                        $('#declarantInfo_IdentityDate').val(moment(items.parent.document_issue_date).format("DD.MM.YYYY"));
+                        $('#orderInfo_ContactPhone').val(items.parent.customer_tel1);
+                        $('#orderInfo_ContactEmail').val(items.parent.customer_email);
+                    }
+                    else {
+                        Lobibox.notify('error', {
+                            size: 'mini',
+                            position: 'top right',
+                            msg: 'Данные родителя не найдены',
+                            soundPath: '../Content/js/components/noty/sounds/',
+                            sound: 'error_sound'
+                        });
+                    }
+                    if (items.child != null) {
+                        $('#childInfo_fio_LastName').val(items.child.customer_fio.split(' ')[0]);
+                        $('#childInfo_fio_FirstName').val(items.child.customer_fio.split(' ')[1]);
+                        $('#childInfo_fio_SecondName').val(items.child.customer_fio.split(' ')[2]);
+                        $('#childInfo_BirthDate').val(moment(items.child.document_birth_date).format("DD.MM.YYYY"));
+                        $('#childInfo_IdentitySerial').val(items.child.document_serial);
+                        $('#childInfo_IdentityNumber').val(items.child.document_number);
+                        $('#childInfo_IdentityPlace').val(items.child.document_issue_body);
+                        $('#childInfo_IdentityDate').val(moment(items.child.document_issue_date).format("DD.MM.YYYY"));
+                    }
+                    else {
+                        Lobibox.notify('error', {
+                            size: 'mini',
+                            position: 'top right',
+                            msg: 'Данные ребенка не найдены',
+                            soundPath: '../Content/js/components/noty/sounds/',
+                            sound: 'error_sound'
+                        });
+                    }
+                }
+            });
+        };
+        function Dictionary(input_name, type) {
+            var input = $("#" + input_name);
+            $.ajax({
+                url: '/Smev/Smev_GetDictionary',
+                type: 'POST',
+                data: { type: type },
+                success: function (items) {
+                    if (items != 'undefined') {
+                        input.empty();
+                        items.Dictionary.forEach(function (item, i, arr) {
+                            input.append('<option value=' + item.Key + '>' + item.Value + '</option>');
+                        });
+                        input.val(items.DefaultKey).niceSelect('update');
+                    }
+                }
+            });
+        };
+        function _checkGiacform() {
+            var bl = false;
+            var $form = $('#modal_smev_card_content').find('form');
+            var $sl = $form.find('.smev-doc-files tr.active');
+            if (typeof ('#modal_smev_card_content') != 'undefined') {
+                $.each($('[data-validation]'), function () {
+                    var $this = $(this);
+                    if ($this.val() != '' && $sl.length > 0 && $sl.val() != 'undefined') {
+                        bl = true;
+                    }
+                    else {
+                        bl = false;
+                        return false;
+                    }
+                });
+            };
+            return bl;
+        };
+        $('#smev-giac-tabs').responsiveTabs({
+            startCollapsed: 'accordion'
+        });
+        $('.smev-send-data').on('click', function (e) {
+            if ($('#modal_smev_card_content').find('form').isValid() && _checkGiacform() && flag) {
+                event.stopPropagation();
+                var btn = $(this);
+                var url = $(this).data('urlSmev');
+                smevSendData(url, btn);
+            }
+            else {
+                $('#modal_smev_card_content').effect("shake", 500);
+                return false;
+            }
+        });
+    </script>*@

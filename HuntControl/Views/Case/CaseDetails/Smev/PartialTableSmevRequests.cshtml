@@ -1,0 +1,114 @@
+﻿@model HuntControl.WebUI.Models.CaseDetailViewModel
+<div class="row">
+    <div class="col-sm-8">
+        <h3 class="panel-title">Список СМЭВ запросов</h3>
+    </div>
+    <div class="col-sm-4 m-b-10">
+        <div class="text-right">
+            @using (Ajax.BeginForm("PartialModalSmevRequest", "Case", new { serviceId = Model.DataServiceId }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+            {
+                <button type="submit" class="btn btn-inverse waves-effect waves-light btn-sm"> Выпонить запрос <i class="fa fa-globe m-l-5"></i></button>
+            }
+        </div>
+    </div>
+</div>
+
+@if (Model.FuncSmevList.Any())
+{
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th></th>
+            
+            @*<th class="text-right p-r-20-important">
+            </th>*@
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.FuncSmevList)
+        {
+        <tr data-smev-id="@item.out_id">
+        
+            <td class="vertical-middle col-md-12">
+                @using (Ajax.BeginForm("PartialModalSmevRequestAnsver", "Case", new { id = item.out_id }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                {
+                    <button class="on-default text-custom link" style="max-width:740px; text-align:left;">
+                        <p class="font-bold" title="@item.out_request_name">@Html.DisplayFor(i => item.out_request_name)</p>
+                        <span class="font-13 text-muted">@Html.DisplayFor(i => item.out_commentt)</span>
+
+                        <span class="font-13 text-muted">Сотрудник: </span> @Html.DisplayFor(i => item.out_employees_fio)<br />
+
+
+
+
+
+
+
+                        <span class="font-13 text-muted">Статус: </span>@Html.DisplayFor(i => item.out_status_name)
+
+                        <span class="m-l-10 font-13 text-muted">Запрос: </span><span class="font-13">@Html.DisplayFor(i => item.out_date_request)</span>
+                        <span class="m-l-5 font-13 text-muted">Ответ: </span><span class="font-13">@Html.DisplayFor(i => item.out_date_response)</span>
+                    </button>
+
+                }
+            </td>
+                @*
+            <td class="actions vertical-middle">
+                @using (Ajax.BeginForm("PartialModalSmevRequestAnsver", "Case", new { id = item.out_id }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                {
+                <button class="on-default text-custom link"><i class="ion ion-eye"></i></button>
+                }
+            </td>*@  
+        </tr>
+        }
+    </tbody>
+</table>
+}
+else
+{
+    <div class="alert alert-warning">
+        <span><i class="icon-info"></i> Нет запросов.</span>
+    </div>
+}
+
+
+<script>
+    $('#customersPillContainer table td button.remove-row').click(function () {
+        var customerId = $(this).closest('tr').data('customerId');
+        removeData('@Url.Action("SubmitCustomerDelete", "Case")', { customerId: customerId }, function (data) { $('#customersPillContainer').html(data); });
+    });
+    //--прикрепление к услуге--
+    //function smevAttachResponse(byte) {
+    //    $.ajax({
+    //        url: '/Case/jsonUploadSmevResult',
+    //        type: "POST",
+    //        data: {
+    //            string_byte: byte,
+    //            //file_name: _fileName,
+    //            file_ext: '.pdf',
+    //            data_services_table_id: $('._glCaseId').val()
+    //        },
+    //        success: function (data) {
+    //            if (data) {
+    //                string_byte = null;
+    //                $(".attach-smev-response").attr("disabled", "disabled").addClass("disabled");
+    //                Lobibox.notify('success', {
+    //                    size: 'mini',
+    //                    position: 'top right',
+    //                    msg: "Ответ СМЭВ успешно прикреплен к услуге.",
+    //                    soundPath: '../Content/js/components/noty/sounds/'
+    //                });
+    //            }
+
+    //        }
+    //    });
+    //};
+
+    //-- smev custom functions
+    // for GisGmp
+    $(document).on('change', '#RequestType', function (e) {
+        var $type = $(this).val();
+        $('.param').addClass('hidden');
+        $('[data-' + $type + ']').removeClass('hidden');
+    });
+</script>

@@ -1,0 +1,115 @@
+﻿@model HuntControl.WebUI.Models.ApplicantPageViewModel
+<div class="panel panel-border panel-primary">
+    <div class="panel-heading p-0">
+        <div class="input-group">
+            <span class="input-group-btn">
+                <button type="button" class="btn waves-effect waves-light btn-link p-l-20-important"><i class="fa fa-search"></i></button>
+            </span>
+            <input type="text" id="searchTextIndividual" class="text-dark no-border-input" placeholder="Поиск физ. лица" value="@ViewBag.Serach"><ul class="typeahead dropdown-menu"></ul><ul class="typeahead dropdown-menu"></ul>
+            <span class="input-group-btn">
+                <button type="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="btn waves-effect waves-light btn-link p-r-0"><i class="fa fa-filter font-18"></i></button>
+            </span>
+            <span class="input-group-btn">
+                @using (Ajax.BeginForm("PartialModalAddCustomer", "ApplicantPage", null, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                {
+                    <button type="submit" class="btn waves-effect waves-light btn-link p-r-20-important"><i class="ion-plus-round font-18"></i></button>
+                }
+            </span>
+        </div>
+    </div>
+    <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" style="">
+        <hr class="m-0" />
+        <div class="card-body p-20 p-b-0">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group form-group-sm m-b-0">
+                        <label class="control-label m-r-10" for="isRemove">Показать аннулированные</label>
+                        @Html.CheckBox("isRemove", false, new { @class = "js-switch extra-small", @placeholder = "Введите наименование", @data_switchery = "true", @data_plugin = "switchery", @data_color = "#f05050" })
+                    </div>
+                </div>
+            </div>
+            <div class="row m-b-5">
+                <div class="col-sm-12 text-right">
+                    <button type="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="btn waves-effect waves-light btn-link p-l-0" data-dismiss="modal"><i class="ion-android-close font-18 text-danger"></i></button>
+                    <button type="button" class="btn waves-effect waves-light btn-link p-l-0 p-r-0"><i class="ion-android-checkmark font-18"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body p-0 table-responsive">
+        <table class="table table-hover">
+            <tbody>
+                @foreach (var item in Model.HunterList)
+                {
+                    <tr data-customer-id="@item.id">
+                        <td class="p-l-20-important text-uppercase">
+                            <span class="font-13">@Html.DisplayFor(m => item.customer_name)</span><br/>
+                            <span class="text-muted font-12"><i class="ion-location m-r-5"></i>@Html.DisplayFor(m => item.actual_address)</span><br/>
+                            <span class="text-muted font-12"><i class="ion-ios7-telephone m-r-5"></i>@Html.DisplayFor(m => item.phone_number1)</span>
+                        </td>
+                        <td class="vertical-middle">
+                            <button type="button" class="on-default text-custom link" style="font-size: 22px;line-height: 22px;" data-tooltip-info='{"customer_name": @Json.Encode(item.customer_name), "actual_address": @Json.Encode(item.actual_address), "legal_address": @Json.Encode(item.legal_address), "phone_number1": "@item.phone_number1", "phone_number2": "@item.phone_number2", "e_mail": @Json.Encode(item.e_mail ?? "-"), "customer_snils": @Json.Encode(item.customer_snils ?? "-"), "doc_serial": @Json.Encode(item.doc_serial ?? "-"), "doc_number": @Json.Encode(item.doc_number ?? "-"), "customer_sex": @Json.Encode(item.customer_sex ?? "-"), "employees_fio": @Json.Encode(item.employees_fio ?? "-"), "set_date": "@Html.DisplayFor(i=>item.set_date)"}'>
+                                <i class="ion-ios7-information-outline"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="dataTables_paginate paging_simple_numbers" id="datatable-editable_paginate">
+                    @Html.PageLinks(Model.PageInfo, x => Ajax.ActionLink(x.NameLink, "PartialTableHunters", "ApplicantPage", new { page = x.CurrentPage, search = ViewBag.Serach }, new AjaxOptions { UpdateTargetId = "huntersTableContainer" }))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('button[data-tooltip-info]').tooltip({
+            title: function () {
+                var tooltipInfo = $(this).data('tooltipInfo');
+                return "<div class='text-left'><strong>ФИО</strong>: " + tooltipInfo['customer_name'] + "</br>" +
+                    "<strong>Серия</strong>: " + tooltipInfo['doc_serial'] + " <strong>Номер</strong>: " + tooltipInfo['doc_number'] + "</br>" +
+                    "<strong>Пол</strong>: " + tooltipInfo['customer_sex'] + "</br>" +
+                    "<strong>СНИЛС</strong>: " + tooltipInfo['customer_snils'] + "</br>" +
+                    "<strong>Адрес регистрации</strong>: " + tooltipInfo['legal_address'] + "</br>" +
+                    "<strong>Адрес проживания</strong>: " + tooltipInfo['actual_address'] + "</br>" +
+                    "<hr class='m-t-5 m-b-5'>" +
+                    "<span class='text-nowrap'><strong><i class='ion-ios7-telephone m-r-5'></i></strong> " + tooltipInfo['phone_number1'] + ", " + tooltipInfo['phone_number2'] + "</span></br>" +
+                    "<strong>Эл. почта</strong>: " + tooltipInfo['e_mail'] + "</br>" +
+                    "<hr class='m-t-5 m-b-5'>" +
+                    "<strong>Добавил</strong>: " + tooltipInfo['employees_fio'] + "</br>" +
+                    "<strong>Дата добавления</strong>: " + tooltipInfo['set_date'] + "</br>" +
+                    "</div>";
+            },
+            html: true,
+            placement: "left"
+        });
+    });
+    $('#searchTextIndividual').change(function () {
+        $.ajax({
+            url: '@Url.Action("PartialTableHunters","ApplicantPage")',
+            type: 'Post',
+            data: { search: $(this).val() },
+            success: function (data) {
+                $('#individualListContainer').html(data);
+            }
+        });
+    }).focus();
+    $('table tr').click(function () {
+        $(this).addClass('active').siblings('.active').removeClass('active');
+        var customerId = $(this).data('customerId');
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialMain", "ApplicantPage")',
+            data: { customerId: customerId },
+            success: function (data) {
+                $('#mainContainer').html(data);
+            }
+        });
+    });
+</script>

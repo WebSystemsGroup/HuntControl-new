@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "Количество нарушений по сотрудникам";
+
+}
+
+@Html.MvcSiteMap().SiteMapPath()
+
+
+<div id="filterReportCountViolationsEmployeesContainer">
+    @Html.Action("PartialFilterCountViolationsEmployees")
+</div>
+
+<div id="reportCountViolationsEmployees">
+    <div class="alert alert-warning">
+        <span style="color:#00545c;"><strong><i class="icon-info"></i></strong> Воспользуйтесь фильтром.</span>
+    </div>
+</div>
+

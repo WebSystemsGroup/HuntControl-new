@@ -1,0 +1,71 @@
+﻿@model HuntControl.WebUI.Models.CaseViewModel
+
+<script src="~/Content/plugins/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js" type="text/javascript"></script>
+<script>
+    $(function () {
+        $('#tariffsTable tbody tr').click(function () {
+            $('#tariffsTable tbody tr').removeClass('success');
+            $(this).addClass('success');
+        });
+        $('input.touchspin').TouchSpin({});
+        $('input#countService').on('change', function () {
+            var $this = $(this);
+            var $charge = $this.closest('tr').find('span[data-type="charge"]');
+            var $tariff = $this.closest('tr').find('span[data-type="tariff"]');
+            var countService = $(this).val();
+            var chargeValue = stringToFloat($this.data('charge'));
+            var tariffValue = stringToFloat($this.data('tariff'));
+            $charge.html(chargeValue * countService);
+            $tariff.html(tariffValue * countService);
+        });
+    });
+    function stringToFloat(str) {
+        return parseFloat(str.replace(' ', '').replace(',', '.'));
+    };
+</script>
+<hr class="m-b-10" />
+<h3 class="panel-title">Выберите тариф</h3>
+
+<div class="card-box p-0">
+    <table id="tariffsTable" class="table table-hover table-striped m-b-0">
+        <thead>
+            <tr>
+                <th class="min-width-th"></th>
+                <th class="min-width-th">@Html.DisplayNameFor(m => Model.SprServicesSubTariffSelectResultList.FirstOrDefault().out_tariff_)</th>
+                <th class="min-width-th">@Html.DisplayNameFor(m => Model.SprServicesSubTariffSelectResultList.FirstOrDefault().out_charge_)</th>
+                <th class="min-width-th">Количество</th>
+                <th class="min-width-th">@Html.DisplayNameFor(m => Model.SprServicesSubTariffSelectResultList.FirstOrDefault().out_count_day_processing)</th>
+                <th class="min-width-th">@Html.DisplayNameFor(m => Model.SprServicesSubTariffSelectResultList.FirstOrDefault().out_count_day_execution)</th>
+                <th class="min-width-th">@Html.DisplayNameFor(m => Model.SprServicesSubTariffSelectResultList.FirstOrDefault().out_count_day_return)</th>
+                <th>@Html.DisplayNameFor(m => Model.SprServicesSubTariffSelectResultList.FirstOrDefault().out_commentt)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tariff in Model.SprServicesSubTariffSelectResultList)
+            {
+                <tr data-tariff-id="@tariff.out_spr_services_sub_tariff_id">
+                    <td class="vertical-middle"><i class="fa fa-check-circle"></i></td>
+                    <td style="line-height: 1;">
+                        @if (tariff.out_tariff_ == 0)
+                        {
+                            <span>Бесплатно</span>
+                        }
+                        else
+                        {
+                            <span data-type="tariff">@Html.DisplayFor(m => tariff.out_tariff_)</span>
+                            <span class="text-muted font-13">@Html.DisplayFor(m => tariff.out_type_tariff_name)</span>
+                        }
+                    </td>
+                    <td class="vertical-middle font-13"><span data-type="charge">@Html.DisplayFor(m => tariff.out_charge_)</span></td>
+                    <td style="width:150px;">
+                        <input type="text" class="form-control input-sm touchspin" data-charge="@Html.DisplayFor(m => tariff.out_charge_)" data-tariff="@Html.DisplayFor(m => tariff.out_tariff_)" name="countService" id="countService" value="1">
+                    </td>
+                    <td class="vertical-middle">Дней: <span data-type="dayProccessing">@Html.DisplayFor(m => tariff.out_count_day_processing)</span></td>
+                    <td class="vertical-middle text-nowrap">Рабочих дней: <span data-type="dayExecutaion">@Html.DisplayFor(m => tariff.out_count_day_execution)</span></td>
+                    <td class="vertical-middle">Дней: <span data-type="dayReturn">@Html.DisplayFor(m => tariff.out_count_day_return)</span></td>
+                    <td class="vertical-middle font-13">@Html.DisplayFor(m => tariff.out_commentt)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

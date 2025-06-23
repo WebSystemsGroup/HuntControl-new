@@ -1,0 +1,10 @@
+﻿
+@{
+    ViewBag.Title = "Справочник документов уд. личность";
+}
+
+@Html.MvcSiteMap().SiteMapPath()
+
+<div id="documentIdentitiesContainer">
+    @Html.Action("PartialTableDocumentIdentities", "Reference")
+</div>

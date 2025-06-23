@@ -1,0 +1,144 @@
+﻿@model HuntControl.WebUI.Models.ApplicantPageViewModel
+<div class="row">
+    <div class="col-sm-10 col-xs-6">
+        <h3 class="panel-title">Список нарушений</h3>
+    </div>
+    
+        <div class="col-sm-2 col-xs-6 m-b-10">
+            <div class="text-right">
+                @using (Ajax.BeginForm("PartialModalAddViolations", "ApplicantPage", new { customerId = ViewBag.CustomerId }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                {
+                    <button type="submit" class="btn btn-inverse waves-effect waves-light btn-sm"> Добавить <i class="fa fa-plus m-l-5"></i></button>
+                }
+            </div>
+        </div>
+    
+
+</div>
+@if (Model.ViolationList.Any())
+{
+<div class="card-box p-0">
+    <div class="table-responsive" style="overflow:initial;">
+        <table class="table m-b-0">
+            <thead>
+                <tr>
+                    <th class="number-row p-l-20-important">№</th>
+                    <th>Статья и часть</th>
+                    <th>Охотугодье</th>
+                    <th>Номер, дата ОЖМ</th>
+                    <th>Статус</th>
+                    <th class="actions">Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ViolationList)
+                {
+                    <tr data-violations-id="@item.out_data_customer_violations_id">
+                        <td class="number-row p-l-20-important vertical-middle-important">
+                            @((Model.PageInfo.CurrentPage - 1) * Model.PageInfo.ItemsPerPage + ++Model.PageInfo.NumberRow)
+                        </td>
+                        <td>                            
+                            <div class="font-13">@item.out_violations_name</div>                            
+                        </td>
+                        <td>
+                            @item.out_hunting_farm_name
+                        </td>
+                        <td>
+                            @(item.out_number_case != null ? item.out_number_case : "-")
+                            <div class="font-13">@(item.out_date_in_ogm != null ? item.out_date_in_ogm.ToString().Replace(" 0:00:00", "") : "-")</div>
+                        </td>
+                        <td>
+                            @item.out_status_name <div class="text-muted font-12" title="@item.out_status_commentt">@item.out_status_commentt</div>
+                        </td>
+                        <td class="actions">
+                            
+                                @using (Ajax.BeginForm("PartialModalTableViolationsFileList", "ApplicantPage", new { violationsId = item.out_data_customer_violations_id }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                                {
+                                    <button class="on-default edit-row link" data-placement="top" data-toggle="tooltip" data-original-title="Файлы">
+                                        <i class="ion-paperclip"></i>
+                                        @if(item.out_count_file != 0)
+                                        {<span class="badge badge-xs badge-danger" style="right:-7px">@(item.out_count_file)</span> }                                        
+                                    </button>
+                                }
+                                <div class="btn-group dropup">
+                                    <button type="button" class="on-default dropdown-toggle link" data-toggle="dropdown" aria-expanded="true" title="Загрузить"><i class="ion-ios7-cloud-download-outline"></i></button>
+                                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                        <li><a href="@Url.Action("ProtocolDownload", new {path = "~/Content/excel/violations/protocol_notification.docx", file_name="protocol_notification", violation_id=item.out_data_customer_violations_id, title="Уведомление"})">Уведомление</a></li>
+                                        <li><a href="@Url.Action("ProtocolDownload", new {path = "~/Content/excel/violations/protocol.docx", file_name="protocol", violation_id=item.out_data_customer_violations_id, title="Протокол об административном правонарушении"})">Протокол</a></li>
+                                        <li><a href="@Url.Action("ProtocolDownload", new {path = "~/Content/excel/violations/o_place.docx", file_name="o_place", violation_id=item.out_data_customer_violations_id, title="Определение о назначении времени и места рассмотрения дела об административном правонарушении"})">Определение о назначении времени и места</a></li>
+                                        <li><a href="@Url.Action("ProtocolDownload", new {path = "~/Content/excel/violations/post_punish.docx", file_name="post_punish", violation_id=item.out_data_customer_violations_id, title="Постановление о назначении  административного наказания"})">Постановление о назначении административного наказания</a></li>
+                                        <li><a href="@Url.Action("ProtocolDownload", new {path = "~/Content/excel/violations/notification_20_25.docx", file_name="notification_20_25", violation_id=item.out_data_customer_violations_id, title="Уведомление о назначении времени и места составления протокола об административном правонарушении"})">Уведомление 20.25</a></li>
+                                        <li><a href="@Url.Action("ProtocolDownload", new {path = "~/Content/excel/violations/protocol_20_25.docx", file_name="protocol_20_25", violation_id=item.out_data_customer_violations_id, title="Протокол об административном правонарушении"})">Протокол 20.25</a></li>
+                                        <li><a href="@Url.Action("ProtocolDownload", new {path = "~/Content/excel/violations/fssp.docx", file_name="fssp", violation_id=item.out_data_customer_violations_id, title=""})">ФССП</a></li>
+                                        <li><a href="@Url.Action("ProtocolDownload", new {path = "~/Content/excel/violations/ov_opredelenie.docx", file_name="ov_opredelenie", violation_id=item.out_data_customer_violations_id, title=" Определение о передаче протокола об административном правонарушении и других материалов дела по подведомственности"})">Определение о передаче по подведомственности</a></li>
+                                        <li><a href="@Url.Action("ProtocolDownload", new {path = "~/Content/excel/violations/ov_materials.docx", file_name="ov_materials", violation_id=item.out_data_customer_violations_id, title=" Материалы дела об административном правонарушении"})">Материалы дела к определению о передаче</a></li>
+                                        <li><a href="@Url.Action("ProtocolDownload", new {path = "~/Content/excel/violations/post_about_stop.docx", file_name="post_about_stop", violation_id=item.out_data_customer_violations_id, title="Постановление о прекращении производства по делу об административном правонарушении"})">Постановление о прекращении</a></li>
+                                    </ul>
+                                </div>
+                                @using (Ajax.BeginForm("PartialModalEditViolations", "ApplicantPage", new { violationsId = item.out_data_customer_violations_id }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                                {
+                                    <button class="on-default edit-row link"><i class="ion-edit"></i></button>
+                                }
+                                <button class="on-default remove-row link"><i class="ion-trash-b"></i></button>
+                            
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <hr class="m-0">
+    <div class="row p-t-10 p-l-20-important p-r-20-important p-b-10">
+        <div class="col-sm-6">
+            <div class="dataTables_info" id="datatable_info" role="status" aria-live="polite">Показаны @((Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage > Model.PageInfo.TotalItems) ? Model.PageInfo.TotalItems : Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage) из @Model.PageInfo.TotalItems записей</div>
+        </div>
+        <div class="col-sm-6">
+            <div class="dataTables_paginate paging_simple_numbers" id="datatable-editable_paginate">
+                @Html.PageLinks(Model.PageInfo, x => Ajax.ActionLink(x.NameLink, "PartialTableViolations", "ApplicantPage", new { customerId = ViewBag.CustomerId, page = x.CurrentPage }, new AjaxOptions { UpdateTargetId = "customerViolationsTabContainer" }))
+            </div>
+        </div>
+    </div>
+</div>
+    }
+    else
+    {
+    <div class="alert alert-warning">
+        <span style="color:#00545c;"><strong><i class="icon-info"></i></strong> Нет нарушений.</span>
+    </div>
+    }
+
+    <script>
+    $('#customerViolationsTabContainer table td button.remove-row').click(function () {
+        var violationsId = $(this).closest('tr').data('violationsId');
+        removeData('@Url.Action("SubmitViolationsDelete", "ApplicantPage")', { violationsId: violationsId }, function (data) { $('#customerViolationsTabContainer').html(data); });
+    });
+
+    $('a[data-print]').click(function () {
+        var print = $(this).data('print');
+        var violationsId = $(this).closest('tr').data('violationsId');
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialPrintViolations", "ApplicantPage")',
+            data: { dataViolationId: violationsId, dataTypeViolations: print},
+            success: function (data) {
+                $(data).printThis({
+                    debug: false,
+                    importCSS: true,
+                    importStyle: true,
+                    printContainer: true,
+                    loadCSS: "",
+                    pageTitle: "",
+                    removeInline: false,
+                    printDelay: 333,
+                    header: null,
+                    formValues: true
+                });
+            }
+        });
+        });
+        $('a[data-pr-download]').click(function () {
+            location.href = '@Url.Action("DownloadViolationsProtocol", "ApplicantPage")?' + $(this).data('prdownload');
+        })
+    </script>
+
+    <script src="~/Content/plugins/print/printThis.js"></script>

@@ -1,0 +1,639 @@
+﻿@model HuntControl.Domain.Concrete.data_customer
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<script src="~/Content/plugins/bootstrap-select/dist/js/bootstrap-select.min.js" type="text/javascript"></script>
+<link href="~/Content/plugins/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+<link href="~/Content/plugins/bootstrap-fileinput/themes/explorer/theme.min.css" rel="stylesheet" />
+<script src="~/Content/plugins/bootstrap-fileinput/js/fileinput.min.js"></script>
+<script src="~/Content/plugins/bootstrap-fileinput/themes/explorer/theme.min.js"></script>
+<script src="~/Content/plugins/bootstrap-fileinput/js/locales/ru.js"></script>
+<script src="~/Content/js/WebCam/webcam.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+        var initialPhoto = '@ViewBag.IndividualPhoto';
+        $("#uploadFile").fileinput({
+            initialPreview: initialPhoto.length > 0 ? '<img src="' + initialPhoto + '" class="file-preview-image kv-preview-data rotate-1" style="width:auto;height:60px;max-width:100%;max-height:100%;object-fit:cover;">' : '',
+            initialPreviewConfig: [
+                {
+                    url: '@Url.Action("SubmitCustomerPhotoDelete", "ApplicantPage")',
+                    extra: { fileName: '@(Model.id + Model.file_ext)' }
+                },
+            ],
+            theme: "explorer",
+            showUpload: false,
+            maxFileCount: 1,
+            language: 'ru',
+            browseClass: 'btn btn-default',
+            allowedFileExtensions: ['jpg', 'png', 'jpeg', 'bmp']
+        });
+
+        $('input[data-type=date]').datepicker({ format: 'dd.mm.yyyy', autoclose: true, language: 'ru', orientation: 'top' });
+
+        $('.slimscroll-customer').slimScroll({
+            height: '100%',
+            position: 'right',
+            size: "10px",
+            color: '#98a6ad',
+            wheelStep: 20,
+            railVisible: true,
+            railColor: '#666',
+            railOpacity: 0.1,
+            alwaysVisible: true
+        });
+
+        $('input[data-type=doc-serial]').inputmask("9999", {
+            "oncomplete": function () {
+                var dataForm = $(this).data('form');
+                $('input[data-form=' + dataForm + '][data-type=doc-number]').focus();
+            },
+            clearIncomplete: true
+        });
+        $('input[data-type=doc-number]').inputmask({
+            mask: "999999",
+            clearIncomplete: true
+        });
+        $('input[data-type=doc-code]').inputmask({
+            mask: '999-999',
+            clearIncomplete: true
+        });
+        $('input[data-type=doc-snils]').inputmask({
+            mask: '999-999-999 99',
+            clearIncomplete: true
+        });
+
+
+        $('button[form="EditCustomerForm"]').click(function () {
+            var form = document.forms.EditCustomerForm;
+            var formData = new FormData(form);
+            var file = $('#uploadFile').fileinput('getFileStack')[0];
+            var blob = new Blob([file], { type: 'image/jpeg' });
+            formData.append("uploadFile", blob, "photo.jpeg");
+            $.ajax({
+                url: '@Url.Action("SubmitCustomerEditSave", "ApplicantPage")',
+                type: 'POST',
+                data: formData,
+                processData: false, // Не обрабатываем файлы (Don't process the files)
+                contentType: false, // Так jQuery скажет серверу что это строковой запрос
+                success: function (data) {
+                    successEdit();
+                    $('#individualPageContainer').html(data);
+                    $('#myModal').modal('hide');
+                }
+            });
+        });
+
+
+        $('button[data-type=btnGetSnils]').on('click', function () {
+            var button = $(this);
+
+            var customerFioElement = $("#customer_name");
+            var customerSexElement = $("#customer_sex");
+            var customerBirthDateElement = $("#doc_birth_date");
+
+            if (customerFioElement.valid() > 0 && customerBirthDateElement.valid() > 0) {
+                var customerFio = customerFioElement.val();
+                var customerSex = customerSexElement.val();
+                var customerBirthDate = customerBirthDateElement.val();
+                var arr = customerFio.split(' ');
+                $.ajax({
+                    url: '@Url.Action("GetCustomerSnils", "Case")',
+                    type: 'POST',
+                    data:
+                    {
+                        FirstName: arr[1],
+                        LastName: arr[2],
+                        SecondName: arr[0],
+                        gender: customerSex,
+                        birthDate: customerBirthDate,
+                    },
+                    success: function (snils) {
+                        $("#customer_snils").val(snils);
+                        $("#customer_snils").prop('disabled', false);
+                        $.Notification.notify('success', 'top right', 'Найден СНИЛС', snils);
+                    },
+                    beforeSend: function () {
+                        $("#customer_snils").prop('disabled', true);
+                        button.find('i').addClass("fa-spin");
+                    },
+                    complete: function () {
+                        button.find('i').removeClass("fa-spin");
+                    },
+                    error: function (data) {
+                        $.Notification.notify('error', 'top right', data.responseText);
+                    }
+                });
+            } else {
+                if (customerFioElement.valid() == 0) {
+                    customerFioElement.addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                        $(this).removeClass('shake animated');
+                    });
+                }
+                if (customerBirthDateElement.valid() == 0) {
+                    customerBirthDateElement.closest('.input-group').addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                        $(this).removeClass('shake animated');
+                    });
+                }
+            }
+        });
+
+        $('button[data-type=btnGetInn]').on('click', function () {
+            var button = $(this);
+            var customerFioElement = $("#customer_name");
+            var docSerialElement = $("#doc_serial");
+            var docNumberElement = $("#doc_number");
+            var docIssueDateElement = $("#doc_issue_date");
+            var customerBirthDateElement = $("#doc_birth_date");
+
+            if (customerFioElement.valid() > 0 && customerBirthDateElement.valid() > 0 && docSerialElement.valid() > 0 && docNumberElement.valid() > 0 && docIssueDateElement.valid() > 0) {
+                var docIdentity = "21";
+                var customerFio = customerFioElement.val();
+                var docSerial = docSerialElement.val();
+                var docNumber = docNumberElement.val();
+                var docIssueDate = docIssueDateElement.val();
+                var customerBirthDate = customerBirthDateElement.val();
+                var arr = customerFio.split(' ');
+                $.ajax({
+                    url: '@Url.Action("GetCustomerInn", "Case")',
+                    type: 'post',
+                    data:
+                    {
+                        firstname: arr[1],
+                        lastname: arr[0],
+                        secondname: arr[2],
+                        documenttype: docIdentity,
+                        documentseries: docSerial,
+                        documentnumber: docNumber,
+                        documentdate: docIssueDate,
+                        birthdate: customerBirthDate,
+                    },
+                    success: function (inn) {
+                        $("#customer_inn").val(inn);
+                        $("#customer_inn").prop('disabled', false);
+                        $.Notification.notify('success', 'top right', 'Найден ИНН', inn);
+                    },
+                    beforeSend: function () {
+                        $("#customer_inn").prop('disabled', true);
+                        button.find('i').addClass("fa-spin");
+                    },
+                    complete: function () {
+                        button.find('i').removeClass("fa-spin");
+                    },
+                    error: function (data) {
+                        $.Notification.notify('error', 'top right', data.responseText);
+                    }
+                });
+            }
+            else {
+                if (customerFioElement.valid() == 0) {
+                    customerFioElement.addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                        $(this).removeClass('shake animated');
+                    });
+                }
+                if (docSerialElement.valid() == 0) {
+                    docSerialElement.addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                        $(this).removeClass('shake animated');
+                    });
+                }
+                if (docNumberElement.valid() == 0) {
+                    docNumberElement.addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                        $(this).removeClass('shake animated');
+                    });
+                }
+                if (docIssueDateElement.valid() == 0) {
+                    docIssueDateElement.closest('.input-group').addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                        $(this).removeClass('shake animated');
+                    });
+                }
+                if (customerBirthDateElement.valid() == 0) {
+                    customerBirthDateElement.closest('.input-group').addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                        $(this).removeClass('shake animated');
+                    });
+                }
+            }
+        });
+    });
+</script>
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myLargeModalLabel">Изменение данных физ. лица</h4>
+        </div>
+        <div class="modal-body">
+            <div class="modal-body" style="height: calc(100vh - 300px);">
+                <div class="slimscroll-customer">
+                    @using (Ajax.BeginForm("SubmitCustomerEditSave", "ApplicantPage", null, null, new { @id = "EditCustomerForm", @class = "form-horizontal" }))
+                    {
+                        @Html.HiddenFor(model => model.id)
+                        @Html.HiddenFor(model => model.file_ext)
+                        <h3 class="panel-title">Документ удостоверяющий личность</h3>
+                        <hr class="m-t-0">
+                        <div class="row m-b-20">
+                            <div class="col-md-10 col-md-offset-1">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-3">
+                                            <label>Серия</label>
+                                            @Html.TextBoxFor(model => model.doc_serial, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "____" }, { "data-form", "customer" }, { "data-type", "doc-serial" }, { "required", "required" } })
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <label>Номер</label>
+                                            @Html.TextBoxFor(model => model.doc_number, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "______" }, { "data-form", "customer" }, { "data-type", "doc-number" }, { "required", "required" } })
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <label>Дата выдачи</label>
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(model => model.doc_issue_date, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-form", "customer" }, { "data-type", "date" }, { "required", "required" } })
+                                                <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <label>Код подразделения</label>
+                                            @Html.TextBoxFor(model => model.doc_code, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "___-___" }, { "data-form", "customer" }, { "data-type", "doc-code" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Кем выдан</label>
+                                    @Html.TextBoxFor(model => model.doc_issue_body, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите кем выдан документ" }, { "data-form", "customer" } })
+                                </div>
+                            </div>
+                        </div>
+                        <h3 class="panel-title">Персональные данные</h3>
+                        <hr class="m-t-0">
+                        <div class="row m-b-20">
+                            <div class="col-md-10 col-md-offset-1">
+                                @*<div id="collapseWebCam" class="panel-collapse collapse" aria-expanded="false">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <div id="my_camera"></div>
+                                            <div id="results" style="display:none">
+                                            </div>
+                                            <button type="button" class="btn btn-success waves-effect waves-light btn-sm" onClick="save_photo()">Сфотографировать <i class="glyphicon glyphicon-camera"></i></button>
+                                            <button type="button" class="btn btn-inverse waves-effect waves-light btn-sm m-r-15" id="webCamBtnHide" onclick="$('#collapseWebCam').collapse('hide');">Закрыть <i class="fa fa-times m-r-5"></i></button>
+                                        </div>
+                                        <div class="col-md-3"></div>
+                                    </div>
+                                </div>*@
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            @Html.Label("uploadImage", "Фотография", new Dictionary<string, object> { })
+                                            <input id="uploadFile" type="file">
+                                        </div>
+                                        @*<div class="col-sm-1">
+                                            <label>&nbsp;</label>
+                                            <button type="button" class="btn btn-inverse waves-effect waves-light" id="webCamBtnShow"><i class="glyphicon glyphicon-camera"></i></button>
+                                        </div>*@
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label>ФИО</label>
+                                    @Html.TextBoxFor(model => model.customer_name, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите ФИО" }, { "data-form", "customer" }, { "required", "required" } })
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-4">
+                                            <label>Дата рождения</label>
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(model => model.doc_birth_date, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-form", "customer" }, { "data-type", "date" }, { "required", "required" } })
+                                                <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-4">
+                                            <label>Пол</label>
+                                            @Html.DropDownListFor(model => model.customer_sex, new SelectList(new List<SelectListItem> { new SelectListItem { Text = "Мужской", Value = "МУЖ" }, new SelectListItem { Text = "Женский", Value = "ЖЕН" } }, "Value", "Text"), new Dictionary<string, object> { { "class", "selectpicker" }, { "data-style", "btn-white btn-sm" }, { "data-form", "customer" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Место рождения</label>
+                                    @Html.TextBoxFor(model => model.doc_birth_place, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите место рождения" }, { "data-form", "customer" } })
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-4">
+                                            <label>СНИЛС</label>
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(model => model.customer_snils, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "СНИЛС" }, { "data-form", "customer" }, { "data-type", "doc-snils" } })
+                                                <span class="input-group-btn">
+                                                    <button type="button" data-type="btnGetSnils" class="btn waves-effect waves-light btn-default"><i class="fa fa-globe font-18"></i></button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-4">
+                                            <label>ИНН</label>
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(model => model.customer_inn, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "ИНН" }, { "data-form", "customer" }, { "data-type", "doc-inn" } })
+                                                <span class="input-group-btn">
+                                                    <button type="button" data-type="btnGetInn" class="btn waves-effect waves-light btn-default"><i class="fa fa-globe font-18"></i></button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h3 class="panel-title">Место работы</h3>
+                        <hr class="m-t-0">
+                        <div class="row m-b-20">
+                            <div class="col-md-10 col-md-offset-1">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.social_organization_info, new Dictionary<string, object> { })
+                                    @Html.TextBoxFor(model => model.social_organization_info, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.social_organization_info) }, { "data-form", "customer" } })
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            @Html.LabelFor(model => model.social_job_position, new Dictionary<string, object> { })
+                                            @Html.TextBoxFor(model => model.social_job_position, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.social_job_position) }, { "data-form", "customer" } })
+                                        </div>
+                                        <div class="col-sm-6 col-md-3 col-md-offset-1">
+                                            @Html.LabelFor(model => model.social_pensioner, new Dictionary<string, object> { })
+                                            <div>
+                                                @Html.CheckBox("social_pensioner", Model.social_pensioner ?? false, new { @class = "js-switch extra-small", @type = "checkbox", @data_switchery = "true", @data_plugin = "switchery", @data_color = "#5fbeaa" })
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            @Html.LabelFor(model => model.social_incapable, new Dictionary<string, object> { })
+                                            <div>
+                                                @Html.CheckBox("social_incapable", Model.social_incapable ?? false, new { @class = "js-switch extra-small", @type = "checkbox", @data_switchery = "true", @data_plugin = "switchery", @data_color = "#5fbeaa" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h3 class="panel-title">Контакты</h3>
+                        <hr class="m-t-0">
+                        <div class="row m-b-20">
+                            <div class="col-md-10 col-md-offset-1">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label>Адрес регистрации</label>
+                                            @Html.TextBoxFor(model => model.legal_address, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите адрес регистрации" }, { "data-form", "customer" } })
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label>Адрес проживания</label>
+                                            @Html.TextBoxFor(model => model.actual_address, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите место проживания" }, { "data-form", "customer" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-3">
+                                            <label>Телефон</label>
+                                            @Html.TextBoxFor(model => model.phone_number1, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "+7(___) ___-____" }, { "data-form", "customer" }, { "data-type", "phone-number" } })
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <label>Телефон 2</label>
+                                            @Html.TextBoxFor(model => model.phone_number2, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "+7(___) ___-____" }, { "data-form", "customer" }, { "data-type", "phone-number" } })
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>E-mail</label>
+                                            @Html.TextBoxFor(model => model.e_mail, new Dictionary<string, object> { { "class", "form-control" }, { "data-form", "customer" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @*<div id="collapseWebCam" class="panel-collapse collapse" aria-expanded="false">
+                            <div class="row">
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-5">
+                                    <div id="my_camera"></div>
+                                    <div id="results" style="display:none">
+                                        <input type="hidden" id="cam" name="cam" />
+                                    </div>
+                                    <button type="button" class="btn btn-success waves-effect waves-light btn-sm" onClick="save_photo()">Сфотографировать <i class="glyphicon glyphicon-camera"></i></button>
+                                    <button type="button" class="btn btn-inverse waves-effect waves-light btn-sm m-r-15" id="webCamBtnHide" onclick="$('#collapseWebCam').collapse('hide');">Закрыть <i class="fa fa-times m-r-5"></i></button>
+                                </div>
+                                <div class="col-md-3"></div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <div class="row">
+                                @Html.Label("uploadFile", "Фотография", new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                <div class="col-md-6">
+                                    <input id="uploadFile" type="file">
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-inverse waves-effect waves-light btn-sm" id="webCamBtnShow"><i class="glyphicon glyphicon-camera"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <div class="row">
+                                <label class="col-md-4 control-label text-right">Серия и номер документа</label>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.doc_serial, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "____" }, { "data-form", "customer" }, { "data-type", "doc-serial" }, { "required", "required" } })
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.doc_number, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "______" }, { "data-form", "customer" }, { "data-type", "doc-number" }, { "required", "required" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <div class="row">
+                                <label class="col-md-4 control-label text-right">Код подразделения</label>
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(model => model.doc_code, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "___-___" }, { "data-form", "customer" }, { "data-type", "doc-code" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <div class="row">
+                                <label class="col-md-4 control-label text-right">Кем выдан документ</label>
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(model => model.doc_issue_body, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите кем выдан документ" }, { "data-form", "customer" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <div class="row">
+                                <label class="col-md-4 control-label text-right">Дата выдачи</label>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(model => model.doc_issue_date, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-form", "customer" }, { "data-type", "date" }, { "required", "required" } })
+                                        <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <div class="row">
+                                <label class="col-md-4 control-label text-right">ФИО</label>
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(model => model.customer_name, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите ФИО" }, { "data-form", "customer" }, { "required", "required" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <div class="row">
+                                <label class="col-md-4 control-label text-right">Пол</label>
+                                <div class="col-md-3">
+                                    @Html.DropDownListFor(model => model.customer_sex, new SelectList(new List<SelectListItem> { new SelectListItem { Text = "Мужской", Value = "МУЖ" }, new SelectListItem { Text = "Женский", Value = "ЖЕН" } }, "Value", "Text"), new Dictionary<string, object> { { "class", "selectpicker" }, { "data-style", "btn-white btn-sm" }, { "data-form", "customer" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <div class="row">
+                                <label class="col-md-4 control-label text-right">Дата рождения</label>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(model => model.doc_birth_date, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-form", "customer" }, { "data-type", "date" }, { "required", "required" } })
+                                        <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <div class="row">
+                                <label class="col-md-4 control-label text-right">Место рождения</label>
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(model => model.doc_birth_place, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите место рождения" }, { "data-form", "customer" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <div class="row">
+                                <label class="col-md-4 control-label text-right">Адрес регистрации</label>
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(model => model.legal_address, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите адрес регистрации" }, { "data-form", "customer" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <div class="row">
+                                <label class="col-md-4 control-label text-right">Адрес проживания</label>
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(model => model.actual_address, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите место проживания" }, { "data-form", "customer" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <div class="row">
+                                <label class="col-md-4 control-label text-right">СНИЛС</label>
+                                <div class="col-md-3">
+                                    <div class="input-group m-b-15">
+                                        @Html.TextBoxFor(model => model.customer_snils, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "СНИЛС" }, { "data-form", "customer" }, { "data-type", "doc-snils" } })
+                                        <span class="input-group-btn">
+                                            <button type="button" data-type="btnGetSnils" data-form="customer" class="btn waves-effect waves-light btn-default"><i class="fa fa-globe font-18"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <div class="row">
+                                <label class="col-md-4 control-label text-right">ИНН</label>
+                                <div class="col-md-3">
+                                    <div class="input-group m-b-15">
+                                        @Html.TextBoxFor(model => model.customer_inn, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "ИНН" }, { "data-form", "customer" } })
+                                        <span class="input-group-btn">
+                                            <button type="button" data-type="btnGetInn" data-form="customer" class="btn waves-effect waves-light btn-default"><i class="fa fa-globe font-18"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <div class="row">
+                                @Html.LabelFor(model => model.social_organization_info, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(model => model.social_organization_info, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.social_organization_info) }, { "data-form", "customer" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <div class="row">
+                                @Html.LabelFor(model => model.social_job_position, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(model => model.social_job_position, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.social_job_position) }, { "data-form", "customer" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <div class="row">
+                                @Html.LabelFor(model => model.social_pensioner, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                <div class="col-md-6">
+                                    @Html.CheckBox("social_pensioner", Model.social_pensioner ?? false, new { @class = "js-switch extra-small", @type = "checkbox", @data_switchery = "true", @data_plugin = "switchery", @data_color = "#5fbeaa" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <div class="row">
+                                @Html.LabelFor(model => model.social_incapable, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                <div class="col-md-6">
+                                    @Html.CheckBox("social_incapable", Model.social_incapable ?? false, new { @class = "js-switch extra-small", @type = "checkbox", @data_switchery = "true", @data_plugin = "switchery", @data_color = "#5fbeaa" })
+                                </div>
+                            </div>
+                        </div>
+                        <h3 class="panel-title">Контактные данные</h3>
+                        <hr class="m-t-10" />
+                        <div class="form-group form-group-sm">
+                            <div class="row">
+                                <label class="col-md-4 control-label text-right">Телефон</label>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.phone_number1, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "+7(___) ___-____" }, { "data-form", "customer" }, { "data-type", "phone-number" } })
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.phone_number2, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "+7(___) ___-____" }, { "data-form", "customer" }, { "data-type", "phone-number" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <div class="row">
+                                <label class="col-md-4 control-label text-right">Электронная почта</label>
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(model => model.e_mail, new Dictionary<string, object> { { "class", "form-control" }, { "data-form", "customer" } })
+                                </div>
+                            </div>
+                        </div>*@
+                    }
+
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel waves-effect waves-light" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Отмена</button>
+            <button type="button" form="EditCustomerForm" class="btn btn-success waves-effect waves-light"> Сохранить <i class="fa fa-check m-l-5"></i></button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+
+<script language="JavaScript">
+ 
+    function b64toBlob(b64Data, contentType, sliceSize) {
+        contentType = contentType || '';
+        sliceSize = sliceSize || 512;
+
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            var byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+        var blob = new Blob(byteArrays, { type: contentType });
+        return blob;
+    }
+</script>

@@ -1,0 +1,204 @@
+﻿@model IEnumerable<HuntControl.Domain.Concrete.ReportHuntingLicIssuedReestrResult>
+<link href="~/Content/css/print-report.css" rel="stylesheet" />
+<style>
+    @@media print {
+        @@page {
+            size: landscape;
+        }
+        .page {
+            height: auto;
+            width: 100%;
+            page-break-after: always;
+        }
+        table thead th, table tbody td {
+            font-size: 10px !important;
+            padding: 5px !important;
+        }
+        .dl-horizontal dt {
+            min-width: 90px;
+        }
+        .dl-horizontal dd {
+            margin-left: 110px;
+        }
+
+        
+
+        thead {
+            display: table-row-group
+        }
+
+        tr {
+            page-break-inside: avoid
+        }
+
+    }
+</style>
+
+<div id="printable">
+    <!-- page 1 start-->
+    <div class="page">
+        <h4 class="text-right">Форма 7.1. (ОХ)</h4>
+        <div class="border-box mb-20">
+            <h1>Документированная информация об охотниках</h1>
+            <strong>по состоянию на ____________  20___  г.</strong>
+        </div>
+        <div class="row">
+            <table class="table text-center col-70">
+                <thead>
+                    <tr>
+                        <th>Представляют:</th>
+                        <th>Сроки представления:</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-left">
+                            <p>орган исполнительный власти субъекта Российской Федерации</p>
+                            Министерству природных ресурсов и экологии Российской Федерации
+                        </td>
+                        <td>до 15 мая</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="col-20 pull-right">
+                <div class="border-box mb-15">
+                    <strong>Форма 7.1. (ОХ)</strong>
+                </div>
+                <div class="border-box">Годовая</div>
+            </div>
+        </div>
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>Наименование субъекта Российской Федерации ____________________________________________________________________________________________________________________________</td>
+                </tr>
+                <tr>
+                    <td>Наименование организации _____________________________________________________________________________________________________________________________________________</td>
+                </tr>
+            </tbody>
+        </table>
+        <h4 class="text-center">Сведения об охотниках</h4>
+        <table class="table text-center">
+            <thead>
+                <tr>
+                    <th rowspan="3">№ <p class="text-nowrap">п/п:</p></th>
+                    <th rowspan="3">Ф.И.О.</th>
+                    <th rowspan="3">Дата рождения</th>
+                    <th rowspan="3">Место рождения</th>
+                    <th rowspan="3">Почтовый адрес, телефон, E-mail</th>
+
+                    <th colspan="3">Основной документ, удостоверяющий личность</th>
+                    <th colspan="4">Социальный статус</th>
+                    <th colspan="5">Охотничий билет</th>
+                    <th colspan="3">Членский охотничий билет</th>
+                </tr>
+                <tr>
+                    <th rowspan="2"><span class="text-vertical text-nowrap">Серия и номер</span></th>
+                    <th rowspan="2"><span class="text-vertical text-nowrap">Дата выдачи</span></th>
+                    <th rowspan="2"><span class="text-vertical text-nowrap">Кем выдан</span></th>
+                    <th rowspan="2"><span class="text-vertical">Наименование <span class="text-nowrap">организации, адрес,</span> телефон</span></th>
+                    <th rowspan="2"><span class="text-vertical">Должность</span></th>
+                    <th rowspan="2"><span class="text-vertical">Пенсионеры</span></th>
+                    <th rowspan="2"><span class="text-vertical">Нетрудоспособные</span></th>
+                    <th rowspan="2"><span class="text-vertical text-nowrap">Дата выдачи</span></th>
+                    <th rowspan="2"><span class="text-vertical text-nowrap">Серия и номер</span></th>
+                    <th rowspan="2"><span class="text-vertical">Дата внесения в охотхозяйственный реестр</span></th>
+                    <th colspan="2" style="word-break: break-all;">аннулирование</th>
+                    <th rowspan="2"><span class="text-vertical text-nowrap">Дата выдачи</span></th>
+                    <th rowspan="2"><span class="text-vertical text-nowrap">Серия и номер</span></th>
+                    <th rowspan="2"><span class="text-vertical text-nowrap">Кем выдан</span></th>
+                </tr>
+                <tr>
+                    <th><span class="text-vertical">Дата</span></th>
+                    <th><span class="text-vertical">Основание</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="small-cells">
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>5</td>
+                    <td>6</td>
+                    <td>7</td>
+                    <td>8</td>
+                    <td>9</td>
+                    <td>10</td>
+                    <td>11</td>
+                    <td>12</td>
+                    <td>13</td>
+                    <td>14</td>
+                    <td>15</td>
+                    <td>16</td>
+                    <td>17</td>
+                    <td>18</td>
+                    <td>19</td>
+                    <td>20</td>
+                </tr>
+                @{ int index = 1; }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@(index++).</td>
+                        <td>@Html.DisplayFor(i => item.out_customer_name)</td>
+                        <td>@Html.DisplayFor(i=>item.out_doc_birth_date)</td>
+                        <td>@Html.DisplayFor(i => item.out_doc_birth_place)</td>
+                        <td>@Html.DisplayFor(i => item.out_actual_address), @Html.DisplayFor(i => item.out_phone_number), @Html.DisplayFor(i => item.out_e_mail)</td>
+                        <td>@Html.DisplayFor(i => item.out_doc_serial) @Html.DisplayFor(i => item.out_doc_number)</td>
+                        <td>@Html.DisplayFor(i => item.out_doc_issue_date)</td>
+                        <td>@Html.DisplayFor(i => item.out_doc_issue_body)</td>
+                        <td>@Html.DisplayFor(i => item.out_social_organization_info)</td>
+                        <td>@Html.DisplayFor(i => item.out_social_job_position)</td>
+                        <td>@Html.DisplayFor(i => item.out_social_pensioner)</td>
+                        <td>@Html.DisplayFor(i => item.out_social_incapable)</td>
+                        <td>@Html.DisplayFor(i => item.out_issue_date)</td>
+                        <td>@Html.DisplayFor(i => item.out_serial_license) @Html.DisplayFor(i => item.out_number_license)</td>
+                        <td>@Html.DisplayFor(i => item.out_reestr_date)</td>
+                        <td>@Html.DisplayFor(i => item.out_cancelled_date)</td>
+                        <td>@Html.DisplayFor(i => item.out_cancelled_ground)</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="row mb-10">
+            <div class="col">Руководитель <br>организации</div>
+            <div class="col">
+                <p>______________________________________________________________</p>
+                <p class="text-center text-small">(Ф.И.О.)</p>
+            </div>
+            <div class="col">
+                <p>_____________________</p>
+                <p class="text-center text-small">(подпись)</p>
+            </div>
+        </div>
+        <div class="row mb-10">
+            <div class="col">Лицо, ответственное <br>за составление формы</div>
+            <div class="col">
+                <p>_____________________________________________</p>
+                <p class="text-center text-small">(должность)</p>
+            </div>
+            <div class="col">
+                <p>_____________________________________________</p>
+                <p class="text-center text-small">(Ф.И.О.)</p>
+            </div>
+            <div class="col">
+                <p>_____________________</p>
+                <p class="text-center text-small">(подпись)</p>
+            </div>
+        </div>
+        <div class="row mb-20">
+            <div class="col">
+                <p>_____________________________________________</p>
+                <p class="text-center text-small">(номер контактного телефона)</p>
+            </div>
+            <div class="col pull-right">
+                <p>«____» _____________________ 20___ год</p>
+                <p class="text-center text-small">(дата составления документа)</p>
+            </div>
+        </div>
+    </div>
+</div>

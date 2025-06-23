@@ -1,0 +1,87 @@
+﻿@model HuntControl.WebUI.Models.ViolationViewModel
+<div class="row">
+    <div class="col-md-4">
+        <div class="card-box p-0">
+            <div class="table-responsive">
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn waves-effect waves-light btn-link p-l-20-important"><i class="fa fa-search"></i></button>
+                    </span>
+                    <input type="text" id="searchTextReports" class="text-dark no-border-input" placeholder="Поиск..."><ul class="typeahead dropdown-menu"></ul><ul class="typeahead dropdown-menu"></ul>
+                </div>
+                <table id="datatable" class="table table-striped" style="margin-top: 0 !important">
+                    <thead class="hidden">
+                        <tr class="text-nowrap">
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ViolationsCustomerSelectResultList)
+                        {
+                            <tr data-customer-id="@item.out_data_customer_id" style="cursor:pointer">
+                                <td class="p-l-20-important text-uppercase">
+                                    <span class="individual-name">@Html.DisplayFor(m => item.out_customer_name)</span><br />
+                                    <div class="text-muted font-12 text-clip-cust" title="@Html.DisplayFor(m => item.out_actual_address)" style="max-width:200px!important">@Html.DisplayFor(m => item.out_actual_address)</div>
+                                </td>
+                                <td class="text-right vertical-middle p-r-20-important">
+                                    <span class="h5 font-600 text-custom">@Html.DisplayFor(m => item.out_count)</span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script src="~/Content/plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="~/Content/plugins/datatables/dataTables.bootstrap.js"></script>
+        <script>
+            $(document).ready(function () {
+                var oTable = $('#datatable').DataTable({ dom: 't<"row m-t-10 p-l-20-important p-b-10 m-r-15"<"col-sm-4"i><"col-sm-8"p>>' });
+                $('#searchTextReports').keyup(function () {
+                    oTable.search($(this).val()).draw();
+                });
+            });
+        </script>
+    </div>
+    <div class="col-md-8" id="individualPageContainer">
+        <div class="alert alert-warning">
+            <span style="color: #00545c;"><strong><i class="icon-info"></i></strong> Выберите физ.лицо из списка.</span>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('table tr').click(function () {
+            $(this).addClass('active').siblings('.active').removeClass('active');
+            var customerId = $(this).data('customerId');
+            location.hash = customerId;
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("PartialIndividualPage", "Violation")',
+                data: { customerId: customerId },
+                success: function (data) {
+                    $('#individualPageContainer').html(data);
+                }
+            });
+        });
+
+        $('button[data-tooltip-info]').tooltip({
+            title: function () {
+                var tooltipInfo = $(this).data('tooltipInfo');
+                return "<div class='text-left'><strong>ФИО</strong>: " + tooltipInfo['customer_name'] + "</br>" +
+                    "<strong>Адрес проживания</strong>: " + tooltipInfo['actual_address'] + "</br>" +
+                    "</div>";
+            },
+            html: true,
+            placement: "left"
+        });
+
+        if ('@ViewBag.CustomerId' !== '') {
+            $('table tr[data-customer-id="@ViewBag.CustomerId"]').trigger('click');
+        }
+
+
+    });
+
+</script>

@@ -1,0 +1,95 @@
+﻿@model HuntControl.WebUI.Models.HuntingFarmViewModel
+
+<div class="panel panel-border panel-primary">
+    <div class="panel-body p-0 table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th class="number-row p-l-20-important">№</th>
+                    <th style="width:50%">@Html.DisplayNameFor(model => model.HuntingFarmAnimalList.First().spr_animal_id)</th>
+                    <th>@Html.DisplayNameFor(model => model.HuntingFarmAnimalList.First().area_habitat)</th>                    
+                    <th class="text-right p-r-20-important">
+                        Действия
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.HuntingFarmAnimalList)
+                {
+                    <tr data-hunting-farm-animal-id="@item.id">
+                        <td class="number-row p-l-20-important">
+                            @((Model.PageInfo.CurrentPage - 1) * Model.PageInfo.ItemsPerPage + ++Model.PageInfo.NumberRow)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(i => item.spr_animal.animal_name)<br />
+                            <span class="text-muted font-12">@Html.DisplayFor(i => item.spr_animal.spr_animal_group_type.group_type_name)</span>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(i => item.area_habitat)
+                        </td>                        
+                        <td class="actions">
+                            <button type="button" class="on-default text-custom link" style="font-size: 22px;line-height: 22px;" data-tooltip-info='{"commentt": "@item.commentt"}'>
+                                <i class="ion-ios7-information-outline"></i>
+                            </button>
+                            @if (User.IsInRole("superadmin") || User.IsInRole("admin"))
+                            {
+                                <button class="on-default edit-row link"><i class="ion-edit"></i></button>
+                                <button class="on-default remove-row link"><i class="ion-trash-b"></i></button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="dataTables_info" id="datatable_info" role="status" aria-live="polite">Показаны @((Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage > Model.PageInfo.TotalItems) ? Model.PageInfo.TotalItems : Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage) из @Model.PageInfo.TotalItems записей</div>
+            </div>
+            <div class="col-sm-6">
+                <div class="dataTables_paginate paging_simple_numbers" id="datatable-editable_paginate">
+                    @Html.PageLinks(Model.PageInfo, x => Ajax.ActionLink(x.NameLink, "PartialTableHuntingFarmAnimals", "Reference", new { page = x.CurrentPage, huntingFarmId = ViewBag.HuntingFarmId }, new AjaxOptions { UpdateTargetId = "huntingFarmAnimalsContainer" }))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip({ trigger: 'hover' });
+        $('button[data-tooltip-info]').tooltip({
+            title: function () {
+                var tooltipInfo = $(this).data('tooltipInfo');
+                return "<div class='text-left'>" +
+                    "<strong>Комментарий</strong>: " + tooltipInfo['commentt'] + "</br> </div>";
+            },
+            html: true,
+            placement: "left"
+        });
+    });
+
+    $('#huntingFarmAnimalsContainer table td button.edit-row').on('click', function () {
+        var huntingFarmAnimalId = $(this).closest('tr').data('huntingFarmAnimalId');
+        $('#huntingFarmAnimalsContainer table tr').removeClass('warning');
+
+        $(this).closest('tr').addClass('warning');
+        $.ajax({
+            type: 'POST',
+            async: false,
+            url: '@Url.Action("PartialEditHuntingFarmAnimal", "Reference")',
+            data: { huntingFarmAnimalId: huntingFarmAnimalId },
+            success: function (data) {
+                $('#collapseEditHuntingFarmAnimals').html(data);
+            }
+        });
+        $('#collapseEditHuntingFarmAnimals').collapse('show');
+    });
+
+
+    $('#huntingFarmAnimalsContainer table td button.remove-row').click(function () {
+        var huntingFarmAnimalId = $(this).closest('tr').data('huntingFarmAnimalId');
+        removeData('@Url.Action("SubmitHuntingFarmAnimalDelete", "Reference")', { huntingFarmAnimalId: huntingFarmAnimalId }, function (data) { $('#huntingFarmAnimalsContainer').html(data); });
+    });
+</script>

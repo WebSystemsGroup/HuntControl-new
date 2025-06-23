@@ -1,0 +1,72 @@
+﻿@model HuntControl.WebUI.Models.HuntingFarmViewModel
+
+<div class="row m-b-10">
+    <div class="col-md-12">
+        @using (Ajax.BeginForm("PartialModalWizardAddAccounting", "Season", null, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+        {
+            <button type="submit" class="btn btn-default waves-effect waves-light btn-sm"> Мастер добавления <i class="fa fa-magic m-l-5"></i></button>
+        }
+    </div>
+</div>
+<div class="app-content" id="season_animals">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group form-actions form-group-sm  m-b-0">
+                <div class="row">
+                    <div class="col-md-12 m-b-10">
+                        <label class="font-12 text-muted p-t-0 m-b-0">Группа видов</label>
+                        @Html.DropDownList("sprAnimalGroupTypeId", ViewBag.SprAnimalGroupTypes as SelectList, "Все", new Dictionary<string, object> {{"class", "select2 input-sm"}})
+                    </div>
+                </div>
+            </div>
+            <div id="animalsContainer">
+                @Html.Action("PartialAnimalList", "Season")
+            </div>
+        </div>
+        <div class="col-md-8 m-t-20" id="accountingsContainer">
+            <div class="alert alert-warning">
+                <span style="color: #00545c;"><strong><i class="icon-info"></i></strong> Выберите животного</span>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Content/plugins/select2/js/select2.full.min.js"></script>
+<script>
+    //$(function () {
+    //    $(".icons-tab-steps").steps({ enablePagination: false, headerTag: "h6", bodyTag: "fieldset", transitionEffect: "fade", titleTemplate: '<span class="step"></span> #title#', labels: { finish: "Submit" }, onFinished: function () { alert("Form submitted.") } });
+    //});
+
+    $(document).ready(function () {
+        $("#sprAnimalGroupTypeId").select2();
+    });
+
+
+    
+      //выбор типа охотугодья
+    $(document).on("change", "#sprAnimalGroupTypeId", function () {
+        $.ajax({
+            url: '@Url.Action("PartialAnimalList", "Season")',
+            type: 'Post',
+            data: { search: '@ViewBag.Search', sprAnimalGroupTypeId: $(this).val() },
+            success: function (data) {
+                $('#animalsContainer').html(data);
+            }
+        });
+    });
+
+    $(document).on("click", "#animalsContainer tbody > tr > td", function () {
+        $("#animalsContainer tbody tr").removeClass('active');
+        $(this).closest('tr').addClass('active');
+        var animalId = $(this).closest('tr').data('animalId');
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableHuntingFarmAccountings", "Season")',
+            data: { animalId: animalId },
+            success: function (data) {
+                $("#accountingsContainer").html(data);
+            }
+        });
+    });
+
+</script>
+

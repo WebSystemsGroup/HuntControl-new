@@ -1,0 +1,331 @@
+﻿@model WebAIS.StoreProcedure.SModel.case_customer_root_get_smev
+
+<div class="modal-card-head wrap-flex">
+    <nav class="breadcrumb m-b-0">
+        <div class="container">
+            <div class="row-flex">
+                <div class="col-flex"><div class="breadcrumb-item complete">Запрос</div></div>
+                <div class="col-flex"><div class="breadcrumb-item active">Данные</div></div>
+                <div class="col-flex"><div class="breadcrumb-item">Ответ</div></div>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="modal-card-body">
+    <div class="form-vertical">
+        <form>
+            <input name="data_services_id" type="hidden" class="data_services_id" />
+            <div class="form-content smev-request">
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="inn">Регион местоположения объекта</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <select class="select" name="RegionsRf" style="display: none;" data-dictionary="" data-dictionary-options='{"dictionary":"RosReestrRegionsRf"}'></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="inn">Тип объекта недвижимости</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <select class="select" name="objectKind" style="display: none;" data-dictionary="" data-dictionary-options='{"dictionary":"RosReestrRealty"}'></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="inn">Запрос по</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <select class="select" name="isRequestByCadasterNum" id="isRequestByCadasterNum" style="display: none;">
+                                <option value="t" selected>Кадастровый номер</option>
+                                <option value="f">Адрес регистрации</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="inn">E-mail</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" id="email" name="email" placeholder="" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="smev-rosreestr-tabs">
+                <ul class="tab-horizontal" style="display:none;">
+                    <li><a href="#smev-rosreestr-tab-1">Данные 1</a></li>
+                    <li><a href="#smev-rosreestr-tab-2">Данные 2</a></li>
+                </ul>
+                <div id="smev-rosreestr-tab-1" class="form-content smev-request">
+                    <div class="row-flex">
+                        <div class="col-flex is-offset-2 is-3">
+                            <label for="inn">Район</label>
+                        </div>
+                        <div class="col-flex is-3">
+                            <div class="form-control">
+                                <select class="select" name="rosReestrLocalityType.District.Type" style="display: none;" data-dictionary="" data-dictionary-options='{"dictionary":"RosReestrDistrict"}'></select>
+                            </div>
+                        </div>
+                        <div class="col-flex is-3">
+                            <div class="form-control">
+                                <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" name="rosReestrLocalityType.District.Name" placeholder="" type="text" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-flex">
+                        <div class="col-flex is-offset-2 is-3">
+                            <label for="inn">Муниципальное образование</label>
+                        </div>
+                        <div class="col-flex is-3">
+                            <div class="form-control">
+                                <select class="select" name="rosReestrLocalityType.City.Type" style="display: none;" data-dictionary="" data-dictionary-options='{"dictionary":"RosReestrCity"}'></select>
+                            </div>
+                        </div>
+                        <div class="col-flex is-3">
+                            <div class="form-control">
+                                <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" name="rosReestrLocalityType.City.Name" placeholder="" type="text" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-flex">
+                        <div class="col-flex is-offset-2 is-3">
+                            <label for="inn">Городской район</label>
+                        </div>
+                        <div class="col-flex is-3">
+                            <div class="form-control">
+                                <select class="select" name="rosReestrLocalityType.UrbanDistrict.Type" style="display: none;" data-dictionary="" data-dictionary-options='{"dictionary":"RosReestrUrbanDistrict"}'></select>
+                            </div>
+                        </div>
+                        <div class="col-flex is-3">
+                            <div class="form-control">
+                                <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" name="rosReestrLocalityType.UrbanDistrict.Name" placeholder="" type="text" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-flex">
+                        <div class="col-flex is-offset-2 is-3">
+                            <label for="inn">Сельсовет</label>
+                        </div>
+                        <div class="col-flex is-3">
+                            <div class="form-control">
+                                <select class="select" name="rosReestrLocalityType.SovietVillage.Type" style="display: none;" data-dictionary="" data-dictionary-options='{"dictionary":"RosReestrSovietVillage"}'></select>
+                            </div>
+                        </div>
+                        <div class="col-flex is-3">
+                            <div class="form-control">
+                                <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" name="rosReestrLocalityType.SovietVillage.Name" placeholder="" type="text" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-flex">
+                        <div class="col-flex is-offset-2 is-3">
+                            <label for="inn">Населенный пункт</label>
+                        </div>
+                        <div class="col-flex is-3">
+                            <div class="form-control">
+                                <select class="select" name="rosReestrLocalityType.Locality.Type" style="display: none;" data-dictionary="" data-dictionary-options='{"dictionary":"RosReestrInhabitedLocalities"}'></select>
+                            </div>
+                        </div>
+                        <div class="col-flex is-3">
+                            <div class="form-control">
+                                <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" name="rosReestrLocalityType.Locality.Name" placeholder="" type="text" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-flex">
+                        <div class="col-flex is-offset-2 is-3">
+                            <label for="inn">Улица</label>
+                        </div>
+                        <div class="col-flex is-3">
+                            <div class="form-control">
+                                <select class="select" name="rosReestrLocalityType.Street.Type" style="display: none;" data-dictionary="" data-dictionary-options='{"dictionary":"RosReestrStreets"}'></select>
+                            </div>
+                        </div>
+                        <div class="col-flex is-3">
+                            <div class="form-control">
+                                <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" name="rosReestrLocalityType.Street.Name" placeholder="" type="text" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-flex">
+                        <div class="col-flex is-offset-2 is-3">
+                            <label for="inn">Уровень 1</label>
+                        </div>
+                        <div class="col-flex is-3">
+                            <div class="form-control">
+                                <select class="select" name="rosReestrLocalityType.Level1.Type" style="display: none;" data-dictionary="" data-dictionary-options='{"dictionary":"RosReestrLocationLevel1"}'></select>
+                            </div>
+                        </div>
+                        <div class="col-flex is-3">
+                            <div class="form-control">
+                                <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" name="rosReestrLocalityType.Level1.Name" placeholder="" type="text" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-flex">
+                        <div class="col-flex is-offset-2 is-3">
+                            <label for="inn">Уровень 2</label>
+                        </div>
+                        <div class="col-flex is-3">
+                            <div class="form-control">
+                                <select class="select" name="rosReestrLocalityType.Level2.Type" style="display: none;" data-dictionary="" data-dictionary-options='{"dictionary":"RosReestrLocationLevel2"}'></select>
+                            </div>
+                        </div>
+                        <div class="col-flex is-3">
+                            <div class="form-control">
+                                <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" name="rosReestrLocalityType.Level2.Name" placeholder="" type="text" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-flex">
+                        <div class="col-flex is-offset-2 is-3">
+                            <label for="inn">Уровень 3</label>
+                        </div>
+                        <div class="col-flex is-3">
+                            <div class="form-control">
+                                <select class="select" name="rosReestrLocalityType.Level1.Type" style="display: none;" data-dictionary="" data-dictionary-options='{"dictionary":"RosReestrLocationLevel3"}'></select>
+                            </div>
+                        </div>
+                        <div class="col-flex is-3">
+                            <div class="form-control">
+                                <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" name="rosReestrLocalityType.Level1.Name" placeholder="" type="text" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-flex">
+                        <div class="col-flex is-offset-2 is-3">
+                            <label for="inn">Квартира</label>
+                        </div>
+                        <div class="col-flex is-3">
+                            <div class="form-control">
+                                <select class="select" name="rosReestrLocalityType.Apartment.Type" style="display: none;" data-dictionary="" data-dictionary-options='{"dictionary":"RosReestrAppartment"}'></select>
+                            </div>
+                        </div>
+                        <div class="col-flex is-3">
+                            <div class="form-control">
+                                <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" name="rosReestrLocalityType.Apartment.Name" placeholder="" type="text" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="smev-rosreestr-tab-2" class="form-content smev-request">
+                    <div class="row-flex">
+                        <div class="col-flex is-offset-2 is-3">
+                            <label for="inn">Кадастровый номер</label>
+                        </div>
+                        <div class="col-flex is-5">
+                            <div class="form-control">
+                                <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation-allowing="-" name="cadasterNum" placeholder="" type="text" value="" data-inputmask="'mask': '99:99:999999:99[99]'">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="form-content smev-response" style="display:none;"></div>
+    </div>
+</div>
+<div class="modal-card-foot">
+    <div class="content-footer__action row-flex-right">
+        <button type="button" class="btn btn-danger attach-smev-response" style="display: none;">
+            <span>Прикрепить к услуге</span>
+            <span class="icon">
+                <i class="ion ion-ios-upload-outline"></i>
+            </span>
+        </button>
+        <button type="button" class="btn btn-danger is-form-send smev-send-data" data-url-smev="Smev_RequestRosReestrCadasterPassport">
+            <span>Далее</span>
+            <span class="icon">
+                <i class="ion ion-ios-arrow-forward"></i>
+            </span>
+        </button>
+    </div>
+</div>
+
+<script>
+    flag = true;
+    if (typeof ('[data-dictionary]') != 'undefined') {
+        $.each($('[data-dictionary]'), function () {
+            var $this = $(this);
+            var options = $this.data('dictionaryOptions');
+            $.post('/Smev/Smev_GetDictionary', {
+                type: options.dictionary
+            }, function (items) {
+                if (items != 'undefined') {
+                    $this.empty();
+                    items.Dictionary.forEach(function (item, i, arr) {
+                        $this.append('<option value=' + item.Key + '>' + item.Value + '</option>');
+                    });
+                    $this.val(items.DefaultKey).niceSelect('update');
+                    $this.change();
+                }
+            }), 'json'
+        });
+    };
+    if (typeof ('#modal_smev_card_content') != 'undefined') {
+        $('input[data-inputmask]').inputmask();
+    };
+
+    /* ловушка полей ввода даты и времени */
+    if (typeof ('#modal_smev_card_content') != 'undefined') {
+        $.datetimepicker.setLocale('ru');
+        $.each($('[data-input-datetimepicker]'), function () {
+            var $this = $(this);
+            var options = $this.data('input-datetimepicker-options');
+            var avalible_time = $this.data('input-datetimepicker-time');
+
+            if (typeof avalible_time != 'undefined') {
+                options['allowTimes'] = avalible_time.split(',');
+            }
+
+            $this.datetimepicker(options);
+        });
+    };
+
+    // Nice select init
+    if (typeof ('#modal_smev_card_content') != 'undefined') {
+        $.validate({
+            lang: 'ru',
+            modules: 'date, security',
+            borderColorOnError: '#e44d32',
+            dateFormat: 'dd-mm-yyyy'
+        });
+        $('#modal_smev_card_content select').niceSelect();
+    };
+
+    $('.smev-send-data').on('click', function (e) {
+        if ($('#modal_smev_card_content').find('form').isValid() && flag) {
+            event.stopPropagation();
+            var btn = $(this);
+            var url = $(this).data('urlSmev');
+            smevSendData(url, btn);
+        }
+    });
+
+    $("#isRequestByCadasterNum").change(function () {
+        if ($("#isRequestByCadasterNum").val() == 't') {
+            $('#smev-rosreestr-tabs').responsiveTabs('deactivate', 0);
+            $('#smev-rosreestr-tabs').responsiveTabs('activate', 1);
+        }
+        else {
+            $('#smev-rosreestr-tabs').responsiveTabs('deactivate', 1);
+            $('#smev-rosreestr-tabs').responsiveTabs('activate', 0);
+        }
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('#smev-rosreestr-tabs').responsiveTabs({startCollapsed: 'accordion'});
+        $('#smev-rosreestr-tabs').responsiveTabs('deactivate', 0);
+        $('#smev-rosreestr-tabs').responsiveTabs('activate', 1);
+    });
+</script>

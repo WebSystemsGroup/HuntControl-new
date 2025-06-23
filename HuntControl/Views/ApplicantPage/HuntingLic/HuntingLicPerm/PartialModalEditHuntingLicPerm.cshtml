@@ -1,0 +1,116 @@
+﻿@model HuntControl.Domain.Concrete.data_customer_hunting_lic_perm
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<script src="~/Content/plugins/select2/js/select2.full.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#date_given').datepicker({ format: 'dd.mm.yyyy', autoclose: true, language: 'ru' });
+        $(".select2").select2();
+    });
+
+    $('#spr_employees_id').change(function () {
+        var selected = $(this).val() != null && $(this).val() !== '';
+        if (selected) {
+            $.ajax({
+                url: '@Url.Action("GetSprEmployees", "ApplicantPage")',
+                data: { employees_id: $('#spr_employees_id').val() },
+                success: function (data) {
+                    $('#fio_given').val(data.employees_fio);
+                    $('#job_pos_name').val(data.job_pos_name);
+                }
+            });
+        }
+        else {
+            $('#fio_given').val("");
+            $('#job_pos_name').val("");
+        }
+        });
+</script>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myLargeModalLabel">Изменение разрешения на охоту</h4>
+        </div>
+        <div class="modal-body">
+            @using (Ajax.BeginForm("SubmitHuntingLicPermSave", "ApplicantPage", Model, new AjaxOptions { UpdateTargetId = "huntingLicPermsTabContainer", OnSuccess = "$('#myModal').modal('hide');successEdit();" }, new { @id = "EditHuntingLicPermForm", @class = "form-horizontal" }))
+            {
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        @Html.LabelFor(model => model.spr_method_remove_id, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-6">
+                            @Html.DropDownListFor(model => model.spr_method_remove_id, ViewBag.MethodRemoves as SelectList, "Способ изъятия", new { @class = "form-control select2 input-sm" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        @Html.LabelFor(model => model.serial_form, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.serial_form, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.serial_form) } })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        @Html.LabelFor(model => model.number_form, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.number_form, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.number_form) } })
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        @Html.LabelFor(model => model.fio_given, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-6">
+                            @Html.DropDownListFor(model => model.spr_employees_id, ViewBag.SprEmployees as SelectList, "Выберите сотрудника", new Dictionary<string, object> { { "class", "form-control select2" } })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        @Html.LabelFor(model => model.job_pos_name, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.job_pos_name, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.job_pos_name) }, { "readonly", "readonly" } })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm hidden">
+                    @Html.LabelFor(model => model.fio_given, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(model => model.fio_given, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.fio_given) }, { "disabled", "disabled" } })
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.date_given, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.date_given, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.date_given) }, { "data-type", "date" } })
+                            <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.tariff_, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                    <div class="col-md-3">
+                        @Html.TextBoxFor(model => model.tariff_, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.tariff_) } })
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.charge_, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                    <div class="col-md-3">
+                        @Html.TextBoxFor(model => model.charge_, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.charge_) } })
+                    </div>
+                </div>
+
+            }
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel waves-effect waves-light" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Отмена</button>
+            <button type="submit" form="EditHuntingLicPermForm" class="btn btn-success waves-effect waves-light"> Сохранить <i class="fa fa-check m-l-5"></i></button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

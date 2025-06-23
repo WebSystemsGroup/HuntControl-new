@@ -1,0 +1,91 @@
+﻿@model HuntControl.WebUI.Models.SmevServiceViewModel
+<div class="row">
+    <div class="col-sm-12">
+        @foreach (var item in ViewBag.StepValues)
+        {
+            <i class="ion-arrow-right-b m-l-10 mystep"></i> @item.Value
+        }
+    </div>
+</div>
+<hr class="m-t-10 m-b-10">
+<div class="row">
+    <div class="col-sm-10 col-xs-6">
+        <h3 class="panel-title">Список запросов СМЭВ</h3>
+    </div>
+    <div class="col-sm-2 col-xs-6 m-b-10">
+        <div class="text-right">
+            @using (Ajax.BeginForm("PartialModalAddSmevServiceRequest", "Reference", new { smevServiceId = ViewBag.SmevServiceId }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+            {
+                <button type="submit" class="btn btn-inverse waves-effect waves-light btn-sm"> Добавить <i class="fa fa-plus m-l-5"></i></button>
+            }
+        </div>
+    </div>
+</div>
+<div class="panel">
+    <div class="panel-body p-0 table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th class="number-row p-l-20-important">№</th>
+                <th>@Html.DisplayNameFor(model => model.SmevServiceRequestList.First().request_active)</th>
+                <th>@Html.DisplayNameFor(model => model.SmevServiceRequestList.First().request_name)</th>
+                <th class="text-right p-r-20-important">
+                    Действия
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.SmevServiceRequestList)
+            {
+                <tr data-smev-service-request-id="@item.id">
+                    <td class="number-row p-l-20-important">
+                        @((Model.PageInfo.CurrentPage - 1)*Model.PageInfo.ItemsPerPage + ++Model.PageInfo.NumberRow)
+                    </td>
+                    <td>
+                        @if (item.request_active)
+                        {
+                            <i class="ion-ios7-circle-filled text-custom font-18"></i>
+                        }
+                        else
+                        {
+                            <i class="ion-ios7-circle-filled text-danger font-18"></i>
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(i => item.request_name)
+                    </td>
+                    <td class="actions">
+                        @if (User.IsInRole("superadmin"))
+                        {
+                            using (Ajax.BeginForm("PartialModalEditSmevServiceRequest", "Reference", new { smevServiceRequestId = item.id}, new AjaxOptions {UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');"}, new {@class = "form-submit"}))
+                            {
+                                <button class="on-default edit-row link"><i class="ion-edit"></i></button>
+                            }
+                            <button class="on-default remove-row link"><i class="ion-trash-b"></i></button>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="dataTables_info" id="datatable_info" role="status" aria-live="polite">Показаны @((Model.PageInfo.CurrentPage*Model.PageInfo.ItemsPerPage > Model.PageInfo.TotalItems) ? Model.PageInfo.TotalItems : Model.PageInfo.CurrentPage*Model.PageInfo.ItemsPerPage) из @Model.PageInfo.TotalItems записей</div>
+            </div>
+            <div class="col-sm-6">
+                <div class="dataTables_paginate paging_simple_numbers" id="datatable-editable_paginate">
+                    @Html.PageLinks(Model.PageInfo, x => Ajax.ActionLink(x.NameLink, "PartialTableSmevServices", "Reference", new {page = x.CurrentPage}, new AjaxOptions {UpdateTargetId = "smevServicesContainer" }))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#smevServiceRequestsTableContainer table td button.remove-row').click(function () {
+        var smevServiceRequestId = $(this).closest('tr').data('smevServiceRequestId');
+        removeData('@Url.Action("SubmitSmevServiceRequestDelete", "Reference")', { smevServiceRequestId: smevServiceRequestId }, function (data) { $('#smevServiceRequestsTableContainer').html(data); });
+    });
+</script>

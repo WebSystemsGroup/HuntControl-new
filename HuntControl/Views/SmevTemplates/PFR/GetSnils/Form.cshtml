@@ -1,0 +1,83 @@
+﻿@model HuntControl.WebUI.Models.SmevRequestFormModel
+<link href="~/Content/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css">
+<link href="~/Content/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
+<link href="~/Content/plugins/multiselect/css/multi-select.css" rel="stylesheet" type="text/css">
+<link href="~/Content/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" rel="stylesheet">
+<link href="~/Content/plugins/switchery/dist/switchery.min.css" rel="stylesheet">
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<script src="~/Content/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+<script src="~/Content/plugins/switchery/dist/switchery.min.js"></script>
+<script src="~/Content/plugins/bootstrap-select/dist/js/bootstrap-select.min.js" type="text/javascript"></script>
+
+<script src="~/Content/plugins/select2/js/select2.min.js" type="text/javascript"></script>
+<script src="~/Content/plugins/multiselect/js/jquery.multi-select.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+        $('input[data-type=date]').datepicker({ format: 'dd.mm.yyyy', autoclose: true, language: 'ru' });
+
+        $('input[data-type=doc-snils]').inputmask({
+            mask: '999-999-999 99',
+            clearIncomplete: true
+        });
+    });
+</script>
+
+<form class="form-horizontal" id="snilsForm">
+    @Html.Hidden("dataServicesId", ViewBag.ServiceId as object)
+    <div class="row m-b-20" style="padding-left: 180px;">
+        <div class="col-lg-7 col-lg-offset-1">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6 col-md-3 col-lg-4">
+                        <label>Фамилия</label>
+                        @Html.TextBox("fio.LastName", Model.CustomerName.Split(' ').Length > 0 ? Model.CustomerName.Split(' ')[0] : "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Фамилия" }, { "data-form", "applicant" }, { "required", "required" } })
+                    </div>
+                    <div class="col-sm-6 col-md-3 col-lg-4">
+                        <label>Имя</label>
+                        @Html.TextBox("fio.FirstName", Model.CustomerName.Split(' ').Length > 1 ? Model.CustomerName.Split(' ')[1] : "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Имя" }, { "data-form", "applicant" }, { "required", "required" } })
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <label>Отчество</label>
+                        @Html.TextBox("fio.SecondName", Model.CustomerName.Split(' ').Length > 2 ? Model.CustomerName.Split(' ')[2] : "", new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Отчество" }, { "data-form", "applicant" }, { "required", "required" } })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label>Дата рождения</label>
+                        <div class="input-group">
+                            @Html.TextBox("birthDate", Model.DocumentBirthDate, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "__.__.____" }, { "data-form", "applicant" }, { "data-type", "date" }, { "required", "required" } })
+                            <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Пол</label>
+                        <div class="input-group">
+                            @Html.DropDownList("Gender", new SelectList(new List<SelectListItem> { new SelectListItem { Text = "Мужской", Value = "Муж" }, new SelectListItem { Text = "Женский", Value = "Жен" } }, "Value", "Text"), new Dictionary<string, object> { { "class", "selectpicker" }, { "data-style", "btn-white" } })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="actions clearfix text-right">
+    <button type="button" id="nextSmevRequestDataSend" class="btn btn-default waves-effect waves-light btn-block-xs m-l-5"> Далее <i class="ion-chevron-right m-l-5"></i></button>
+</div>
+<script>
+     $('button#nextSmevRequestDataSend').click(function () {
+         var Form = $('#snilsForm');
+        if (!Form.valid()) {
+            Form.addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                $(this).removeClass('shake animated');
+            });
+        }
+        else {
+            smevSendData('@Url.Action("Smev_Snils", "Smev")', Form.serialize());
+        }
+    });     
+</script>

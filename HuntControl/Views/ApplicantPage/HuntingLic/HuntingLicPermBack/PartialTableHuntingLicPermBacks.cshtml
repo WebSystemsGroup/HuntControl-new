@@ -1,0 +1,85 @@
+﻿@model HuntControl.WebUI.Models.ApplicantPageViewModel
+<div class="row">
+    <div class="col-sm-10 col-xs-6">
+        <h3 class="panel-title">Список корешков</h3>
+    </div>
+    <div class="col-sm-2 col-xs-6 m-b-10">
+        <div class="text-right">
+            @using (Ajax.BeginForm("PartialModalAddHuntingLicPermBack", "ApplicantPage", new { huntingLicPermId = ViewBag.HuntingLicPermId }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+            {
+                <button type="submit" class="btn btn-inverse waves-effect waves-light btn-sm"> Добавить <i class="fa fa-plus m-l-5"></i></button>
+            }
+        </div>
+    </div>
+</div>
+<div class="card-box p-0">
+    <div class="table-responsive">
+        <table class="table table-hover m-b-0">
+            <thead>
+                <tr>
+                    <th class="number-row p-l-20-important">№</th>
+                    <th>@Html.DisplayNameFor(model => model.HuntingLicPermBackList.First().date_back)</th>
+                    <th class="text-right p-r-20-important">
+                        Действия
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.HuntingLicPermBackList)
+                {
+                    <tr data-hunting-lic-perm-back-id="@item.id">
+                        <td class="number-row p-l-20-important vertical-middle-important">
+                            @((Model.PageInfo.CurrentPage - 1) * Model.PageInfo.ItemsPerPage + ++Model.PageInfo.NumberRow)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(i => item.date_back)
+                        </td>
+                        <td class="actions vertical-middle-important">
+                            @if (User.IsInRole("superadmin") || User.IsInRole("admin"))
+                            {
+                                if (item.is_remove != true)
+                                {
+                                    using (Ajax.BeginForm("PartialModalPermBackAnimals", "ApplicantPage", new { huntingLicPermBackId = item.id }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                                    {
+                                        <button class="on-default edit-row link" data-placement="top" data-toggle="tooltip" data-original-title="Лимиты на животного">
+                                            <i class="ion-ios7-paw"></i>
+                                            <span class="badge badge-xs badge-danger">@(item.data_customer_hunting_lic_perm_back_animal.Any() ? (object)item.data_customer_hunting_lic_perm_back_animal.Count : null)</span>
+                                        </button>
+                                    }
+                                    using (Ajax.BeginForm("PartialModalEditHuntingLicPermBack", "ApplicantPage", new { huntingLicPermBackId = item.id }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+                                    {
+                                        <button class="on-default edit-row link" data-placement="top" data-toggle="tooltip" data-original-title="Изменение"><i class="ion-edit"></i></button>
+                                    }
+                                    <button class="on-default remove-row link" data-placement="top" data-toggle="tooltip" data-original-title="Удаление"><i class="ion-trash-b"></i></button>
+                                }
+                                else
+                                {
+                                    <button class="on-default recovery-row link" data-placement="top" data-toggle="tooltip" data-original-title="Восстановление"><i class="fa fa-history"></i></button>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <hr class="m-0">
+    <div class="row p-t-10 p-l-20-important p-r-20-important p-b-10">
+        <div class="col-sm-6">
+            <div class="dataTables_info" id="datatable_info" role="status" aria-live="polite">Показаны @((Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage > Model.PageInfo.TotalItems) ? Model.PageInfo.TotalItems : Model.PageInfo.CurrentPage * Model.PageInfo.ItemsPerPage) из @Model.PageInfo.TotalItems записей</div>
+        </div>
+        <div class="col-sm-6">
+            <div class="dataTables_paginate paging_simple_numbers" id="datatable-editable_paginate">
+                @Html.PageLinks(Model.PageInfo, x => Ajax.ActionLink(x.NameLink, "PartialTableHuntingLicPermBacks", "ApplicantPage", new { page = x.CurrentPage, huntingLicPermId = ViewBag.HuntingLicPermId }, new AjaxOptions { UpdateTargetId = "huntingLicPermBackContainer" }))
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#huntingLicPermBackContainer table td button.remove-row').click(function () {
+        var huntingLicPermBackId = $(this).closest('tr').data('huntingLicPermBackId');
+        removeData('@Url.Action("SubmitHuntingLicPermBackDelete", "ApplicantPage")', { huntingLicPermBackId: huntingLicPermBackId }, function (data) { $('#huntingLicPermBackContainer').html(data); });
+    });
+</script>
+

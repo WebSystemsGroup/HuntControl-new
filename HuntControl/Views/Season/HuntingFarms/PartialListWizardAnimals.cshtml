@@ -1,0 +1,57 @@
+﻿@model HuntControl.WebUI.Models.AnimalViewModel
+<form id="WizardAnimalForm">
+    <div class="card-box p-0">
+        <div class="table-responsive">
+            <table class="table m-b-0">
+                <thead>
+                    <tr>
+                        <th class="number-row p-l-20-important"></th>
+                        <th>@Html.DisplayNameFor(model => model.AnimalList.First().animal_name)</th>
+                        <th>Период</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{int index = 0;}
+                    @foreach (var item in Model.AnimalList)
+                    {
+                        <tr>
+                            <td class="number-row p-l-20-important">
+                                <div class="checkbox checkbox-primary checkbox-single m-t-5 m-b-0">
+                                    <input type="checkbox" id="checkAnimal[@index]" name="checkAnimal" value="false">
+                                    <label></label>
+                                </div>
+                            </td>
+                            <td class="vertical-middle">
+                                <label for="checkAnimal[@index]">@Html.DisplayFor(i => item.animal_name)</label>
+                            </td>
+                            <td style="width: 400px;">
+                                @Html.Hidden($"animalSeasons[{index}].spr_animal_id", item.id)
+                                <div class="input-daterange input-group" id="date-range">
+                                    @Html.TextBox($"animalSeasons[{index}].date_start", null, "{0:dd.MM.yyyy}", new { @class = "form-control input-sm required", disabled = "disabled" })
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
+                                    @Html.TextBox($"animalSeasons[{index}].date_stop", null, "{0:dd.MM.yyyy}", new { @class = "form-control input-sm required", disabled = "disabled" })
+                                </div>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+
+<script>
+    $(function () {
+        $("[name='checkAnimal']").change(function() {
+            if ($(this).is(':checked')) {
+                $(this).closest('tr').find('#date-range input').prop("disabled", false);
+            } else {
+                $(this).closest('tr').find('#date-range input').val('').prop("disabled", true);
+            }
+        });
+        $('#animalsWizardContainer #date-range').datepicker({ format: 'dd.mm.yyyy', toggleActive: true, autoclose: true, language: 'ru', orientation: 'bottom right', startDate: '@ViewBag.DateStart', endDate: '@ViewBag.DateStop' }).on("changeDate", function(e) {
+            $(this).closest("tr").find("input[name='checkAnimal']").prop("checked", true);
+        });
+    });
+</script>

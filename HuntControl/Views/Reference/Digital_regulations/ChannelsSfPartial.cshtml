@@ -1,0 +1,122 @@
+﻿@model WebAIS.Models.KcrModel.channelsSFType
+
+<div class="row justify-content-end">
+    <div class="col-lg-11 accardion-milti-castoner">
+        <div class="accardion-milti-castoner-сontrol">
+            <button type="button" class="btn accardion-milti-castoner-btn-show" data-accardion onclick="showAdccardion(this)">
+                Способы подачи запроса и документов
+            </button>
+            <i class="fa fa-chevron-left accardion-chevron" aria-hidden="true"></i>
+        </div>
+        <div class="accardion-content-milti-castoner" data-accardion-content style="display: none">
+            <fieldset>
+                <div class="row justify-content-center">
+                    <table class="table">
+                        <tbody>
+                            @if (Model.uniqueChannelsSpecified)
+                            {
+                                <tr>
+                                    <td>Способы обращения меняются для категории лиц?</td>
+                                    <td>@(Model.uniqueChannels ? "да" : "нет")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                @if (Model.requestChannels != null && Model.requestChannels.Length > 0)
+                {
+                    <div class="row justify-content-end">
+                        <div class="col-lg-11 accardion-milti-castoner">
+                            <div class="accardion-milti-castoner-сontrol">
+                                <button type="button" class="btn accardion-milti-castoner-btn-show" data-accardion onclick="showAdccardion(this)">
+                                    Способы подачи
+                                </button>
+                                <i class="fa fa-chevron-left accardion-chevron" aria-hidden="true"></i>
+                            </div>
+                            <div class="accardion-content-milti-castoner" data-accardion-content style="display: none">
+                                <fieldset>
+                                    @foreach (var requestChannel in Model.requestChannels)
+                                    {
+                                        <table class="table">
+                                            <tbody>
+                                                @if (requestChannel.channel != null)
+                                                {
+                                                    <tr>
+                                                        <td>Способ подачи запроса и документов</td>
+                                                        <td>@requestChannel.channel.id</td>
+                                                    </tr>
+                                                }
+                                                @if (requestChannel.hasMfcRefuseSpecified)
+                                                {
+                                                    <tr>
+                                                        <td>Признак отказа в МФЦ</td>
+                                                        <td>@(requestChannel.hasMfcRefuse ? "да" : "нет")</td>
+                                                    </tr>
+                                                }
+                                                @if (requestChannel.identifyMethods != null && requestChannel.identifyMethods.Length > 0)
+                                                {
+                                                    <tr>
+                                                        <td>Способы установления личности</td>
+                                                        <td>
+                                                            @foreach (var item in requestChannel.identifyMethods)
+                                                            {
+                                                                <p>- @item.id</p>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                @if (requestChannel.applicants != null)
+                                                {
+                                                    <tr>
+                                                        <td>Наименование категории лиц</td>
+                                                        <td>
+                                                            @foreach (var item in requestChannel.applicants)
+                                                            {
+                                                                <p>- @item.id</p>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    }
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (Model.resultChannels != null && Model.resultChannels.Length > 0)
+                {
+                    <div class="row justify-content-end">
+                        <div class="col-lg-11 accardion-milti-castoner">
+                            <div class="accardion-milti-castoner-сontrol">
+                                <button type="button" class="btn accardion-milti-castoner-btn-show" data-accardion onclick="showAdccardion(this)">
+                                    Способы получения
+                                </button>
+                                <i class="fa fa-chevron-left accardion-chevron" aria-hidden="true"></i>
+                            </div>
+                            <div class="accardion-content-milti-castoner" data-accardion-content style="display: none">
+                                <fieldset>
+                                    <div class="row justify-content-center">
+                                        <table class="table">
+                                            <tbody>
+
+                                                @foreach (var resultChannel in Model.resultChannels)
+                                                {
+                                                    <tr>
+                                                        <td>@resultChannel.channel.id</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </fieldset>
+        </div>
+    </div>
+</div>

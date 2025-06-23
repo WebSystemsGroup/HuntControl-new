@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "Реестр нарушений";
+
+}
+
+@Html.MvcSiteMap().SiteMapPath()
+
+
+
+
+<div id="filterReportDataCustomerViolationsReestrContainer">
+    @Html.Action("PartialFilterDataCustomerViolationsReestr")
+</div>
+
+
+
+<div id="reportDataCustomerViolationsReestr">
+    <div class="alert alert-warning">
+        <span style="color:#00545c;"><strong><i class="icon-info"></i></strong> Воспользуйтесь фильтром.</span>
+    </div>
+</div>
+

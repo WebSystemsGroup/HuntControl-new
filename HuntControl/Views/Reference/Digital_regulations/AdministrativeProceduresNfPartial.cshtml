@@ -1,0 +1,67 @@
+﻿@model IEnumerable<WebAIS.Models.KcrModel.administrativeProceduresNFType>
+
+<div class="row justify-content-end">
+    <div class="col-lg-11 accardion-milti-castoner">
+        <div class="accardion-milti-castoner-сontrol">
+            <button type="button" class="btn accardion-milti-castoner-btn-show" data-accardion onclick="showAdccardion(this)">
+                Административные процедуры
+            </button>
+            <i class="fa fa-chevron-left accardion-chevron" aria-hidden="true"></i>
+        </div>
+        <div class="accardion-content-milti-castoner" data-accardion-content style="display: none">
+            <fieldset>
+                @foreach (var proc in Model)
+                {
+                    <div class="row justify-content-end">
+                        <div class="col-lg-11 accardion-milti-castoner">
+                            <div class="accardion-milti-castoner-сontrol">
+                                <button type="button" class="btn accardion-milti-castoner-btn-show" data-accardion onclick="showAdccardion(this)">
+                                    Административная процедура
+                                </button>
+                                <i class="fa fa-chevron-left accardion-chevron" aria-hidden="true"></i>
+                            </div>
+                            <div class="accardion-content-milti-castoner" data-accardion-content style="display: none">
+                                <fieldset>
+                                    <div class="row justify-content-center">
+                                        <table class="table">
+                                            <tbody>
+                                            @if (proc.order != null)
+                                            {
+                                                <tr>
+                                                    <td>Порядковый номер</td>
+                                                    <td>@proc.order</td>
+                                                </tr>
+                                            }
+                                            @if (proc.number != null)
+                                            {
+                                                <tr>
+                                                    <td>Счетчик экземпляра АП</td>
+                                                    <td>@proc.number</td>
+                                                </tr>
+                                            }
+                                            @if (proc.name != null)
+                                            {
+                                                <tr>
+                                                    <td>Административная процедура</td>
+                                                    <td>@proc.name.name</td>
+                                                </tr>
+                                            }
+                                            @if (proc.timeFrameQuantity != null)
+                                            {
+                                                <tr>
+                                                    <td>Срок выполнения АП</td>
+                                                    <td>@proc.timeFrameQuantity @(proc.timeFrameUnit != null ? proc.timeFrameUnit.name : "")</td>
+                                                </tr>
+                                            }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </fieldset>
+        </div>
+    </div>
+</div>

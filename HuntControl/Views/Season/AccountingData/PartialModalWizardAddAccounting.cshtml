@@ -1,0 +1,153 @@
+﻿@model HuntControl.Domain.Concrete.spr_hunting_farm_accounting
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myLargeModalLabel">Мастер добавления годового учёта</h4>
+        </div>
+        <div class="modal-body app-content">
+
+            <div class="wizard-circle wizard_add_accounting" id="wizardAddAccounting">
+                <!-- Step 1 -->
+                <h6>Данные</h6>
+                <fieldset class="p-0">
+                    <div id="dataWizardContainer">
+                        <form id="WizardAccountingForm">
+                            <div class="form-group form-group-sm">
+                                <div class="row">
+                                    @Html.LabelFor(model => model.spr_animal_id, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                    <div class="col-md-5">
+                                        @Html.DropDownListFor(model => model.spr_animal_id, ViewBag.Animals as SelectList, "-- Выберите животное --", new Dictionary<string, object> { { "class", "form-control select2 input-sm required" } })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <div class="row">
+                                    @Html.LabelFor(model => model.spr_animal_method_account_id, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                    <div class="col-md-5">
+                                        @Html.DropDownListFor(model => model.spr_animal_method_account_id, ViewBag.MethodAccounts as SelectList, "-- Выберите способ учёта --", new Dictionary<string, object> { { "class", "form-control select2 input-sm required" } })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <div class="row">
+                                    @Html.LabelFor(model => model.animal_sex, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                    <div class="col-md-5">
+                                        @Html.DropDownListFor(model => model.animal_sex, new SelectList(new List<SelectListItem> { new SelectListItem { Value = "0", Text = "Без полового различия" }, new SelectListItem { Value = "1", Text = "Самец" }, new SelectListItem { Value = "2", Text = "Самка" } }, "Value", "Text"), new Dictionary<string, object> { { "class", "form-control select2 input-sm required" } })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <div class="row">
+                                    @Html.LabelFor(model => model.animal_age, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                    <div class="col-md-5">
+                                        @Html.DropDownListFor(model => model.animal_age, new SelectList(new List<SelectListItem> { new SelectListItem { Value = "0", Text = "Без возрастных различий" }, new SelectListItem { Value = "1", Text = "До года" }, new SelectListItem { Value = "2", Text = "Старше года" } }, "Value", "Text"), new Dictionary<string, object> { { "class", "form-control select2 input-sm" } })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <div class="row">
+                                    @Html.LabelFor(model => model.year_, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                    <div class="col-md-5">
+                                        @Html.TextBoxFor(model => model.year_, new Dictionary<string, object> { { "class", "form-control required" }, { "placeholder", Html.DisplayNameFor(model => model.year_) }, { "data-val", "true" } })
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </fieldset>
+
+                <!-- Step 2 -->
+                <h6>Охотугодья</h6>
+                <fieldset class="p-0">
+                    <div id="huntingFarmsWizardContainer" class="hunting_farms_container">
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+
+<script src="~/Content/plugins/select2/js/select2.full.min.js"></script>
+<script>
+    $("#WizardAccountingForm").validate().settings.ignore = ".bs-select-hidden";
+    $(function() {
+        $("#wizardAddAccounting").steps({
+        headerTag: "h6",
+        bodyTag: "fieldset",
+        transitionEffect: "fade",
+        titleTemplate: '<span class="step"></span> #title#',
+        labels: { previous: "Назад", next: "Далее", finish: "Сохранить" },
+        onStepChanging: function (event, currentIndex, newIndex) {
+            var result = true;
+            var wizardAccountingForm = $('#WizardAccountingForm');
+            $.validator.unobtrusive.parse(document);
+
+            if (newIndex === 1 && currentIndex === 0 && wizardAccountingForm.valid()) {
+                $.ajax({
+                    type: 'POST',
+                    async: false,
+                    url: '@Url.Action("PartialListWizardHuntingFarms", "Season")',
+                    data: { animalId: $('#spr_animal_id').val() },
+                    success: function (data) {
+                        $("#huntingFarmsWizardContainer").html(data);
+                        result = true;
+                    },
+                    error: function () {
+                        result = false;
+                    }
+                });
+            }
+            else if(newIndex === 0 && currentIndex === 1)
+                result = true;
+            else
+                result = false;
+            return result;
+        },
+        onStepChanged: function (event, currentIndex, priorIndex) {
+            if (currentIndex < priorIndex) {
+                var theSteps = $('.steps ul').find('.current');
+                $(theSteps).next('li').removeClass('done').addClass('disabled');
+            }
+        },
+        onFinishing: function () {
+            var result = true;
+            var wizardAccountingForm = $('#WizardAccountingForm');
+            var wizardHuntingFarmForm = $('#WizardHuntingFarmForm');
+            $.validator.unobtrusive.parse(document);
+            if (!wizardAccountingForm.valid()) {
+                return false;
+            }
+            else if (!wizardHuntingFarmForm.valid()) {
+                return false;
+            }
+            $.ajax({
+                type: 'POST',
+                async: false,
+                url: '@Url.Action("WizardAccountingSave", "Season")',
+                data: wizardAccountingForm.serialize() + '&' + wizardHuntingFarmForm.serialize(),
+                success: function (data) {
+                    swal({
+                        type: 'success',
+                        title: 'Готово!',
+                        html: 'Учетные данные успешно добавлены.'
+                    });
+                    $('#myModal').modal("hide");
+                    result = true;
+                },
+                error: function (data) {
+                    result = false;
+                }
+            });
+            return result;
+        }
+        });
+    });
+
+    $(".select2").select2();
+    $("select").on("select2:close",
+        function(e) {
+            $(this).valid();
+        });
+</script>

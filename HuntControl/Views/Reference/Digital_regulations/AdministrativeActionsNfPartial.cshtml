@@ -1,0 +1,188 @@
+﻿@model IEnumerable<WebAIS.Models.KcrModel.administrativeActionsNFType>
+
+<div class="row justify-content-end">
+    <div class="col-lg-11 accardion-milti-castoner">
+        <div class="accardion-milti-castoner-сontrol">
+            <button type="button" class="btn accardion-milti-castoner-btn-show" data-accardion onclick="showAdccardion(this)">
+                Административные действия
+            </button>
+            <i class="fa fa-chevron-left accardion-chevron" aria-hidden="true"></i>
+        </div>
+        <div class="accardion-content-milti-castoner" data-accardion-content style="display: none">
+            <fieldset>
+                @foreach (var action in Model)
+                {
+                    <div class="row justify-content-end">
+                        <div class="col-lg-11 accardion-milti-castoner">
+                            <div class="accardion-milti-castoner-сontrol">
+                                <button type="button" class="btn accardion-milti-castoner-btn-show" data-accardion onclick="showAdccardion(this)">
+                                    Административное действие
+                                </button>
+                                <i class="fa fa-chevron-left accardion-chevron" aria-hidden="true"></i>
+                            </div>
+                            <div class="accardion-content-milti-castoner" data-accardion-content style="display: none">
+                                <fieldset>
+                                    <div class="row justify-content-center">
+                                        <table class="table">
+                                            <tbody>
+                                            @if (action.name != null)
+                                            {
+                                                <tr>
+                                                    <td>Административное действие</td>
+                                                    <td>@action.name.name</td>
+                                                </tr>
+                                            }
+                                            @if (action.innerStatus != null)
+                                            {
+                                                <tr>
+                                                    <td>Внутренний статус</td>
+                                                    <td>@action.innerStatus.name</td>
+                                                </tr>
+                                            }
+                                            @if (action.isAffectedByAdmActionSpecified)
+                                            {
+                                                <tr>
+                                                    <td>Влияет на изменение статуса на ЕПГУ?</td>
+                                                    <td>@(action.isAffectedByAdmAction ? "да" : "нет")</td>
+                                                </tr>
+                                            }
+                                            @if (action.epguStatus != null)
+                                            {
+                                                <tr>
+                                                    <td>Статус ЕПГУ</td>
+                                                    <td>@action.epguStatus.name</td>
+                                                </tr>
+                                            }
+                                            @if (action.epguStatusComment != null)
+                                            {
+                                                <tr>
+                                                    <td>Комментарий к статусу ЕПГУ для заявителя</td>
+                                                    <td>@action.epguStatusComment</td>
+                                                </tr>
+                                            }
+                                             @if (action.performedBy != null)
+                                             {
+                                            	<tr>
+                                            		<td>Действие выполняет</td>
+                                            		<td>@action.performedBy.name</td>
+                                            	</tr>
+                                            }
+                                            @if (action.isAvailableInPgsSpecified)
+                                            {
+                                                <tr>
+                                                    <td>Признак наличия действия в ПГС?</td>
+                                                    <td>@(action.isAvailableInPgs ? "да" : "нет")</td>
+                                                </tr>
+                                            }
+                                            @if (action.isSuspensionServiceSpecified)
+                                            {
+                                                <tr>
+                                                    <td>Приостанавливается ли предоставление услуги на время исполнение настоящей АД?</td>
+                                                    <td>@(action.isSuspensionService ? "да" : "нет")</td>
+                                                </tr>
+                                            }
+                                             @if (action.timeFrameQuantity != null)
+                                             {
+                                                 <tr>
+                                                     <td>Срок выполнения АД</td>
+                                                     <td>@action.timeFrameQuantity @(action.timeFrameUnit != null ? action.timeFrameUnit.name : "")</td>
+                                                 </tr>
+                                             }
+                                              @if (action.isServiceTimeFrameAffectedSpecified)
+                                              {
+                                                  <tr>
+                                                      <td>Влияет на срок предоставления услуги?</td>
+                                                      <td>@(action.isServiceTimeFrameAffected ? "да" : "нет")</td>
+                                                  </tr>
+                                              }
+                                              @if (action.timeMvzQuantity != null)
+                                              {
+                                                  <tr>
+                                                      <td>Срок выполнения МВ</td>
+                                                      <td>@action.timeMvzQuantity @(action.timeMvzUnit != null ? action.timeMvzUnit.name : "")</td>
+                                                  </tr>
+                                              }
+                                             @if (action.reasonsAdditionalInformation != null && action.reasonsAdditionalInformation.Length > 0)
+                                             {
+                                            	<tr>
+                                            		<td>Основания для получения дополнительных сведений от заявителя</td>
+                                            		<td>
+                                            			@foreach (var item in action.reasonsAdditionalInformation)
+                                            			{
+                                            				<p>- @item.name</p>
+                                            			}
+                                            		</td>
+                                            	</tr>
+                                            }
+                                            @if (action.authorities != null && action.authorities.Length > 0)
+                                            {
+                                                <tr>
+                                                    <td>Орган власти</td>
+                                                    <td>
+                                                        @foreach (var item in action.authorities)
+                                                        {
+                                                            <p>- @item.name</p>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                              @if (action.additionalInformationIn != null && action.additionalInformationIn.Length > 0)
+                                              {
+                                                  <tr>
+                                                      <td>Входные сведения</td>
+                                                      <td>
+                                                          @foreach (var item in action.additionalInformationIn)
+                                                          {
+                                                              <p>- @item</p>
+                                                          }
+                                                      </td>
+                                                  </tr>
+                                              }
+                                            @if (action.additionalInformationOut != null && action.additionalInformationOut.Length > 0)
+                                            {
+                                                <tr>
+                                                    <td>Выходные сведения</td>
+                                                    <td>
+                                                        @foreach (var item in action.additionalInformationOut)
+                                                        {
+                                                            <p>- @item</p>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                              @if (action.documentsIn != null && action.documentsIn.Length > 0)
+                                              {
+                                                  <tr>
+                                                      <td>Входные документы</td>
+                                                      <td>
+                                                          @foreach (var item in action.documentsIn)
+                                                          {
+                                                              <p>- @item</p>
+                                                          }
+                                                      </td>
+                                                  </tr>
+                                              }
+                                             @if (action.documentsOut != null && action.documentsOut.Length > 0)
+                                             {
+                                                 <tr>
+                                                     <td>Выходные документы</td>
+                                                     <td>
+                                                         @foreach (var item in action.documentsOut)
+                                                         {
+                                                             <p>- @item</p>
+                                                         }
+                                                     </td>
+                                                 </tr>
+                                             }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </fieldset>
+        </div>
+    </div>
+</div>

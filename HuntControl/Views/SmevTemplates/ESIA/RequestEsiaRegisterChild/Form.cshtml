@@ -1,0 +1,454 @@
+﻿@model WebAIS.StoreProcedure.SModel.case_customer_root_get_smev
+
+<div class="modal-card-head wrap-flex">
+    <nav class="breadcrumb m-b-0">
+        <div class="container">
+            <div class="row-flex">
+                <div class="col-flex"><div class="breadcrumb-item complete">Запрос</div></div>
+                <div class="col-flex"><div class="breadcrumb-item active">Данные</div></div>
+                <div class="col-flex"><div class="breadcrumb-item">Ответ</div></div>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="modal-card-body">
+    <div class="form-vertical smev-request" id="smev-esia-tabs">
+        <ul class="tab-horizontal">
+            <li><a href="#smev-esia-tab-1">Данные родителя</a></li>
+            <li><a href="#smev-esia-tab-2">Данные ребенка</a></li>
+        </ul>
+        <form id="_esiaForm">
+            <input name="data_services_id" type="hidden" class="data_services_id" />
+            <div id="smev-esia-tab-1" class="form-content smev-request">
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="LastName">Фамилия</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input capitalize" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="LastName" name="fio.LastName" placeholder="Фамилия" type="text" value="@Model.out_customer_name.Split(' ')[0]">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Имя</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input capitalize" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="FirstName" name="fio.FirstName" placeholder="Имя" type="text" value="@(Model.out_customer_name.Split(' ').Length >= 2 ? Model.out_customer_name.Split(' ')[1]:"")">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="SecondName">Отчество</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input capitalize" data-val="true" data-val-length="" data-validation-allowing="-" id="SecondName" name="fio.SecondName" placeholder="Отчество" type="text" value="@(Model.out_customer_name.Split(' ').Length >= 3 ? Model.out_customer_name.Split(' ')[2]:"")">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="Snils">СНИЛС</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-validation="required" data-validation-allowing="-" id="Snils" name="Snils" placeholder="СНИЛС" type="text" value="@Model.out_customer_snils" data-inputmask="'mask': '999-999-999 99'">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="inn">
+                            Тип документа
+                        </label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <select class="select" id="identityType" name="identityType" data-case-doc-identity="" data-identity-doc-serial="documentData_DocSeries" , data-identity-doc-number="documentData_DocNumber">
+                                <option value="RfPassport" selected>Паспорт гражданина РФ</option>
+                                <option value="FidDoc">Документ иностранного гражданина</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Серия</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="documentData_DocSeries" name="documentData.DocSeries" placeholder="" type="text" value="@Model.out_document_serial" data-inputmask="'mask': '9999'">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Номер</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="documentData_DocNumber" name="documentData.DocNumber" placeholder="" type="text" value="@Model.out_document_number" data-inputmask="'mask': '999999'">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Код подразделения</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" name="documentData.IssuerCode" placeholder="" type="text" value="@Model.out_document_code" data-inputmask="'mask': '999999'">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="BirthDate">Дата выдачи</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control has-addons">
+                            <input class="input" type="text" name="documentData.DocDate" value="@Model.out_document_issue_date" placeholder="__.__.____" data-inputmask="'mask': '99.99.9999'"
+                                   data-validation="date" data-validation-format="dd.mm.yyyy"
+                                   data-input-datetimepicker="" data-input-datetimepicker-options='{"timepicker":false,"format":"d.m.Y","scrollMonth":false,"scrollInput":false}' />
+                            <span class="icon" style="top:0px;"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex" id="div_documentData_DocEndDate" style="display:none">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="BirthDate">Дата окончания</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control has-addons">
+                            <input class="input" type="text" id="documentData_DocEndDate" name="documentData.DocEndDate" value="" placeholder="__.__.____" data-inputmask="'mask': '99.99.9999'"
+                                   data-validation="date" data-validation-format="dd.mm.yyyy"
+                                   data-input-datetimepicker="" data-input-datetimepicker-options='{"timepicker":false,"format":"d.m.Y","scrollMonth":false,"scrollInput":false}' />
+                            <span class="icon" style="top:0px;"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex nomargin-bottom">
+                    <h2 class="col-flex is-offset-5 form-title">Контактные данные</h2>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="SecondName">Номер телефона</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-validation-allowing="-" name="mobile" placeholder="" type="text" value="@Model.out_customer_tel1" data-inputmask="'mask': '+7(999)9999999'">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="SecondName">E-mail</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-validation-allowing="-" name="email" placeholder="" type="text" value="@Model.out_customer_email">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="smev-esia-tab-2" class="form-content smev-request">
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="LastName">Фамилия</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input capitalize" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="ChildFio_LastName" name="ChildFio.LastName" placeholder="Фамилия" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Имя</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input capitalize" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="ChildFio_FirstName" name="ChildFio.FirstName" placeholder="Имя" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="SecondName">Отчество</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input capitalize" data-val="true" data-val-length="" data-validation-allowing="-" id="ChildFio_SecondName" name="ChildFio.SecondName" placeholder="Отчество" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="BirthDate">Дата рождения</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control has-addons">
+                            <input class="input" type="text" name="ChildBirthDate" id="ChildBirthDate" value="" placeholder="__.__.____" data-inputmask="'mask': '99.99.9999'"
+                                   data-validation="date" data-validation-format="dd.mm.yyyy"
+                                   data-input-datetimepicker="" data-input-datetimepicker-options='{"timepicker":false,"format":"d.m.Y","scrollMonth":false,"scrollInput":false}' />
+                            <span class="icon" style="top:0px;"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="Gender">Пол</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            @Html.DropDownListFor(m => m.out_customer_sex, new List<SelectListItem> { new SelectListItem { Text = "Мужской", Value = "Муж" }, new SelectListItem { Text = "Женский", Value = "Жен" } }, new { @data_val = "true", @id = "ChildGender", @Name = "ChildGender", @class = "select" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="Snils">СНИЛС</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-validation="required" data-validation-allowing="-" id="ChildSnils" name="ChildSnils" placeholder="СНИЛС" type="text" value="" data-inputmask="'mask': '999-999-999 99'">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="Snils">ИНН</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-validation="required" data-validation-allowing="-" id="ChildInn" name="ChildInn" placeholder="ИНН" type="text" value="" data-inputmask="'mask': '999999999999'">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex nomargin-bottom">
+                    <h2 class="col-flex is-offset-5 form-title">Свидетельство о рождении</h2>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Серия</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="ChildBirthCert_DocSeries" name="ChildBirthCert.DocSeries" placeholder="" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Номер</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="ChildBirthCert_DocNumber" name="ChildBirthCert.DocNumber" placeholder="" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Кем выдан</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" name="ChildBirthCert.Issuer" placeholder="" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="BirthDate">Дата выдачи</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control has-addons">
+                            <input class="input" type="text" name="ChildBirthCert.DocDate" value="" placeholder="__.__.____" data-inputmask="'mask': '99.99.9999'"
+                                   data-validation="date" data-validation-format="dd.mm.yyyy"
+                                   data-input-datetimepicker="" data-input-datetimepicker-options='{"timepicker":false,"format":"d.m.Y","scrollMonth":false,"scrollInput":false}' />
+                            <span class="icon" style="top:0px;"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Количество родителей</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="number" data-validation-allowing="-" name="ChildBirthCert.ParentsCount" placeholder="" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex nomargin-bottom">
+                    <h2 class="col-flex is-offset-5 form-title">Полис</h2>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Дата окончания действия страхового полиса</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control has-addons">
+                            <input class="input" type="text" name="ChildInsurancePolice.ExpiryDate" value="" placeholder="__.__.____" data-inputmask="'mask': '99.99.9999'"
+                                   data-validation-format="dd.mm.yyyy"
+                                   data-input-datetimepicker="" data-input-datetimepicker-options='{"timepicker":false,"format":"d.m.Y","scrollMonth":false,"scrollInput":false}' />
+                            <span class="icon" style="top:0px;"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="FirstName">Номер</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="ChildInsurancePolice_Number" name="ChildInsurancePolice.Number" placeholder="" type="text" value="" data-inputmask="'mask': '999999999'">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="form-content smev-response" style="display:none;"></div>
+</div>
+<div class="modal-card-foot">
+    <div class="content-footer__action row-flex-right">
+        <button type="button" class="btn btn-danger attach-smev-response" style="display: none;">
+            <span>Прикрепить к услуге</span>
+            <span class="icon">
+                <i class="ion ion-ios-upload-outline"></i>
+            </span>
+        </button>
+        <button type="button" class="btn btn-danger is-form-send smev-send-data" data-url-smev="Smev_RequestEsiaRegisterChild">
+            <span>Далее</span>
+            <span class="icon">
+                <i class="ion ion-ios-arrow-forward"></i>
+            </span>
+        </button>
+    </div>
+</div>
+<script>
+    $.validate({
+        modules : 'date, security'
+    });
+    $(document).on('change', '[data-case-doc-identity]', function () {
+        var $this = $(this);
+        var doc_serial = $("#" + $this.data('identityDocSerial'));
+        var doc_num = $("#" + $this.data('identityDocNumber'));
+        $(doc_serial).val('');
+        $(doc_num).val('');
+        $(doc_serial).inputmask('remove');
+        $(doc_num).inputmask('remove');
+        $(doc_serial).removeAttr('data-inputmask');
+        $(doc_serial).removeAttr('data-inputmask');
+
+        switch ($this.val()) {
+            case 'RfPassport':
+                $(doc_serial).attr('placeholder', '99 99');
+                $(doc_serial).inputmask('99 99');
+                $(doc_num).removeAttr('data-inputmask');
+                $(doc_num).attr('placeholder', '999999');
+                $(doc_num).inputmask("999999");
+                break;
+            case 'FidDoc':
+                $(doc_serial).attr('placeholder', '__');
+                $(doc_num).removeAttr('data-inputmask');
+                $(doc_num).attr('placeholder', '________');
+                break;
+        }
+    });
+</script>
+<script>
+    flag = true;
+    $('#smev-esia-tabs').responsiveTabs({
+        startCollapsed: 'accordion'
+    });
+    if (typeof ('[data-dictionary]') != 'undefined') {
+        $.each($('[data-dictionary]'), function () {
+            var $this = $(this);
+            var options = $this.data('dictionaryOptions');
+            $.post('/Smev/Smev_GetDictionary', {
+                type: options.dictionary
+            }, function (items) {
+                if (items != 'undefined') {
+                    $this.empty();
+                    items.Dictionary.forEach(function (item, i, arr) {
+                        $this.append('<option value=' + item.Key + '>' + item.Value + '</option>');
+                    });
+                    $this.val("RUS").niceSelect('update');
+                }
+            }), 'json'
+        });
+    };
+    if (typeof ('#modal_smev_card_content') != 'undefined') {
+        $('input[data-inputmask]').inputmask();
+        $.datetimepicker.setLocale('ru');
+        $.each($('[data-input-datetimepicker]'), function () {
+            var $this = $(this);
+            var options = $this.data('input-datetimepicker-options');
+            var avalible_time = $this.data('input-datetimepicker-time');
+
+            if (typeof avalible_time != 'undefined') {
+                options['allowTimes'] = avalible_time.split(',');
+            }
+
+            $this.datetimepicker(options);
+        });
+        $.validate({
+            lang: 'ru',
+            modules: 'date, security',
+            borderColorOnError: '#e44d32',
+            dateFormat: 'dd-mm-yyyy'
+        });
+        $('#modal_smev_card_content select').niceSelect();
+    };
+    $('#SecondName').change(function () {
+        var _val = $(this).val();
+        var arr = _val.split(' ');
+        var lastChar = _val.substr(_val.length - 1);
+        if (lastChar.toLowerCase() == "ч") {
+            $("#Gender").val('Муж').niceSelect('update');
+        }
+        else {
+            $("#Gender").val('Жен').niceSelect('update');
+        }
+    });
+    $("#identityType").change(function () {
+        if ($("#identityType option:selected").val() == "RfPassport") {
+            $("#div_documentData_DocEndDate").hide();
+            $("#documentData_DocEndDate").val("");
+        }
+        else {
+            $("#div_documentData_DocEndDate").show();
+        }
+    });
+    $('.smev-send-data').on('click', function (e) {
+        if ($('#modal_smev_card_content').find('form').isValid() && _checkEsiaform() && flag) {
+            event.stopPropagation();
+            var btn = $(this);
+            var url = $(this).data('urlSmev');
+            smevSendData(url, btn);
+        }
+    });
+    function _checkEsiaform() {
+        var bl = false;
+        var $form = $('#modal_smev_card_content').find('form');
+        if (typeof ('#modal_smev_card_content') != 'undefined') {
+            $.each($('[data-validation]'), function () {
+                var $this = $(this);
+                if ($this.val() != '') {
+                    bl = true;
+                }
+                else {
+                    bl = false;
+                }
+            });
+        };
+        return bl;
+    }
+</script>

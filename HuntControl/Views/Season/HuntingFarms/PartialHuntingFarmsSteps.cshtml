@@ -1,0 +1,30 @@
+﻿<div class="wizard-circle card-box" id="wizardSeason">
+    <!-- Step 1 -->
+    <h6>Сезоны</h6>
+    <fieldset class="p-0">
+        <div id="huntingFarmSeasonContainer">
+            @Html.Action("PartialTableHuntingFarmSeasons", "Reference", new { huntingFarmId = ViewBag.HuntingFarmId })
+        </div>
+    </fieldset>
+
+    <!-- Step 2 -->
+    <h6>Животные</h6>
+    <fieldset class="p-0">
+        <div id="huntingFarmSeasonAnimalContainer">
+        </div>
+    </fieldset>
+
+    <!-- Step 4 -->
+    <h6>Норма на выборку</h6>
+    <fieldset class="p-0">
+        <div id="huntingFarmLimitContainer">
+        </div>
+    </fieldset>
+</div>
+
+
+<script>
+    $(function () {
+        $("#wizardSeason").steps({ enablePagination: false, headerTag: "h6", bodyTag: "fieldset", transitionEffect: "fade", titleTemplate: '<span class="step"></span> #title#'});
+    });
+</script>

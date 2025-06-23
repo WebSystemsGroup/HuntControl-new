@@ -1,0 +1,91 @@
+﻿@model IEnumerable<HuntControl.Domain.Concrete.spr_settings>
+@{
+    ViewBag.Title = "Настройки";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row m-t-15 m-b-15">
+    <div class="col-sm-12">
+        @Html.MvcSiteMap().SiteMapPath()
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-body">
+
+        @using (Ajax.BeginForm("SubmitSettingSave", "System", Model, new AjaxOptions { OnSuccess = "$('button[form=SaveSettingForm]').prop('disabled',true)" }, new { @id = "SaveSettingForm", @class = "form-horizontal" }))
+        {
+            <h3 class="panel-title">Данные FTP сервера</h3>
+            <hr class="m-t-10" />
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Сервер</label>
+                    <div class="col-md-5">
+                        @Html.TextBox("setting[ftp_server]", Model.SingleOrDefault(m => m.param_name == "ftp_server")?.param_value, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите адрес сервера" } })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Логин</label>
+                    <div class="col-md-3">
+                        @Html.TextBox("setting[ftp_user]", Model.SingleOrDefault(m => m.param_name == "ftp_user")?.param_value, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите логин" } })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Пароль</label>
+                    <div class="col-md-3">
+                        @Html.Password("setting[ftp_password]", Model.SingleOrDefault(m => m.param_name == "ftp_password")?.param_value, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите пароль" } })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">FTP папка</label>
+                    <div class="col-md-5">
+                        @Html.TextBox("setting[ftp_folder]", Model.SingleOrDefault(m => m.param_name == "ftp_folder")?.param_value, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите наименование папки" } })
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="panel-title">Данные СМЭВ 3</h3>
+            <hr class="m-t-10" />
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Сервер</label>
+                    <div class="col-md-5">
+                        @Html.TextBox("setting[smev_ftp_server]", Model.SingleOrDefault(m => m.param_name == "smev_ftp_server")?.param_value, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите адрес сервера" } })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Логин</label>
+                    <div class="col-md-3">
+                        @Html.TextBox("setting[smev_ftp_user]", Model.SingleOrDefault(m => m.param_name == "smev_ftp_user")?.param_value, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите логин" } })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">Пароль</label>
+                    <div class="col-md-3">
+                        @Html.Password("setting[smev_ftp_password]", Model.SingleOrDefault(m => m.param_name == "smev_ftp_password")?.param_value, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите пароль" } })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4 control-label text-right">СМЭВ папка</label>
+                    <div class="col-md-5">
+                        @Html.TextBox("setting[smev_ftp_folder]", Model.SingleOrDefault(m => m.param_name == "smev_ftp_folder")?.param_value, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "Введите наименование папки" } })
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="panel-footer text-right">
+        <button type="submit" form="SaveSettingForm" class="btn btn-success waves-effect waves-light btn-block-xs"> Сохранить <i class="fa fa-check m-l-5"></i></button>
+    </div>
+</div>

@@ -1,0 +1,60 @@
+﻿@model HuntControl.WebUI.Models.SmevRequestFormModel
+<link href="~/Content/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css">
+<link href="~/Content/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
+<link href="~/Content/plugins/multiselect/css/multi-select.css" rel="stylesheet" type="text/css">
+<link href="~/Content/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" rel="stylesheet">
+<link href="~/Content/plugins/switchery/dist/switchery.min.css" rel="stylesheet">
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<script src="~/Content/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+<script src="~/Content/plugins/switchery/dist/switchery.min.js"></script>
+<script src="~/Content/plugins/bootstrap-select/dist/js/bootstrap-select.min.js" type="text/javascript"></script>
+
+<script src="~/Content/plugins/select2/js/select2.min.js" type="text/javascript"></script>
+<script src="~/Content/plugins/multiselect/js/jquery.multi-select.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+        $('input[data-type=date]').datepicker({ format: 'dd.mm.yyyy', autoclose: true, language: 'ru' });
+
+        $('input[data-type=doc-snils]').inputmask({
+            mask: '999-999-999 99',
+            clearIncomplete: true
+        });
+    });
+</script>
+
+<form class="form-horizontal" id="reverseSnilsForm">
+    @Html.Hidden("dataServicesId", ViewBag.ServiceId as object)
+    <div class="form-group form-group-sm">
+        <div class="row">
+            <label class="col-md-4 control-label text-right">СНИЛС</label>
+            <div class="col-md-6">
+                @Html.TextBox("Snils", Model.CustomerSnils, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", "СНИЛС" }, { "required", "required" }, { "data-type", "Snils" } })
+            </div>
+        </div>
+    </div>
+</form>
+<div class="actions clearfix text-right">
+    <button type="button" id="nextSmevRequestDataSend" class="btn btn-default waves-effect waves-light btn-block-xs m-l-5"> Далее <i class="ion-chevron-right m-l-5"></i></button>
+</div>
+<script>
+    $(function () {
+        $('input[data-type=Snils]').inputmask({
+            mask: '999-999-999 99',
+            clearIncomplete: true
+        });
+    });
+    $('button#nextSmevRequestDataSend').click(function () {
+        var Form = $('#reverseSnilsForm');
+        if (!Form.valid()) {
+            Form.addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                $(this).removeClass('shake animated');
+            });
+        }
+        else {
+            smevSendData('@Url.Action("Smev_ReverseSnilsQuery", "Smev")', Form.serialize());
+        }
+    });
+</script>

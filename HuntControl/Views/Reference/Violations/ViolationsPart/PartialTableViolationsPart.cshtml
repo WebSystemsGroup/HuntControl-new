@@ -1,0 +1,117 @@
+﻿@model HuntControl.WebUI.Models.ReferenceViewModel
+@if (Model.SprViolationPartList.Any())
+{
+    <div class="card-box p-0">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="number-row p-l-20-important">№</th>
+                        <th>@Html.DisplayNameFor(model => model.SprViolationPartList.FirstOrDefault().part_)</th>
+                        <th>@Html.DisplayNameFor(model => model.SprViolationPartList.FirstOrDefault().part_text)</th>
+                        <th class="text-right p-r-20-important">
+                            <button id="showViolationsPartRemoves" type="button" class="link p-r-0 text-custom"><i class="@(ViewBag.IsRemove ? "ion-ios7-trash" : "ion-ios7-trash-outline") m-l-5" style="font-size: 20px;" data-placement="bottom" data-toggle="tooltip" data-original-title="@(ViewBag.IsRemove ? "Скрыть удаленные" : "Показать удаленные")"></i></button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.SprViolationPartList)
+                    {
+                        <tr data-violations-id="@item.id" class="@(item.is_remove == true ? "danger" : "")">
+                            <td class="number-row p-l-20-important">
+                                @((Model.PageInfo.CurrentPage - 1) * Model.PageInfo.ItemsPerPage + ++Model.PageInfo.NumberRow)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(i => item.part_)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(i => item.part_text)
+                            </td>
+                            <td class="actions">
+                                @if (User.IsInRole("superadmin") || User.IsInRole("admin"))
+                                {
+                                    if (item.is_remove != true)
+                                    {
+                                        <button class="on-default remove-row link"><i class="ion-trash-b"></i></button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="on-default text-custom link" style="font-size: 22px;line-height: 22px;" data-tooltip-info='{ "employees_fio": @Json.Encode(item.employees_fio), "employees_fio_modifi": @Json.Encode(item.employees_fio_modifi ?? "-"), "set_date": "@Html.DisplayFor(i=>item.set_date)", "is_remove": @Json.Encode(item.is_remove), "date_remove": "@Html.DisplayFor(i=>item.date_remove)", "employees_fio_remove": @Json.Encode(item.employees_fio_remove), "commentt_remove": @Json.Encode(item.commentt_remove)}'>
+                                            <i class="ion-ios7-information-outline"></i>
+                                        </button>
+                                        <button class="on-default recovery-row link" data-placement="top" data-toggle="tooltip" data-original-title="Восстановление"><i class="fa fa-history"></i></button>
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">
+        <span style="color:#00545c;"><strong><i class="icon-info"></i></strong> Нет частей.</span>
+    </div>
+}
+
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip({ trigger: 'hover' });
+        $('button[data-tooltip-info]').tooltip({
+            title: function () {
+                var tooltipInfo = $(this).data('tooltipInfo');
+                return "<div class='text-left'>" +
+                    "<strong>Добавил</strong>: " + tooltipInfo['employees_fio'] + "</br>" +
+                    "<strong>Дата добавления</strong>: " + tooltipInfo['set_date'] + "</br>" +
+                    "<hr class='m-t-5 m-b-5'>" +
+                    "<strong>Изменил</strong>: " + tooltipInfo['employees_fio_modifi'] + "</br>" +
+                    (tooltipInfo['is_remove'] ?
+                            "<hr class='m-t-5 m-b-5'>" +
+                            "<strong>Удалил</strong>: " + tooltipInfo['employees_fio_remove'] + "</br>" +
+                            "<strong>Причина удаления</strong>: " + tooltipInfo['commentt_remove'] + "</br>" +
+                            "<strong>Дата удаления</strong>: " + tooltipInfo['date_remove'] + "</br>" : "") +
+                    "</div>";
+            },
+            html: true,
+            placement: "left"
+        });
+    });
+    $('#showViolationsPartRemoves').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableViolationsPart", "Reference")',
+            data: { violationsId: '@ViewBag.ViolationsId', isRemove: '@(!ViewBag.IsRemove)' },
+            success: function (data) {
+                $('#violationsPartContainer').html(data);
+            }
+        });
+    });
+
+    $('#violationsPartContainer table td button.recovery-row').click(function () {
+        var violationsId = $(this).closest('tr').data('violationsId');
+        var paramObject = {
+            url: '@Url.Action("SubmitViolationsPartRecovery", "Reference")',
+            params: { violationsId: violationsId },
+            onSuccess: function (data) {
+                $('#violationsPartContainer').html(data);
+            }
+        }
+        removeRecovery(paramObject);
+    });
+
+    $('#violationsPartContainer table td button.remove-row').click(function () {
+        var violationsId = $(this).closest('tr').data('violationsId');
+        var paramObject = {
+            url: '@Url.Action("SubmitViolationsPartDelete", "Reference")',
+            params: { violationsId: violationsId },
+            onSuccess: function (data) {
+                $('#violationsPartContainer').html(data);
+            }
+        }
+        removeWithComment(paramObject);
+    });
+</script>

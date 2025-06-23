@@ -1,0 +1,86 @@
+﻿@model IEnumerable<WebAIS.Models.KcrModel.object5Type>
+
+<div class="row justify-content-end">
+    <div class="col-lg-11 accardion-milti-castoner">
+        <div class="accardion-milti-castoner-сontrol">
+            <button type="button" class="btn accardion-milti-castoner-btn-show" data-accardion onclick="showAdccardion(this)">
+                Межведомственные запросы без СМЭВ
+            </button>
+            <i class="fa fa-chevron-left accardion-chevron" aria-hidden="true"></i>
+        </div>
+        <div class="accardion-content-milti-castoner" data-accardion-content style="display: none">
+            <fieldset>
+                @foreach (var requests in Model)
+                {
+                    if (requests.requests != null && requests.requests.Length > 0)
+                    {
+                        foreach (var request in requests.requests)
+                        {
+                            <div class="row justify-content-end">
+                                <div class="col-lg-11 accardion-milti-castoner">
+                                    <div class="accardion-milti-castoner-сontrol">
+                                        <button type="button" class="btn accardion-milti-castoner-btn-show" data-accardion onclick="showAdccardion(this)">
+                                            Запрос без СМЭВ
+                                        </button>
+                                        <i class="fa fa-chevron-left accardion-chevron" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="accardion-content-milti-castoner" data-accardion-content style="display: none">
+                                        <fieldset>
+                                            <div class="row justify-content-center">
+                                                <table class="table">
+                                                    <tbody>
+                                                    @if (request.request != null)
+                                                    {
+                                                        @Html.Partial("~/Views/Reference/Digital_regulations/Request3NfPartial.cshtml", request.request)
+                                                    }
+                                                    @if (request.reasonService != null)
+                                                    {
+                                                        <tr>
+                                                            <td>Основания для запроса</td>
+                                                            <td>@request.reasonService.name</td>
+                                                        </tr>
+                                                    }
+                                                    @if (request.timeRequest != null)
+                                                    {
+                                                        <tr>
+                                                            <td>Срок выполнения запроса</td>
+                                                            <td>@request.timeRequest @(request.timeRequestMeasure != null ? request.timeRequestMeasure.name : "")</td>
+                                                        </tr>
+                                                    }
+                                                    @if (request.timeResponse != null)
+                                                    {
+                                                        <tr>
+                                                            <td>Срок выполнения ответа</td>
+                                                            <td>@request.timeResponse @(request.timeResponseMeasure != null ? request.timeResponseMeasure.name : "")</td>
+                                                        </tr>
+                                                    }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            @if (request.criteria != null)
+                                            {
+                                                @Html.Partial("~/Views/Reference/Digital_regulations/CriteriaNfPartial.cshtml", request.criteria)
+                                            }
+                                            @if (request.admProcedures != null)
+                                            {
+                                                @Html.Partial("~/Views/Reference/Digital_regulations/AdmProceduresNfPartial.cshtml", request.admProcedures)
+                                            }
+                                            @if (request.attributeRequests != null)
+                                            {
+                                                @Html.Partial("~/Views/Reference/Digital_regulations/AttributeRequestsNfPartial.cshtml", request.attributeRequests)
+                                            }
+                                            @if (request.attributeResponses != null)
+                                            {
+                                                @Html.Partial("~/Views/Reference/Digital_regulations/AttributeResponsesNfPartial.cshtml", request.attributeResponses)
+                                            }
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+            </fieldset>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+﻿@model HuntControl.WebUI.Models.CaseDetailViewModel
+
+<div class="row m-b-15">
+    <div class="col-sm-9">
+        <h3 class="panel-title">Список этапов</h3>
+    </div>
+    <div class="col-sm-3">
+        @using (Ajax.BeginForm("PartialModalNextRouteStage", "Case", new { serviceId = Model.DataServiceId }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+        {
+            <button type="submit" class="btn btn-inverse waves-effect waves-light btn-sm btn-block"> Следующий этап <i class="ion-arrow-right-a m-l-5"></i></button>
+        }
+    </div>
+</div>
+
+@if (Model.CaseServicesRoutesStageSelectResultList.Any())
+{
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.CaseServicesRoutesStageSelectResultList.First().out_date_start)</th>
+                    <th>@Html.DisplayNameFor(model => model.CaseServicesRoutesStageSelectResultList.First().out_stage_name)</th>
+                    <th>@Html.DisplayNameFor(model => model.CaseServicesRoutesStageSelectResultList.First().out_count_day_execution)</th>
+                    <th>@Html.DisplayNameFor(model => model.CaseServicesRoutesStageSelectResultList.First().out_employees_fio)</th>
+                    <th>Дополнительно</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CaseServicesRoutesStageSelectResultList)
+                {
+                    <tr class="text-nowrap">
+                        <td class="vertical-middle">
+                            <i class="fa fa-calendar text-muted"></i> @Html.DisplayFor(i => item.out_date_start)<br />
+                            <i class="fa fa-clock-o text-muted"></i> <span class="text-muted">@Html.DisplayFor(i => item.out_time_start)</span>
+                        </td>
+                        <td class="vertical-middle">
+                            @Html.DisplayFor(i => item.out_stage_name)
+                        </td>
+                        <td class="vertical-middle">
+                            @Html.DisplayFor(i => item.out_count_day_execution)
+                        </td>
+                        <td class="font-13 vertical-middle">
+                            @Html.DisplayFor(i => item.out_employees_fio)
+                            @*<br/><span class="text-muted">@Html.DisplayFor(i => item.job_pos_name)</span>*@
+                        </td>
+                        <td>
+                            <span class="text-muted">Факт. <i class='fa fa-calendar text-muted'></i> @Html.DisplayFor(i => item.out_date_finish_fact)</span><br />
+                            <span class="text-muted">Регл. <i class="fa fa-calendar text-muted"></i> @Html.DisplayFor(i => item.out_date_finish_reg)</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">
+        <span><i class="icon-info"></i> Нет этапов.</span>
+    </div>
+}

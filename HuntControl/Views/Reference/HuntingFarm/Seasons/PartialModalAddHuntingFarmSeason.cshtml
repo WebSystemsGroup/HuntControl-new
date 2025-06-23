@@ -1,0 +1,52 @@
+﻿@model HuntControl.Domain.Concrete.spr_hunting_farm_season
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<script src="~/Content/plugins/select2/js/select2.full.min.js"></script>
+<script>
+    $(document).ready(function () {
+        jQuery("#AddHuntingFarmSeasonForm").validate().settings.ignore = ".bs-select-hidden";
+        $(".select2").select2();
+        $("select").on("select2:close", function (e) {
+            $(this).valid();
+        });
+        $('#date-range').datepicker({ format: 'dd.mm.yyyy', toggleActive: true, autoclose: true, language: 'ru', orientation: 'bottom right' });
+    });
+</script>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myLargeModalLabel">Добавление сезона</h4>
+        </div>
+        <div class="modal-body">
+            @using (Ajax.BeginForm("SubmitHuntingFarmSeasonSave", "Reference", Model, new AjaxOptions { UpdateTargetId = "huntingFarmSeasonContainer", OnSuccess = "$('#myModal').modal('hide');successAdd();" }, new { @id = "AddHuntingFarmSeasonForm", @class = "form-horizontal" }))
+            {
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        @Html.LabelFor(model => model.spr_season_id, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-7">
+                            @Html.DropDownListFor(model => model.spr_season_id, ViewBag.AnimalGroupTypes as SelectList, "Выберите сезон", new Dictionary<string, object> { { "class", "form-control select2 input-sm" }})
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        @Html.Label("Дата", new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-7">
+                            <div class="input-daterange input-group" id="date-range">
+                                @Html.TextBoxFor(model => model.date_start, "{0:dd.MM.yyyy}", new { @class = "form-control input-sm" })
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
+                                @Html.TextBoxFor(model => model.date_stop, "{0:dd.MM.yyyy}", new { @class = "form-control input-sm" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel waves-effect waves-light btn-block-xs" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Отмена</button>
+            <button type="submit" form="AddHuntingFarmSeasonForm" class="btn btn-success waves-effect waves-light btn-block-xs"> Сохранить <i class="fa fa-check m-l-5"></i></button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

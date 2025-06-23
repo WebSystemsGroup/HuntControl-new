@@ -1,0 +1,80 @@
+﻿@model WebAIS.StoreProcedure.SModel.case_customer_root_get_smev
+
+<div class="modal-card-head wrap-flex">
+    <nav class="breadcrumb m-b-0">
+        <div class="container">
+            <div class="row-flex">
+                <div class="col-flex"><div class="breadcrumb-item complete">Запрос</div></div>
+                <div class="col-flex"><div class="breadcrumb-item active">Данные</div></div>
+                <div class="col-flex"><div class="breadcrumb-item">Ответ</div></div>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="modal-card-body">
+    <div class="dash" data-tabs="">
+        <div class="dash-content">
+            <div class="row-flex">
+                <div class="col-flex is-12">
+                    <div class="form-content smev-request" style="display: block;">
+                        <form>
+                            <input name="data_services_id" type="hidden" class="data_services_id" />
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="MvdResponseNumber">Регистрационный номер справки МВД России</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-validation="required" data-validation-allowing="-" id="MvdResponseNumber" name="MvdResponseNumber" placeholder="Регистрационный номер справки МВД России" type="text" value="">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="Date">Дата возврата справки</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control has-addons">
+                                        <input class="input" type="text" name="Date" id="Date" value="@DateTime.Now" placeholder="__.__.____" data-inputmask="'mask': '99.99.9999'"
+                                               data-validation="date" data-validation-format="dd.mm.yyyy"
+                                               data-input-datetimepicker="" data-input-datetimepicker-options='{"timepicker":false,"format":"d.m.Y","scrollMonth":false,"scrollInput":false}' />
+                                        <span class="icon" style="top:0px;"><i class="ion-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="form-content smev-response" style="display:none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-card-foot">
+    <div class="content-footer__action row-flex-right">
+        <button type="button" class="btn btn-danger attach-smev-response" style="display: none;">
+            <span>Прикрепить к услуге</span>
+            <span class="icon">
+                <i class="ion ion-ios-upload-outline"></i>
+            </span>
+        </button>
+        <button type="button" class="btn btn-danger is-form-send smev-send-data" data-url-smev="Smev_Notify3MonthsGiacAdmOffenceDrugs">
+            <span>Далее</span>
+            <span class="icon">
+                <i class="ion ion-ios-arrow-forward"></i>
+            </span>
+        </button>
+    </div>
+</div>
+<script>
+    flag = true;
+    $('.smev-send-data').on('click', function (e) {
+        if (flag) {
+            event.stopPropagation();
+            var btn = $(this);
+            var url = $(this).data('urlSmev');
+            smevSendData(url, btn);
+        }
+    });
+</script>

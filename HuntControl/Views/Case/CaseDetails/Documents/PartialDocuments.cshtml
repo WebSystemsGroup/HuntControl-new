@@ -1,0 +1,198 @@
+﻿@model IEnumerable<HuntControl.Domain.Concrete.CaseServicesDocumentSelectResult>
+
+<link href="~/Content/plugins/scan-image/css/scan-image.css" rel="stylesheet" />
+<script src="~/Content/plugins/scan-image/js/scan-image.js"></script>
+<link rel="stylesheet" type="text/css" href="/Content/plugins/fancyapps/source/jquery.fancybox.css?v=2.1.5" media="screen">
+<script type="text/javascript" src="/Content/plugins/fancyapps/source/jquery.fancybox.js?v=2.1.5"></script>
+
+@{ int index = 0;
+    int index1 = 0;
+}
+@if (Model.Any())
+{
+<div class="text-right">
+    <button type="submit" class="btn btn-inverse waves-effect waves-light btn-sm btn-block" style="width:150px;" onclick="filesDownload('@ViewBag.ServiceId')">
+      Скачать все  <i class="ion-ios7-cloud-download m-l-10 font-13" ></i> 
+    </button>
+  
+
+</div>
+    foreach (var item in Model)
+    {
+        <div class="docs-list">
+            @if (item.out_file_count > 0)
+            {
+                <div class="row docs-list-item">
+                    <div class="col-sm-8">
+                        <button class="btn btn-link link-dashed text-truncate" type="button" data-toggle="collapse" data-target="#docsCollapsed_@index">@item.out_document_name </button>
+                        
+                    </div>
+                    @if (item.out_type == 1)
+                    {
+                        <div class="col-sm-3">
+                            <span class="">Услуга</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-sm-3">
+                            <div class="doc-options">
+                                @switch (item.out_document_needs)
+                                {
+                                    case 0:
+                                        <small class="text-danger" data-toggle="tooltip" data-placement="left" title="Обязательно">Обяз</small>
+                                        break;
+                                    case 1:
+                                        <small class="text-success" data-toggle="tooltip" data-placement="left" title="Необязательный">Необяз</small>
+                                        break;
+                                    case 2:
+                                        <small class="text-warning" data-toggle="tooltip" data-placement="left" title="При наличии">Прн</small>
+                                        break;
+                                }
+                                @switch (item.out_document_type)
+                                {
+                                    case 0:
+                                        <small class="text-primary" data-toggle="tooltip" data-placement="left" title="Оригинал">Орг</small>
+                                        break;
+                                    case 1:
+                                        <small class="text-primary" data-toggle="tooltip" data-placement="left" title="Копия">Коп</small>
+                                        break;
+                                }
+                                <small class="text-inverse" data-toggle="tooltip" data-placement="left" title="Количество">@item.out_document_count</small>
+                            </div>
+                        </div>
+                    }
+                    <div class="col-sm-1 text-right">
+                        <button data-upload-file-click class="btn btn-icon btn-sm waves-effect waves-light btn-inverse" data-infoid="@item.out_data_services_info_id" data-documentid="@item.out_id" data-toggle="modal" data-target="#add_docs_modal"><i class="ti-plus"></i></button>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="collapse" id="docsCollapsed_@(index++)">
+                            <div class="table-responsive m-t-15">
+                                <div class="m-t-20" id="documentFilesContainer">
+                                    @Html.Action("PartialTableDocumentFiles", "Case", new { documentId = item.out_id })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row docs-list-item">
+                    <div class="col-sm-8">
+                        <button class="btn btn-link link-dashed text-truncate text-muted" type="button" data-toggle="collapse" data-target="#docsCollapse_@index1">@item.out_document_name</button>
+                    </div>
+                    @if (item.out_type == 1)
+                    {
+                        <div class="col-sm-3">
+                            <span class="">Услуга</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-sm-3">
+                            <div class="doc-options">
+                                @switch (item.out_document_needs)
+                                {
+                                    case 0:
+                                        <small class="text-danger" data-toggle="tooltip" data-placement="left" title="Обязательно">Обяз</small>
+                                        break;
+                                    case 1:
+                                        <small class="text-success" data-toggle="tooltip" data-placement="left" title="Необязательный">Необяз</small>
+                                        break;
+                                    case 2:
+                                        <small class="text-warning" data-toggle="tooltip" data-placement="left" title="При наличии">Прн</small>
+                                        break;
+                                }
+                                @switch (item.out_document_type)
+                                {
+                                    case 0:
+                                        <small class="text-primary" data-toggle="tooltip" data-placement="left" title="Оригинал">Орг</small>
+                                        break;
+                                    case 1:
+                                        <small class="text-primary" data-toggle="tooltip" data-placement="left" title="Копия">Коп</small>
+                                        break;
+                                }
+                                <small class="text-inverse" data-toggle="tooltip" data-placement="left" title="Количество">@item.out_document_count</small>
+                            </div>
+                        </div>
+                    }
+                    <div class="col-sm-1 text-right">
+                        <button data-upload-file-click class="btn btn-icon btn-sm waves-effect waves-light btn-inverse" data-infoid="@item.out_data_services_info_id" data-documentid="@item.out_id" data-toggle="modal" data-target="#add_docs_modal"><i class="ti-plus"></i></button>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="collapse" id="docsCollapse_@(index1++)">
+                            <div class="text-muted m-t-15">
+                                Нет файлов
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+}
+<div class="modal" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myLargeModalLabel">Просмотр файла</h4>
+            </div>
+            <div class="modal-body" style="height: 700px;">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-rotate="90" class="btn btn-default waves-effect"><i class="ion-ios7-refresh-outline m-r-5"></i> Повернуть</button>
+                <button type="button" class="btn btn-default waves-effect" data-dismiss="modal"><i class="ion-printer m-r-5"></i> Печать</button>
+                <button type="button" class="btn btn-cancel waves-effect waves-light" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function refreshDocuments() {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialDocuments", "Case")',
+            data: { serviceId: '@ViewBag.ServiceId' },
+            success: function (data) {
+                $('#documentsPillContainer').html(data);
+            }
+        });
+    };
+
+    $('ul#documentList li').on('click', function () {
+        var documentId = $(this).data('documentId');
+        $.ajax({
+            url: '@Url.Action("PartialTableDocumentFiles", "Case")',
+            type: 'POST',
+            async: false,
+            data: { documentId: documentId },
+            success: function (data) {
+                $('#documentFilesContainer').html(data);
+            }
+        });
+        $('ul#documentList li').removeClass("r-tabs-state-active");
+        $(this).addClass("r-tabs-state-active");
+    });
+
+
+    $('[data-upload-file-click]').on('click', function () {
+        $.ajax({
+            url: '@Url.Action("UploadDocument", "Case")',
+            data: { infoid: $(this).data('infoid'), documentid: $(this).data('documentid') },
+            type: 'Get',
+            success: function (data) {
+                $('#myModal').html(data);
+                $('#myModal').modal("show");
+            }
+        });
+    });
+
+    function filesDownload(serviceId)
+        {
+        location.href = '@Url.Action("SubmitDocumentFilesDownload", "Case")?serviceId=' + serviceId;
+        };
+</script>

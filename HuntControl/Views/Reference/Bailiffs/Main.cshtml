@@ -1,0 +1,9 @@
+﻿@{
+    ViewBag.Title = "Справочник ФССП";
+}
+
+@Html.MvcSiteMap().SiteMapPath()
+
+<div id="bailiffsContainer">
+    @Html.Action("PartialTableBailiffs", "Reference")
+</div>

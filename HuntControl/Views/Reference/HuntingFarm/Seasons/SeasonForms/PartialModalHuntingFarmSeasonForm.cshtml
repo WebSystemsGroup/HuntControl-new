@@ -1,0 +1,43 @@
+﻿<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myLargeModalLabel">Бланки</h4>
+        </div>
+        <div class="modal-body">
+            <div id="collapseEditHuntingFarmSeasonForms" class="panel-collapse collapse" aria-expanded="false">
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <h3 class="panel-title">Список бланков</h3>
+                </div>
+                <div class="col-xs-6 m-b-10">
+                    <div class="text-right">
+                        <button type="button" class="btn btn-inverse waves-effect waves-light btn-sm" id="seasonFormAddBtn"> Добавить <i class="fa fa-plus m-l-5"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div id="huntingFarmSeasonFormsContainer">
+                @Html.Action("PartialTableHuntingFarmSeasonForms", "Reference", new { huntingFarmSeasonId = ViewBag.HuntingFarmSeasonId })
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel waves-effect waves-light" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Закрыть</button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+<script>
+    $('button#seasonFormAddBtn').on('click', function () {
+        $(this).hide();
+        $.ajax({
+            type: 'POST',
+            async: false,
+            url: '@Url.Action("PartialAddHuntingFarmSeasonForm", "Reference")',
+            data: { huntingFarmSeasonId: '@ViewBag.HuntingFarmSeasonId' },
+            success: function (data) {
+                $('#collapseEditHuntingFarmSeasonForms').html(data);
+            }
+        });
+        $('#collapseEditHuntingFarmSeasonForms').collapse('show');
+    });
+</script>

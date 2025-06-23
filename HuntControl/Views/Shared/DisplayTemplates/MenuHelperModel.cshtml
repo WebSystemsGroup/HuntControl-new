@@ -1,0 +1,91 @@
+﻿@model MvcSiteMapProvider.Web.Html.Models.MenuHelperModel
+@using System.Web.Mvc.Html
+@using MvcSiteMapProvider.Web.Html.Models
+@using System.Web;
+
+<ul>
+    @foreach (var node in Model.Nodes)
+    {
+        if (node.Children.Any())
+        {
+
+            <li class="has_sub">
+                <a href="#" class="waves-effect">
+                    @if (node.MetaAttributes.ContainsKey("iconClass"))
+                    {
+                        <i class="@node.MetaAttributes["iconClass"]"></i>
+                    }
+                    @node.Title
+                </a>
+                <ul class="list-unstyled" style="@(node.IsInCurrentPath && !node.IsRootNode ? "display: block;" : "")">
+                    @foreach (var child in node.Children)
+                    {
+                        if (child.Children.Any())
+                        {
+
+                            <li class="@(node.IsInCurrentPath && !node.IsRootNode ? "active" : "")">
+                                <a href="#">
+                                    @if (child.MetaAttributes.ContainsKey("iconClass"))
+                                    {
+                                        <i class="@child.MetaAttributes["iconClass"]"></i>
+                                    }
+                                    @child.Title
+                                </a>
+                                <ul class="list-unstyled">
+                                    @foreach (var subChild in child.Children)
+                                    {
+                                        <li class="@(subChild.IsInCurrentPath && !subChild.IsRootNode ? "active" : "")">
+                                            <a href="@Url.Action(subChild.Action, subChild.Controller)">
+                                                @if (subChild.MetaAttributes.ContainsKey("iconClass"))
+                                                {
+                                                    <i class="@subChild.MetaAttributes["iconClass"]"></i>
+                                                }
+                                                @subChild.Title
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            if (child.MetaAttributes.ContainsKey("class") && child.MetaAttributes["class"].Contains("menu-title"))
+                            {
+                                <li class="@child.MetaAttributes["class"]">@child.Title</li>
+                            }
+                            else
+                            {
+                                <li class="@(child.IsInCurrentPath && !child.IsRootNode ? "subdrop" : "")">
+                                    <a href="@Url.Action(child.Action, child.Controller)">
+                                        @if (child.MetaAttributes.ContainsKey("iconClass"))
+                                        {
+                                            <i class="@child.MetaAttributes["iconClass"]"></i>
+                                        }
+                                        @child.Title
+                                    </a>
+                                </li>
+                            }
+                        }
+                    }
+                </ul>
+            </li>
+        }
+        else
+        {
+            <li>
+                <a href="@Url.Action(node.Action, node.Controller)" class="waves-effect @(node.IsInCurrentPath && !node.IsRootNode ? "subdrop" : "")">
+                    @if (node.MetaAttributes.ContainsKey("iconClass"))
+                    {
+                        <i class="@node.MetaAttributes["iconClass"]"></i>
+                    }
+                    @node.Title
+                    @if (node.MetaAttributes.ContainsKey("isBadge") && Convert.ToInt32(@Html.Action("GetErrorsNumber", "Processing").ToString()) != 0)
+                    {
+                        <span class="badge badge-xs badge-danger">@Html.Action("GetErrorsNumber", "Processing")</span>
+                    }
+                </a>
+            </li>
+        }
+
+    }
+</ul>

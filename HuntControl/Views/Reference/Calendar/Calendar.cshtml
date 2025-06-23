@@ -1,0 +1,9 @@
+﻿@{
+    ViewBag.Title = "Календарь";
+}
+@Html.MvcSiteMap().SiteMapPath()
+<div id="calendarContainer">
+    @Html.Action("CalendarDay", "Reference")
+</div>
+
+

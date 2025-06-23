@@ -1,0 +1,188 @@
+﻿@model IEnumerable<WebAIS.Models.KcrModel.criteriaSFType>
+
+<div class="row justify-content-end">
+    <div class="col-lg-11 accardion-milti-castoner">
+        <div class="accardion-milti-castoner-сontrol">
+            <button type="button" class="btn accardion-milti-castoner-btn-show" data-accardion onclick="showAdccardion(this)">
+                Критерии
+            </button>
+            <i class="fa fa-chevron-left accardion-chevron" aria-hidden="true"></i>
+        </div>
+        <div class="accardion-content-milti-castoner" data-accardion-content style="display: none">
+            <fieldset>
+                @foreach (var criteria in Model)
+                {
+                    <div class="row justify-content-end">
+                        <div class="col-lg-11 accardion-milti-castoner">
+                            <div class="accardion-milti-castoner-сontrol">
+                                <button type="button" class="btn accardion-milti-castoner-btn-show" data-accardion onclick="showAdccardion(this)">
+                                    Критерий
+                                </button>
+                                <i class="fa fa-chevron-left accardion-chevron" aria-hidden="true"></i>
+                            </div>
+                            <div class="accardion-content-milti-castoner" data-accardion-content style="display: none">
+                                <fieldset>
+                                    <div class="row justify-content-center">
+                                        <table class="table">
+                                            <tbody>
+                                                @if (criteria.criterion != null)
+                                                {
+                                                    <tr>
+                                                        <td>Наименование</td>
+                                                        <td>@criteria.criterion.id</td>
+                                                    </tr>
+
+                                                }
+                                                @if (criteria.decisionType != null)
+                                                {
+                                                    <tr>
+                                                        <td>Дейстивие при не соответствии</td>
+                                                        <td>@criteria.decisionType.id</td>
+                                                    </tr>
+                                                }
+                                                @if (criteria.checkType != null)
+                                                {
+                                                    <tr>
+                                                        <td>Признак ручной или автоматизированной проверки</td>
+                                                        <td>@criteria.checkType.id</td>
+                                                    </tr>
+                                                }
+                                                @if (criteria.rejectionReason != null)
+                                                {
+                                                    <tr>
+                                                        <td>Идентификатор основания для отказа</td>
+                                                        <td>@criteria.rejectionReason.id</td>
+                                                    </tr>
+                                                }
+                                                @if (criteria.provisionTypes != null && criteria.provisionTypes.Length > 0)
+                                                {
+                                                    <tr>
+                                                        <td>Идентификаторы формата обращения</td>
+                                                        <td>
+                                                            @foreach (var doc in criteria.provisionTypes)
+                                                            {
+                                                                <p>- @doc.id</p>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                @if (criteria.isRejectionReasonSpecified)
+                                                {
+                                                    <tr>
+                                                        <td>Причина отказа?</td>
+                                                        <td>@(criteria.isRejectionReason ? "да" : "нет")</td>
+                                                    </tr>
+                                                }
+                                                @if (criteria.documentRequirements != null && criteria.documentRequirements.Length > 0)
+                                                {
+                                                    <tr>
+                                                        <td>Требования к документу</td>
+                                                        <td>
+                                                            @foreach (var doc in criteria.documentRequirements)
+                                                            {
+                                                                <p>- @doc.id</p>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                @if (criteria.rulesCriteria != null)
+                                                {
+                                                    <tr>
+                                                        <td>Правила проверки критерия (формулы) в формате json</td>
+                                                        <td>@criteria.rulesCriteria</td>
+                                                    </tr>
+                                                }
+                                                @if (criteria.rulesResume != null)
+                                                {
+                                                    <tr>
+                                                        <td>Правила возобновления критерия (формулы) в формате json</td>
+                                                        <td>@criteria.rulesResume</td>
+                                                    </tr>
+                                                }
+                                                @if (criteria.isRulesCriteriaInResumeSpecified)
+                                                {
+                                                    <tr>
+                                                        <td>Использовать настройки параметров соответствия критерию при возобновлении предоставлении услуги?</td>
+                                                        <td>@(criteria.isRulesCriteriaInResume ? "да" : "нет")</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    @if (criteria.criteriaAdmProcedure != null && criteria.criteriaAdmProcedure.Length > 0)
+                                    {
+                                        <div class="row justify-content-end">
+                                            <div class="col-lg-11 accardion-milti-castoner">
+                                                <div class="accardion-milti-castoner-сontrol">
+                                                    <button type="button" class="btn accardion-milti-castoner-btn-show" data-accardion onclick="showAdccardion(this)">
+                                                        Критерии административных процедур
+                                                    </button>
+                                                    <i class="fa fa-chevron-left accardion-chevron" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="accardion-content-milti-castoner" data-accardion-content style="display: none">
+                                                    <fieldset>
+                                                        @foreach (var proc in criteria.criteriaAdmProcedure)
+                                                        {
+                                                            <div class="row justify-content-end">
+                                                                <div class="col-lg-11 accardion-milti-castoner">
+                                                                    <div class="accardion-milti-castoner-сontrol">
+                                                                        <button type="button" class="btn accardion-milti-castoner-btn-show" data-accardion onclick="showAdccardion(this)">
+                                                                            Критерий
+                                                                        </button>
+                                                                        <i class="fa fa-chevron-left accardion-chevron" aria-hidden="true"></i>
+                                                                    </div>
+                                                                    <div class="accardion-content-milti-castoner" data-accardion-content style="display: none">
+                                                                        <fieldset>
+                                                                            <div class="row justify-content-center">
+                                                                                <table class="table">
+                                                                                    <tbody>
+                                                                                        @if (proc.admProcedureId != null)
+                                                                                        {
+                                                                                            <tr>
+                                                                                                <td>Идентификатор административной процедуры</td>
+                                                                                                <td>@proc.admProcedureId.name</td>
+                                                                                            </tr>
+                                                                                        }
+                                                                                        @if (proc.deadline != null)
+                                                                                        {
+                                                                                            <tr>
+                                                                                                <td>Срок административной процедуры</td>
+                                                                                                <td>@proc.admProcedureId.name @(proc.unitsOfMeasurementId != null ? proc.unitsOfMeasurementId.name : "")</td>
+                                                                                            </tr>
+                                                                                        }
+                                                                                        @if (proc.serialNumber != null)
+                                                                                        {
+                                                                                            <tr>
+                                                                                                <td>Позиция в списке при отображении</td>
+                                                                                                <td>@proc.serialNumber</td>
+                                                                                            </tr>
+                                                                                        }
+                                                                                        @if (proc.isRequiredSpecified)
+                                                                                        {
+                                                                                            <tr>
+                                                                                                <td>proc.isRequiredSpecified</td>
+                                                                                                <td>@(proc.isRequired ? "да" : "нет")</td>
+                                                                                            </tr>
+                                                                                        }
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </fieldset>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </fieldset>
+        </div>
+    </div>
+</div>

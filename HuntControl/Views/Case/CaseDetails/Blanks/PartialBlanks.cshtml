@@ -1,0 +1,42 @@
+﻿@model HuntControl.WebUI.Models.CaseDetailViewModel
+@if (Model.SprServicesSubFileFolderList.Any())
+{
+    <div class="row file-archive r-tabs">
+        <ul class="tabs-vertical file-archive__list col-md-3 r-tabs-nav" id="folderList">
+            @foreach (var item in Model.SprServicesSubFileFolderList)
+            {
+                <li class="r-tabs-tab @(Model.SprServicesSubFileFolderList.FirstOrDefault() == item ? "r-tabs-state-active" : null)" data-folder-id="@item.id">
+                    <a href="#" class="r-tabs-anchor">
+                        <i class="ion-folder"></i>
+                        <span>@item.folder_name</span>
+                    </a>
+                </li>
+            }
+        </ul>
+        <div id="blanksContainer" class="col-md-9 r-tabs-panel r-tabs-state-active p-t-0" style="display: block;">
+            @Html.Action("PartialTableBlankDocuments", "Case", new { folderId = Model.SprServicesSubFileFolderList.FirstOrDefault()?.id })
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">
+        <span style="color:#00545c;"><strong><i class="icon-info"></i></strong> Нет бланков.</span>
+    </div>
+}
+
+<script>
+    $('#blanksPillContainer ul#folderList li').on('click', function () {
+        $('#blanksPillContainer ul#folderList li').removeClass("r-tabs-state-active");
+        $(this).addClass("r-tabs-state-active");
+        var folderId = $(this).data('folderId');
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableBlankDocuments", "Case")',
+            data: { folderId: folderId },
+            success: function (data) {
+                $("#blanksContainer").html(data);
+            }
+        });
+    });
+</script>

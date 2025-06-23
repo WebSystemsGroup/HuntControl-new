@@ -1,0 +1,102 @@
+﻿
+@{
+    ViewBag.Title = "Животные";
+}
+
+@Html.MvcSiteMap().SiteMapPath()
+
+<script src="https://maps.google.com/maps/api/js?key=AIzaSyA1s6Waj0fSFrfuxUJUwuJxNVeZxdp-iQo&sensor=true&libraries=geometry" type="text/javascript"></script>
+
+<div class="card-box">
+    <ul class="nav nav-pills m-b-30">
+        <li class="active">
+            <a href="#animalsPillContainer" data-toggle="tab" aria-expanded="true">Животные</a>
+        </li>
+        <li class="">
+            <a href="#animalGroupsPillContainer" data-toggle="tab" aria-expanded="false">Группы</a>
+        </li>
+        <li class="">
+            <a href="#animalGroupTypesPillContainer" data-toggle="tab" aria-expanded="false">Группы видов</a>
+        </li>
+        <li class="">
+            <a href="#removeMethodsPillContainer" data-toggle="tab" aria-expanded="false">Способы изъятия</a>
+        </li>
+        <li class="">
+            <a href="#accountMethodsPillContainer" data-toggle="tab" aria-expanded="false">Методы учёта</a>
+        </li>
+        <li class="">
+            <a href="#huntingTypesPillContainer" data-toggle="tab" aria-expanded="false">Вид охоты</a>
+        </li>
+    </ul>
+    <div class="tab-content br-n pn">
+        <div id="animalsPillContainer" class="tab-pane active">
+            @Html.Action("PartialTableAnimals", "Reference")
+        </div>
+        <div id="animalGroupsPillContainer" class="tab-pane">
+        </div>
+        <div id="animalGroupTypesPillContainer" class="tab-pane">
+        </div>
+        <div id="accountMethodsPillContainer" class="tab-pane">
+        </div>
+        <div id="removeMethodsPillContainer" class="tab-pane">
+        </div>
+        <div id="huntingTypesPillContainer" class="tab-pane">
+        </div>
+    </div>
+</div>
+<script>
+    $('a[href="#animalsPillContainer"]').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableAnimals", "Reference")',
+            success: function (data) {
+                $('#animalsPillContainer').html(data);
+            }
+        });
+    });
+    $('a[href="#animalGroupsPillContainer"]').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableAnimalGroups", "Reference")',
+            success: function (data) {
+                $('#animalGroupsPillContainer').html(data);
+            }
+        });
+    });
+    $('a[href="#animalGroupTypesPillContainer"]').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableAnimalGroupTypes", "Reference")',
+            success: function (data) {
+                $('#animalGroupTypesPillContainer').html(data);
+            }
+        });
+    });
+    $('a[href="#accountMethodsPillContainer"]').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableAccountMethods", "Reference")',
+            success: function (data) {
+                $('#accountMethodsPillContainer').html(data);
+            }
+        });
+    });
+    $('a[href="#removeMethodsPillContainer"]').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableRemoveMethods", "Reference")',
+            success: function (data) {
+                $('#removeMethodsPillContainer').html(data);
+            }
+        });
+    });
+    $('a[href="#huntingTypesPillContainer"]').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("PartialTableHuntingTypes", "Reference")',
+            success: function (data) {
+                $('#huntingTypesPillContainer').html(data);
+            }
+        });
+    });
+</script>

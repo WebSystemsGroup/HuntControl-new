@@ -1,0 +1,275 @@
+﻿@model HuntControl.WebUI.Models.Print.Perms.Blanks.BlankViewModel<HuntControl.Domain.Concrete.FormBirdInfoResult>
+
+<style>
+    /* ====================== Общие стили ====================== */
+    *,
+    *:before,
+    *:after {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    .page {
+        margin: 0;
+        font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        font-style: italic;
+    }
+
+    .page-1 {
+        position: relative;
+        display: block;
+        margin: 0 auto;
+        margin-bottom: 0.5cm;
+    }
+
+    .left {
+        position: absolute;
+        top: .3cm;
+        left: 0;
+        width: 8.15cm;
+        bottom: .9cm;
+    }
+
+    .center {
+        position: absolute;
+        top: .25cm;
+        left: 8.3cm;
+        width: 8cm;
+        bottom: .9cm;
+    }
+
+    .right {
+        position: absolute;
+        top: -0.1cm;
+        left: 16.4cm;
+        width: 8cm;
+        bottom: .9cm;
+    }
+
+    .subject {
+        margin-top: 0;
+        text-align: center;
+    }
+
+    .organization-name {
+        margin-top: .35cm;
+        text-align: center;
+    }
+
+    .hunting-items {
+        margin-left: 0.1cm;
+        margin-top: 4.8cm;
+    }
+
+    .page-2 {
+        position: relative;
+        display: block;
+        margin: 0 auto;
+        margin-bottom: 0.5cm;
+    }
+
+        .page-2 .right {
+            top: 11.25cm;
+            left: 19.4cm;
+            width: 8cm;
+        }
+
+    .hunting-items .hunting-item {
+        margin-top: .2cm;
+    }
+
+        .hunting-items .hunting-item .number {
+            margin-right: .3cm;
+        }
+
+        .hunting-items .hunting-item .hunting-type-name {
+            width: 2.3cm;
+            display:inline-block;
+        }
+
+        .hunting-items .hunting-item .date-start {
+            margin-right: .18cm;
+        }
+
+        .hunting-items .hunting-item .date-stop {
+            margin-right: .3cm;
+        }
+
+        .hunting-items .hunting-item .limit-day {
+            margin-right: .7cm;
+        }
+
+    .hunting-area-name {
+        height: 1.8cm;
+        margin-top: .2cm;
+        margin-left: .6cm;
+        margin-right: .6cm;
+        margin-bottom: 0;
+        text-indent: 2cm;
+        line-height: .41cm;
+    }
+
+        .hunting-area-name::first-line {
+            line-height: 1cm;
+        }
+
+    .permission-status {
+        margin-top: 2cm;
+        margin-left: 3.6cm;
+        margin-right: .6cm;
+        margin-bottom: 0;
+        line-height: .35cm;
+    }
+
+        .permission-status::first-line {
+            line-height: 1cm;
+        }
+
+    .hunting-ticket {
+        margin-top: .45cm;
+        margin-left: 3.6cm;
+    }
+
+    .page-2 .hunting-ticket {
+        margin-left: 3.7cm;
+    }
+
+    .hunting-ticket .serial {
+        margin-right: .9cm;
+    }
+
+    .hunting-ticket-date {
+        width: 3.2cm;
+        margin-top: .09cm;
+        margin-left: 4.05cm;
+    }
+
+    .page-2 .hunting-ticket-date {
+        margin-left: 4.15cm;
+    }
+
+    .hunting-ticket-date .day {
+        margin-right: .4cm;
+    }
+
+    .hunting-ticket-date .year {
+        float: right;
+    }
+
+
+    .authorized-person {
+        margin-top: 0.25cm;
+        margin-left: 3.3cm;
+    }
+
+    .permission-date {
+        display: inline-block;
+        vertical-align: bottom;
+        width: 3.1cm;
+        margin-top: 1.3cm;
+        margin-left: 4.15cm;
+    }
+
+        .permission-date .day {
+            margin-right: .4cm;
+        }
+
+        .permission-date .year {
+            float: right;
+        }
+
+
+    @@media print {
+        .page {
+            margin: 0;
+            box-shadow: 0;
+            page-break-after: always;
+        }
+    }
+
+
+    @@page {
+        size: 29.5cm 12.7cm;
+    }
+</style>
+<div class="page page-1">
+    <section class="left">
+        <div class="hunting-items">
+            @{ int index = 1;}
+            @foreach (var item in Model.AnimalList)
+            {
+                <div class="hunting-item">
+                    <span class="number">@(index++)</span>
+                    <span class="hunting-type-name">@item.out_animal_name</span>
+                    <span class="date-start">@item.out_date_start</span>
+                    <span class="date-stop">@item.out_date_stop</span>
+                    <span class="limit-day">@item.out_limit_day</span>
+                    <span class="limit-season">@item.out_limit_season</span>
+                </div>
+            }
+        </div>
+    </section>
+    <section class="center">
+        <div class="hunting-items">
+            @{ int i = 1;}
+            @foreach (var item in Model.AnimalList)
+            {
+                <div class="hunting-item">
+                    <span class="number">@(i++)</span>
+                    <span class="hunting-type-name">@item.out_animal_name</span>
+                    <span class="date-start">@item.out_date_start</span>
+                    <span class="date-stop">@item.out_date_stop</span>
+                    <span class="limit-day">@item.out_limit_day</span>
+                    <span class="limit-season">@item.out_limit_season</span>
+                </div>
+            }
+        </div>
+    </section>
+
+    <section class="right">
+        <div class="subject">@Model.Model.out_region_name</div>
+        <div class="organization-name">@Model.Model.out_organization_name</div>
+        <p class="permission-status">@Model.Model.out_customer_name</p>
+        <div class="hunting-ticket">
+            <span class="serial">@Model.Model.out_hunting_lic_serial</span>
+            <span class="number">@Model.Model.out_hunting_lic_number</span>
+        </div>
+        <div class="hunting-ticket-date">
+            <span class="day">@(Model.Model.out_hunting_lic_issue_date?.ToString("dd"))</span>
+            <span class="month">@(Model.Model.out_hunting_lic_issue_date?.ToString("MMMM"))</span>
+            <span class="year">@(Model.Model.out_hunting_lic_issue_date?.ToString("yy"))</span>
+        </div>
+        <p class="hunting-area-name">@Model.Model.out_hunting_farm_name</p>
+        <div class="permission-date">
+            <span class="day">@(Model.Model.out_date_given?.ToString("dd"))</span>
+            <span class="month">@(Model.Model.out_date_given?.ToString("MMMM"))</span>
+            <span class="year">@(Model.Model.out_date_given?.ToString("yy"))</span>
+        </div>
+        <div class="authorized-person">@(Model.Model.out_fio_given.Length > 20 ? Model.Model.out_fio_given.Substring(0, 20) : Model.Model.out_fio_given)</div>
+    </section>
+</div>
+<div class="page page-2">
+    <section class="right">
+        <div class="subject">@Model.Model.out_region_name</div>
+        <div class="organization-name">@Model.Model.out_organization_name</div>
+        <p class="permission-status">@Model.Model.out_customer_name</p>
+        <div class="hunting-ticket">
+            <span class="serial">@Model.Model.out_hunting_lic_serial</span>
+            <span class="number">@Model.Model.out_hunting_lic_number</span>
+        </div>
+        <div class="hunting-ticket-date">
+            <span class="day">@(Model.Model.out_hunting_lic_issue_date?.ToString("dd"))</span>
+            <span class="month">@(Model.Model.out_hunting_lic_issue_date?.ToString("MMMM"))</span>
+            <span class="year">@(Model.Model.out_hunting_lic_issue_date?.ToString("yy"))</span>
+        </div>
+        <p class="hunting-area-name">@Model.Model.out_hunting_farm_name</p>
+        <div class="permission-date">
+            <span class="day">@(Model.Model.out_date_given?.ToString("dd"))</span>
+            <span class="month">@(Model.Model.out_date_given?.ToString("MMMM"))</span>
+            <span class="year">@(Model.Model.out_date_given?.ToString("yy"))</span>
+        </div>
+        <div class="authorized-person">@(Model.Model.out_fio_given.Length > 20 ? Model.Model.out_fio_given.Substring(0,20) : Model.Model.out_fio_given)</div>
+    </section>
+</div>

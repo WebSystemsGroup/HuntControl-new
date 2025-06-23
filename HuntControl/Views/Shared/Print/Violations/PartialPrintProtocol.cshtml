@@ -1,0 +1,820 @@
+﻿@model HuntControl.Domain.Concrete.data_customer_violations
+<style>
+    @@media print {
+        .printSelected > * {
+            display: none;
+        }
+
+        .printSelected > .printSelection {
+            display: block;
+        }
+
+        @@page {
+            size: portrait;
+            margin: 15mm 10mm 15mm 25mm;
+        }
+
+        #print-content {
+            width: 165mm; /* ширина */
+        }
+    }
+
+    .printSelection {
+        display: none;
+    }
+
+    #print-content table {
+        width: 400px; /* Ширина таблицы */
+        border-collapse: collapse; /* Отображать только одинарные линии */
+    }
+
+    #print-content th {
+        text-align: left; /* Выравнивание по левому краю */
+        padding: 2px; /* Поля вокруг содержимого ячеек */
+        border: 2px solid black; /* Граница вокруг ячеек */
+        font-size: 8.0pt;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+
+    #print-content td {
+        font-size: 8.0pt;
+        padding: 2px; /* Поля вокруг содержимого ячеек */
+        border: 1px solid black; /* Граница вокруг ячеек */
+    }
+
+    #print-content .first {
+        border-left: 0px;
+        text-align: center;
+    }
+
+    #print-content .last {
+        border-right: 0px;
+        text-align: center;
+    }
+
+    #print-content p {
+        line-height: 5pt;
+    }
+
+    #print-content {
+        font-family: Times New Roman;
+        min-height: 290mm;
+        position: relative;
+        padding-bottom: 50px;
+        width: 165mm;
+    }
+</style>
+
+
+<style>
+
+    /* Style Definitions */
+    p.MsoNormal, li.MsoNormal, div.MsoNormal {
+        margin-top: 0cm;
+        margin-right: 0cm;
+        margin-bottom: 10.0pt;
+        margin-left: 0cm;
+        line-height: 115%;
+        font-size: 11.0pt;
+    }
+
+    a:link, span.MsoHyperlink {
+        color: blue;
+        text-decoration: underline;
+        text-underline: single;
+    }
+
+    a:visited, span.MsoHyperlinkFollowed {
+        color: purple;
+        text-decoration: underline;
+        text-underline: single;
+    }
+
+    p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph {
+        margin-top: 0cm;
+        margin-right: 0cm;
+        margin-bottom: 10.0pt;
+        margin-left: 36.0pt;
+        line-height: 115%;
+        font-size: 11.0pt;
+    }
+
+    p.MsoListParagraphCxSpFirst, li.MsoListParagraphCxSpFirst, div.MsoListParagraphCxSpFirst {
+        margin-top: 0cm;
+        margin-right: 0cm;
+        margin-bottom: 0cm;
+        margin-left: 36.0pt;
+        margin-bottom: .0001pt;
+        line-height: 115%;
+        font-size: 11.0pt;
+    }
+
+    p.MsoListParagraphCxSpMiddle, li.MsoListParagraphCxSpMiddle, div.MsoListParagraphCxSpMiddle {
+        margin-top: 0cm;
+        margin-right: 0cm;
+        margin-bottom: 0cm;
+        margin-left: 36.0pt;
+        margin-bottom: .0001pt;
+        line-height: 115%;
+        font-size: 11.0pt;
+    }
+
+    p.MsoListParagraphCxSpLast, li.MsoListParagraphCxSpLast, div.MsoListParagraphCxSpLast {
+        margin-top: 0cm;
+        margin-right: 0cm;
+        margin-bottom: 10.0pt;
+        margin-left: 36.0pt;
+        line-height: 115%;
+        font-size: 11.0pt;
+    }
+
+    .MsoPapDefault {
+        margin-bottom: 10.0pt;
+        line-height: 115%;
+    }
+
+    div.WordSection1 {
+        page: WordSection1;
+    }
+</style>
+<div id="print-content">
+    <div class=WordSection1>
+
+        <p class='MsoNormal' align=center style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:center;line-height:normal'>
+
+            <img height="55" src="@Url.Content("~/Content/img/docGebLogo.png")" />
+            <br />
+            <b>
+                <span style='font-size:14.0pt;'>
+                    МИНИСТЕРСТВО
+                    ПРИРОДНЫХ РЕСУРСОВ И ЭКОЛОГИИ
+                </span>
+            </b>
+        </p>
+
+        <p class='MsoNormal' align=center style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:center;line-height:normal'>
+            <b>
+                <span style='font-size:14.0pt;'>
+                    РЕСПУБЛИКИ
+                    ДАГЕСТАН
+                </span>
+            </b>
+        </p>
+
+        <p class='MsoNormal' align=center style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:center;line-height:normal'>
+            <b>
+                <span style='font-size:14.0pt;'>
+                    ОТДЕЛ
+                    ОХРАНЫ ЖИВОТНОГО МИРА
+                </span>
+            </b>
+        </p>
+
+        <p class='MsoNormal' align=center style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:center;line-height:normal'>
+            <b>
+                <span style='font-size:7.0pt; '><o:p>&nbsp;</o:p></span>
+            </b>
+        </p>
+
+        <p class='MsoNormal' align=center style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:center;line-height:normal'>
+            <b>
+                <span style='font-size:7.0pt; '>
+                    367000,
+                    Махачкала, ул. Абубакарова, д. 73
+                </span>
+            </b>
+        </p>
+
+        <p class='MsoNormal' align=center style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:center;line-height:normal'>
+            <b>
+                <span style='font-size:7.0pt; '>
+                    тел.
+                    51-72-53, факс (8722) 51-72-53,
+                </span>
+            </b><b>
+                <span lang=EN-US style='font-size:7.0pt;'>e</span>
+            </b><b>
+                <span style='font-size:7.0pt; '>-</span>
+            </b><b>
+                <span lang=EN-US style='font-size:7.0pt;'>mail</span>
+            </b><b>
+                <span style='font-size:7.0pt; '>
+                    :
+                </span>
+            </b>
+            <b>
+                <span style='font-size:7.0pt; '>mprierd-info@mail.ru</span>
+            </b>
+        </p>
+
+        <p class='MsoNormal' align=center style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:center;line-height:normal'>
+            <b>
+                <span style='font-size:7.0pt; '><o:p>&nbsp;</o:p></span>
+            </b>
+        </p>
+
+        <p class='MsoNormal' align=center style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:center;line-height:normal'>
+            <b>
+                <span style='font-size:14.0pt; '><o:p>&nbsp;</o:p></span>
+            </b>
+        </p>
+
+        <p class='MsoNormal' align=center style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:center;line-height:normal'>
+            <b>
+                <span style='font-size:14.0pt; '>
+                    ПРОТОКОЛ
+                    № 000217
+                </span>
+            </b>
+        </p>
+
+        <p class='MsoNormal' align=center style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:center;line-height:normal'>
+            <b>
+                <span style='font-size:14.0pt; '>
+                    об
+                    административном правонарушении
+                </span>
+            </b>
+        </p>
+
+        <p class='MsoNormal' align=center style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:center;line-height:normal'>
+            <b>
+                <span style='font-size:14.0pt; '><o:p>&nbsp;</o:p></span>
+            </b>
+        </p>
+
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;line-height:150%; float: left;'>
+            <span style='font-size:12.0pt;'>
+                «<span style="position: relative;">
+                    ___<span style="position:absolute; top: -2px; left: 5px;">@(Model.pr_date_create?.ToString("dd"))</span>
+                </span>»
+                <span style="position: relative;">
+                    _______<span style="position:absolute; top: -2px; left: 10px;">@(Model.pr_date_create?.ToString("MM"))</span>
+                </span>
+                20<span style="position: relative;">
+                    __<span style="position:absolute; top: -2px; left: 2px;">@(Model.pr_date_create?.ToString("yy"))</span>
+                </span>г.
+            </span><br />
+
+            <span style='font-size:12.0pt; position: relative;'>
+                <span style="position: relative;">
+                    _____<span style="position:absolute; top: -2px; left: 10px;">@(Model.pr_date_create?.ToString("hh"))</span>
+                </span>
+                ч.
+                <span style="position: relative;">
+                    ________<span style="position:absolute; top: -2px; left: 10px;">@(Model.pr_date_create?.ToString("mm"))</span>
+                </span>
+                мин.
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:left;line-height:150%; float: right;'>
+            <span style="position: relative;">
+                <span style='font-size:12.0pt;'>
+                    _____________________
+                </span><br />
+                <span style='font-size:12.0pt;'>
+                    _____________________
+                </span>
+                <span style="position:absolute; top: -2px; left: 2px;">@(Model.pr_area)</span>
+            </span>
+            <br />
+            <span style='font-size:7.0pt;'>
+                место составления протокола
+            </span>
+        </p>
+        <p style="clear:both"></p>
+
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;line-height:150%; '>
+            <span style='font-size:12.0pt; line-height:150%;'><o:p>&nbsp;</o:p></span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify; '>
+            <b>
+                <span style='font-size:10.0pt; line-height:115%;'>1.</span>
+            </b><span style='font-size:10.0pt; line-height:115%;'>
+                Должность, фамилия, имя, отчество лица, составившего протокол:
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt; font-size:10.0pt; line-height:115%;'>
+            <span style="position: relative;">
+                <span>
+                    _____________________________________________________________________________________________
+                </span><br />
+                <span>
+                    _____________________________________________________________________________________________
+                </span>
+                <span style="position:absolute; top: 0px; left: 2px;">@(Model.pr_name_create)</span>
+            </span>
+
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt; text-align:justify;'>
+
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm; margin-bottom:.0001pt; text-align:justify; font-size:10.0pt; line-height:115%;'>
+            <span>
+                на основании ст. 28.2, 28.3 КоАП РФ составил настоящий протокол в отношении гражданина:
+                <span style="position: relative;">
+                    <span>
+                        _____________________________________________________________________________________________
+                    </span><br />
+                    <span>
+                        _____________________________________________________________________________________________
+                    </span>
+                    <span style="position:absolute; top: 0px; left: 2px;">@(Model.data_customer.customer_name)</span>
+                </span>
+            </span>
+        </p>
+
+        <p class='MsoNormal' align=center style='margin-bottom: 0cm; margin-bottom: .0001pt; text-align:center;'>
+            <span style='font-size:7.0pt; line-height: 115%;'>
+                (фамилия,
+                имя, отчество)
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm; margin-bottom:.0001pt;text-align:justify;font-size:10.0pt;line-height:115%;'>
+            <span style="position: relative;">
+                <span style="float: right;">
+                    _________________________________________________________________________
+                </span><br />
+                <span>
+                    _____________________________________________________________________________________________
+                </span>
+                <span style="position:absolute; top: 0px; left: 2px;">Дата и место рождения @Html.DisplayFor(m => m.data_customer.doc_birth_date) @(Model.data_customer.doc_issue_body)</span>
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm; margin-bottom:.0001pt;text-align:justify; font-size:10.0pt;line-height:115%;'>
+            <span style="position: relative;">
+                <span style="float: right;">
+                    ____________________________________________________________________
+                </span><br />
+                <span>
+                    _____________________________________________________________________________________________
+                </span>
+                <span style="position:absolute; top: 0px; left: 2px;">Место жительства и телефон @Html.DisplayFor(m => m.data_customer.actual_address) @(Model.data_customer.phone_number1)</span>
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm; margin-bottom:.0001pt;text-align:justify;'>
+            <span style='font-size:10.0pt;line-height:115%;'>
+                Семейное положение
+                <span style="position: relative;">
+                    ________________
+                    <span style="position:absolute; top: 0px; left: 2px;">@Html.DisplayFor(m => m.pr_marital_status)</span>
+                </span>
+                На иждивении
+                <span style="position: relative;">
+                    _______________
+                    <span style="position:absolute; top: 0px; left: 2px;">@Html.DisplayFor(m => m.pr_dependent)</span>
+                </span>
+
+                Гражданство
+                __________________
+
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm; margin-bottom:.0001pt;text-align:justify;'>
+            <span style='font-size:10.0pt;line-height:115%;'>
+                Место работы
+                (службы, учебы), должность
+                <span style="position: relative;">
+                    ________________________________________________________
+                    <span style="position:absolute; top: 0px; left: 2px;">@Html.DisplayFor(m => m.data_customer.social_organization_info), @Html.DisplayFor(m => m.data_customer.social_job_position)</span>
+                </span>
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm; margin-bottom:.0001pt;text-align:justify;'>
+            <span style='font-size:10.0pt;line-height:115%;'>_____________________________________________________________________________________________</span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm; margin-bottom:.0001pt;text-align:justify;'>
+            <span style='font-size:10.0pt;line-height:115%;'>
+                Охотбилет серия:
+
+                <span style="position: relative;">
+                    _____
+                    <span style="position:absolute; top: 0px; left: 2px;">@Html.DisplayFor(m => m.data_customer.data_customer_hunting_lic.FirstOrDefault(hl => hl.cancelled_date == null).serial_license)</span>
+                </span>
+                №
+                <span style="position: relative;">
+                    ______
+                    <span style="position:absolute; top: 0px; left: 2px;">@Html.DisplayFor(m => m.data_customer.data_customer_hunting_lic.FirstOrDefault(hl => hl.cancelled_date == null).number_license)</span>
+                </span>
+                кем выдан
+                <span style="position: relative;">
+                    __________________________
+                    <span style="position:absolute; top: 0px; left: 2px;">@Html.DisplayFor(m => m.data_customer.data_customer_hunting_lic.FirstOrDefault(hl => hl.cancelled_date == null).issue_body)</span>
+                </span>
+                когда
+                <span style="position: relative;">
+                    ______________________
+                    <span style="position:absolute; top: 0px; left: 2px;">@Html.DisplayFor(m => m.data_customer.data_customer_hunting_lic.FirstOrDefault(hl => hl.cancelled_date == null).issue_date)</span>
+                </span>
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm; margin-bottom:.0001pt;text-align:justify;font-size:10.0pt;line-height:115%;'>
+            Разрешение №
+            <span style="position: relative;">
+                ______________
+                <span style="position:absolute; top: 0px; left: 2px;">@Html.DisplayFor(m => m.pr_gun_permission_number)</span>
+            </span>
+            выдано
+            <span style="position: relative;">
+                ___________________________________________________________
+                <span style="position:absolute; top: 0px; left: 2px;">@Html.DisplayFor(m => m.pr_gun_issue_body)</span>
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm; margin-bottom: .0001pt; text-align:justify;'>
+            <span style='font-size:7.0pt; line-height:115%;'>
+                <span>
+                </span>(каким, когда)
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm; margin-bottom:.0001pt;text-align:justify;'>
+            <span style='font-size:10.0pt;line-height:115%;'>
+                Срок действия разрешения до
+                <span style="position: relative;">
+                    ____________
+                    <span style="position:absolute; top: 0px; left: 2px;">@Html.DisplayFor(m => m.pr_gun_permission_date_stop)</span>
+                </span>
+                документ, удостоверяющий личность
+                <span style="position: relative;">
+                    <span>______________________</span> <br />
+                    <span>_____________________________________________________________________________________________</span>
+                    <span style="position:absolute; top: 0px; left: 2px;">@Html.DisplayFor(m => m.pr_gun_issue_body)</span>
+                </span>
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm; margin-bottom:.0001pt;text-align:justify;'>
+            <span style='font-size:10.0pt;line-height:115%;'><o:p>&nbsp;</o:p></span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm; margin-bottom:.0001pt; text-align:justify;'>
+            <b>
+                <span style='font-size: 10.0pt; line-height: 115%;'>2.<span> </span></span>
+            </b><span style='font-size: 10.0pt; line-height: 115%;'>Свидетели (если таковые имеются):</span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm; margin-bottom:.0001pt;text-align:justify;'>
+            <span style='font-size:10.0pt;line-height:115%;'>
+                1.
+                ___________________________________________________________________________________________
+            </span>
+        </p>
+
+        <p class='MsoNormal' align=center style='margin-bottom:0cm; margin-bottom:.0001pt; text-align:center;'>
+            <span style='font-size:7.0pt; line-height:115%;'>
+                (фамилия,
+                имя, отчество, адрес места жительства)
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom: 0cm; margin-bottom: .0001pt; text-align:justify;'>
+            <span style='font-size:10.0pt;line-height:115%;'>
+                2.
+                ___________________________________________________________________________________________
+            </span>
+        </p>
+
+        <p class='MsoNormal' align=center style='margin-bottom:0cm; margin-bottom:.0001pt; text-align:center;'>
+            <span style='font-size:7.0pt; line-height:115%;'>
+                (фамилия,
+                имя, отчество, адрес места жительства)
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm; margin-bottom:.0001pt; text-align:justify;'>
+            <span style='font-size:10.0pt;line-height:115%;'>_____________________________________________________________________________________________</span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;'>
+            <span style='font-size:7.0pt;line-height:115%;'>
+                В соответствии со
+                ст. 51 Конституции РФ и ст. 25.6 КоАП РФ свидетелям разъяснены их права и
+                обязанности, а именно: свидетель обязан явиться по вызову должностного лица, в
+                производстве которого находится дело об административном правонарушении, давать
+                правдивые показания, сообщить все известные ему по делу обстоятельства,
+                ответить на поставленные вопросы. Свидетель вправе не свидетельствовать против
+                себя, своего супруга (ги), близких родственников, давать показания на родном
+                языке, пользоваться бесплатной помощью переводчика, делать замечания по поводу
+                правильности занесения его показаний в протокол.
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;'>
+            <span style='font-size:7.0pt;line-height:115%;'><o:p>&nbsp;</o:p></span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;'>
+            <b>
+                <span style='font-size:10.0pt; line-height:115%;'>Права свидетеля мне разъяснены:</span>
+            </b>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;'>
+            <span style='font-size:10.0pt;line-height:115%;'>
+                1. ________________ / _______________________ 2. _________________ / ____________________________
+            </span>
+        </p>
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:normal;'>
+            <span style='font-size:7.0pt; '>
+                <span style="margin-left:50px;">подпись</span><span style="margin-left:100px;">(Ф.И.О.)</span><span style="margin-left:130px;">подпись</span><span style="margin-left:120px;">(Ф.И.О.)</span>
+            </span><span style='font-size:10.0pt; '></span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;'>
+            <span style='font-size:10.0pt;line-height:115%;'><o:p>&nbsp;</o:p></span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify; font-size:10.0pt;line-height:115%;'>
+            <b>
+                <span>3. </span>
+            </b>
+            <span>
+                Дата, время, место совершения и событие административного правонарушения:
+                <span style="position: relative;">
+                    <span>______________________</span><br />
+                    <span>_____________________________________________________________________________________________</span><br />
+                    <span>_____________________________________________________________________________________________</span><br />
+                    <span>_____________________________________________________________________________________________</span><br />
+                    <span>_____________________________________________________________________________________________</span>
+                    <span style="position:absolute; top: 0px; left: 2px;"></span>
+                </span>
+            </span>
+        </p>
+
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;'>
+            <b>
+                <span style='font-size:10.0pt; line-height:115%;'>4</span>
+            </b><span style='font-size:10.0pt;line-height:115%;'>
+                . Обнаружены
+                орудия и предметы административного правонарушения:
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;'>
+            <span style='font-size:10.0pt;line-height:115%;'>
+                № и марка
+                транспортного средства
+                <span style="position: relative;">
+                    _______________________________________________________________
+                    <span style="position:absolute; top: 0px; left: 2px;">@Html.DisplayFor(m => m.pr_motor_transport)</span>
+                </span>
+
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;'>
+            <span style='font-size:10.0pt;line-height:115%;'>
+                Оружие системы:
+                _______________, калибр
+
+                <span style="position: relative;">
+                    _________________,
+                    <span style="position:absolute; top: 0px; left: 2px;">@Html.DisplayFor(m => m.pr_gun_caliber)</span>
+                </span>
+                номер
+                _______________________________
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;'>
+            <span style='font-size:7.0pt;line-height:115%;'>(тип, количество)</span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;'>
+            <span style='font-size:10.0pt;line-height:115%;'>
+                продукция
+                незаконной охоты: ___________________________________________________________________
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;'>
+            <b>
+                <span style='font-size:10.0pt; line-height:115%;'>5</span>
+            </b><span style='font-size:10.0pt;line-height:115%;'>
+                . Было оказано
+                сопротивление, допущены угрозы, оскорбление, в чем эти действия выразились:
+                _________
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;'>
+            <span style='font-size:10.0pt;line-height:115%;'>_____________________________________________________________________________________________</span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;'>
+            <b>
+                <span style='font-size:10.0pt; line-height:115%;'>6</span>
+            </b><span style='font-size:10.0pt;line-height:115%;'>
+                . Нарушена статья,
+                пункт, абзац федерального закона, закона РД и иных нормативных правовых актов
+                ____
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;'>
+            <span style='font-size:10.0pt;line-height:115%;'>_____________________________________________________________________________________________</span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;'>
+            <b>
+                <span style='font-size:10.0pt; line-height:115%;'>7</span>
+            </b><span style='font-size:10.0pt;line-height:115%;'>
+                . Административная
+                ответственность за совершенное административное правонарушение предусмотрено
+                частью
+
+                <span style="position: relative;">
+                    ___________________________________
+                    <span style="position:absolute; top: 0px; left: 2px;">@Html.DisplayFor(m => m.pr_violations_part)</span>
+                </span>
+                КоАП РФ.
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;'>
+            <b>
+                <span style='font-size:10.0pt; line-height:115%;'>8</span>
+            </b><span style='font-size:10.0pt;line-height:115%;'>
+                . Объяснение
+                физического лица или законного представителя юридического лица, в отношении
+                которого возбуждено дело об административном правонарушении:
+                ___________________________________________
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;'>
+            <span style='font-size:10.0pt;line-height:115%;'>_____________________________________________________________________________________________</span>
+        </p>
+
+
+        <p class='MsoNormal' style='margin-bottom:0cm; margin-bottom:.0001pt;text-align:justify;font-size:10.0pt;line-height:115%;'>
+            <span style="position: relative;">
+                <span style="float: right;">
+                    ____________________________________________________________________
+                </span><br />
+                <span>
+                    _____________________________________________________________________________________________
+                </span>
+                <span style="position:absolute; top: 0px; left: 0px;"><b>9. </b> К протоколу прилагается:  @Html.DisplayFor(m => m.pr_attached)</span>
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;'>
+            <b>
+                <span style='font-size:10.0pt; line-height:115%;'>10</span>
+            </b><span style='font-size:10.0pt;line-height:115%;'>
+                . Права,
+                предусмотренные ст. 51 Конституции РФ и ст. 51.1 КоАП РФ, а именно: лицо, в
+                отношении которого ведется производство по делу об административном
+                правонарушении, вправе знакомиться со всеми материалами дела, давать
+                объяснения, представлять доказательства, заявлять ходатайства и отводы,
+                пользоваться юридической помощью защитника, не свидетельствовать против своего
+                супруга и близких родственников, мне разъяснены _______________________________
+                / _________________________________
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom: 0cm; margin-bottom:.0001pt;text-align:justify;'>
+            <b>
+                <span style='font-size:10.0pt; line-height:115%;'>11</span>
+            </b><span style='font-size:10.0pt;line-height:115%;'>
+                . Дело будет
+                рассмотрено «_____» _________________________ 20 ___ г.<span></span>в ______ ч. ________ мин. по адресу: г.
+                Махачкала, ул. Абубакарова, 73, Минприроды РД, кабинет № 202.
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;'>
+            <span style='font-size:10.0pt;line-height:115%;'><o:p>&nbsp;</o:p></span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;'>
+            <span style='font-size:10.0pt;line-height:115%;'>
+                <span></span>
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;'>
+            <span style='font-size:10.0pt;line-height:115%;'>
+                <span></span>Подпись должностного лица,<span></span>Подпись
+                лица, в отношении которого
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;'>
+            <span style='font-size:10.0pt;line-height:115%;'>
+                <span></span>составившего протокол<span></span>возбуждено
+                дело об административном
+            </span>
+        </p>
+
+        <p class='MsoNormal'>
+            <span style='font-size:10.0pt; line-height:115%;'>
+                <span></span>правонарушении,
+                (его представителя)
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:normal;'>
+            <span style='font-size:10.0pt;'>
+                ___________ / ____________________ ______________ / ____________________
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt; font-size:7.0pt;'>
+            <span style="margin-left:20px;">подпись</span><span style="margin-left:80px;">(Ф.И.О.)</span><span style="margin-left:90px;">подпись</span><span style="margin-left:90px;">(Ф.И.О.)</span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;'>
+            <span style='font-size:10.0pt; line-height:115%;'><o:p>&nbsp;</o:p></span>
+        </p>
+
+        <p class='MsoNormal'>
+            <span style='font-size:10.0pt; line-height:115%;'><o:p>&nbsp;</o:p></span>
+        </p>
+
+        <p class='MsoNormal'>
+            <span style='font-size:10.0pt; line-height:115%;'>
+                Подписи
+                свидетелей:<span>                                                                              </span>Копия
+                протокола (получил, отказался)
+            </span>
+        </p>
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:normal;'>
+            <span style='font-size:10.0pt;'>
+                ___________ / ____________________ ______________ / ____________________
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt; font-size:7.0pt;'>
+            <span style="margin-left:20px;">подпись</span><span style="margin-left:80px;">(Ф.И.О.)</span><span style="margin-left:90px;">подпись</span><span style="margin-left:90px;">(Ф.И.О.)</span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:normal;'>
+            <span style='font-size:10.0pt;'><o:p>&nbsp;</o:p></span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:normal;'>
+            <span style='font-size:10.0pt;'>
+                ___________ / ____________________ ______________ / ____________________
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt; font-size:7.0pt;'>
+            <span style="margin-left:20px;">подпись</span><span style="margin-left:80px;">(Ф.И.О.)</span><span style="margin-left:90px;">подпись</span><span style="margin-left:90px;">(Ф.И.О.)</span>
+        </p>
+
+        <p class='MsoNormal'>
+            <span style='font-size:10.0pt; line-height:115%;'><o:p>&nbsp;</o:p></span>
+        </p>
+
+        <p class='MsoNormal'>
+            <span style='font-size:10.0pt; line-height:115%;'><o:p>&nbsp;</o:p></span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:normal;'>
+            <span style='font-size:10.0pt; '>
+                В случае
+                отказа от получения протокола
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:normal;'>
+            <span style='font-size:10.0pt; '>
+                делается
+                соответствующая запись
+            </span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:normal;'>
+            <span style='font-size:10.0pt; '><o:p>&nbsp;</o:p></span>
+        </p>
+
+        <p class='MsoNormal' style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:normal;'>
+            <span style='font-size:10.0pt; '>
+                Копия
+                протокола отправлена по почте «_____» _________________ 20 _____ г. № заказного
+                письма _______
+            </span>
+        </p>
+
+    </div>
+</div>

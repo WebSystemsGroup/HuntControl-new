@@ -1,0 +1,238 @@
+﻿@model WebAIS.StoreProcedure.SModel.case_customer_root_get_smev
+
+<div class="modal-card-head wrap-flex">
+    <nav class="breadcrumb m-b-0">
+        <div class="container">
+            <div class="row-flex">
+                <div class="col-flex"><div class="breadcrumb-item complete">Запрос</div></div>
+                <div class="col-flex"><div class="breadcrumb-item active">Данные</div></div>
+                <div class="col-flex"><div class="breadcrumb-item">Ответ</div></div>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="modal-card-body">
+    <div class="dash" data-tabs="">
+        <div class="dash-content">
+            <div class="row-flex">
+                <div class="col-flex is-12">
+                    <div class="form-content smev-request" style="display: block;">
+                        <form>
+                            <input name="data_services_id" type="hidden" class="data_services_id"/>
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="ApplicationType">Тип заявителя</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <select class="select" name="ApplicationType">
+                                            <option value="IpApplication">Индивидуальный предприниматель</option>
+                                            <option value="LegalApplication">Юридическое лицо</option>
+                                            <option value="PersonApplication">Физическое лицо</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="Inn">ИНН</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-validation="required" data-validation-allowing="-" id="Inn" name="Inn" placeholder="ИНН" type="text" value="@Model.out_customer_inn" data-inputmask="'mask': '9999999999'">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="CityDistrict">Муниципальный район/Городской округ</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-validation="required" data-validation-allowing="-" name="CityDistrict" placeholder="" type="text" value="">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="Municipality">Муниципальное образование (город, село, поселок и др.)</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-validation="required" data-validation-allowing="-" name="Municipality" placeholder="" type="text" value="">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="SupportFormType">Форма поддержки</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <select class="select" name="SupportFormType" id="SupportFormType" style="display: none;" data-dictionary="" data-dictionary-options='{"dictionary":"MspCorpSupportFormTypes"}'></select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="OptionServiceType">Вариант получения ответа</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <select class="select" name="ReportingMethod" id="ReportingMethod" style="display: none;" data-dictionary="" data-dictionary-options='{"dictionary":"MspCorpReportingMethodTypes"}'></select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="ReportingMethodOtherTypeText">Комментарий по ответу</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input" name="ReportingMethodOtherTypeText" placeholder="" type="text" value="">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex nomargin-bottom">
+                                <h2 class="col-flex form-title center">Контактные данные</h2>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="SecondName">Номер телефона</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-validation-allowing="-" name="InformingMethodPhone" placeholder="" type="text" value="@Model.out_customer_tel1" data-inputmask="'mask': '+7(999)9999999'">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <div class="col-flex is-offset-2 is-3">
+                                    <label for="SecondName">E-mail</label>
+                                </div>
+                                <div class="col-flex is-5">
+                                    <div class="form-control">
+                                        <input class="input" data-val="true" data-val-length="" data-validation-allowing="-" name="InformingMethodEmail" placeholder="" type="text" value="@Model.out_customer_email">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="form-content smev-response" style="display:none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-card-foot">
+    <div class="content-footer__action row-flex-right">
+        <button type="button" class="btn btn-danger attach-smev-response" style="display: none;">
+            <span>Прикрепить к услуге</span>
+            <span class="icon">
+                <i class="ion ion-ios-upload-outline"></i>
+            </span>
+        </button>
+        <button type="button" class="btn btn-danger is-form-send smev-send-data" data-url-smev="Smev_MspCorpGovDepInfo">
+            <span>Далее</span>
+            <span class="icon">
+                <i class="ion ion-ios-arrow-forward"></i>
+            </span>
+        </button>
+    </div>
+</div>
+<script>
+    flag = true;
+    $.validate({
+        modules : 'date, security'
+    });
+    $(".js-example-basic-multiple").select2({
+        placeholder: "Поиск...",
+        theme: "classic",
+        tags: true,
+        minimumResultsForSearch: -1,
+        language: "ru",
+        allowClear: true,
+        showSearchBox: false
+    });
+    $("#OptionServiceType").select2({
+        theme: "classic",
+        language: "ru",
+        showSearchBox: false
+    });
+    if (typeof ('[data-dictionary]') != 'undefined') {
+        $.each($('[data-dictionary]'), function () {
+            var $this = $(this);
+            var options = $this.data('dictionaryOptions');
+            $.ajax({
+                url: '/Smev/Smev_GetDictionary',
+                type: 'POST',
+                data: { type: options.dictionary },
+                success: function (items) {
+                    if (items != 'undefined') {
+                        $this.empty();
+                        items.Dictionary.forEach(function (item, i, arr) {
+                            $this.append('<option value=' + item.Key + '>' + item.Value + '</option>');
+                        });
+                        $this.niceSelect('update');
+                    }
+                }
+            });
+        });
+    };
+    if (typeof ('#modal_smev_card_content') != 'undefined') {
+        $('input[data-inputmask]').inputmask();
+    };
+    $("#identityType").change(function () {
+        if ($("#identityType option:selected").val() == "RfPassport") {
+            $("#div_documentData_DocEndDate").hide();
+            $("#documentData_DocEndDate").val("");
+        }
+        else {
+            $("#div_documentData_DocEndDate").show();
+        }
+    });
+
+    /* ловушка полей ввода даты и времени */
+    if (typeof ('#modal_smev_card_content') != 'undefined') {
+        $.datetimepicker.setLocale('ru');
+        $.each($('[data-input-datetimepicker]'), function () {
+            var $this = $(this);
+            var options = $this.data('input-datetimepicker-options');
+            var avalible_time = $this.data('input-datetimepicker-time');
+
+            if (typeof avalible_time != 'undefined') {
+                options['allowTimes'] = avalible_time.split(',');
+            }
+
+            $this.datetimepicker(options);
+        });
+    };
+
+    // Nice select init
+    if (typeof ('#modal_smev_card_content') != 'undefined') {
+        $.validate({
+            lang: 'ru',
+            modules: 'date, security',
+            borderColorOnError: '#e44d32',
+            dateFormat: 'dd-mm-yyyy'
+        });
+        $('#modal_smev_card_content select').niceSelect();
+    };
+    $('.smev-send-data').on('click', function (e) {
+        if ($('#modal_smev_card_content').find('form').isValid() && flag) {
+            event.stopPropagation();
+            var btn = $(this);
+            var url = $(this).data('urlSmev');
+            smevSendData(url, btn);
+        }
+    });
+</script>

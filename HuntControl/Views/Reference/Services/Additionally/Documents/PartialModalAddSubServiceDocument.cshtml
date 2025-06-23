@@ -1,0 +1,55 @@
+﻿@model HuntControl.Domain.Concrete.spr_services_sub_document
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<script src="~/Content/plugins/bootstrap-select/dist/js/bootstrap-select.min.js" type="text/javascript"></script>
+<script>
+    $(document).ready(function() {
+        $('.selectpicker').selectpicker();
+    });
+</script>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myLargeModalLabel">Добавление документа к услуге</h4>
+        </div>
+        <div class="modal-body">
+            @using (Ajax.BeginForm("SubmitSubServiceDocumentSave", "Reference", Model, new AjaxOptions { UpdateTargetId = "documentsPillContainer", OnSuccess = "successAdd();$('#myModal').modal('hide');" }, new { @id = "AddSubServiceDocumentForm", @class = "form-horizontal" }))
+            {
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group form-group-sm">
+                            <div class="col-md-6">
+                                @Html.LabelFor(model => model.spr_documents_id, new { @class = "font-13" })
+                                @Html.DropDownListFor(model => model.spr_documents_id, ViewBag.Documents as SelectList, "Выберите документ", new Dictionary<string, object> { { "class", "selectpicker" }, { "data-style", "btn-white btn-sm" } })
+                            </div>
+                            <div class="col-md-6">
+                                @Html.LabelFor(model => model.document_needs, new { @class = "font-13" })
+                                @Html.DropDownListFor(model => model.document_needs, new SelectList(new List<SelectListItem> { new SelectListItem() { Text = "Да", Value = "0" }, new SelectListItem() { Text = "Нет", Value = "1" }, new SelectListItem() { Text = "При наличии", Value = "2" } }, "Value", "Text"), new Dictionary<string, object> { { "class", "selectpicker" }, { "data-style", "btn-white btn-sm" } })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group form-group-sm">
+                            <div class="col-md-6">
+                                @Html.LabelFor(model => model.document_type, new { @class = "font-13" })
+                                @Html.DropDownListFor(model => model.document_type, new SelectList(new List<SelectListItem> { new SelectListItem() { Text = "Оригинал", Value = "0" }, new SelectListItem() { Text = "Копия", Value = "1" } }, "Value", "Text"), new Dictionary<string, object> { { "class", "selectpicker" }, { "data-style", "btn-white btn-sm" } })
+                            </div>
+                            <div class="col-md-6">
+                                @Html.LabelFor(model => model.document_count, new { @class = "font-13" })
+                                @Html.TextBoxFor(model => model.document_count, new { @class = "form-control", @placeholder = "Количество копий" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel waves-effect waves-light" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Отмена</button>
+            <button type="submit" form="AddSubServiceDocumentForm" class="btn btn-success waves-effect waves-light"> Сохранить <i class="fa fa-check m-l-5"></i></button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

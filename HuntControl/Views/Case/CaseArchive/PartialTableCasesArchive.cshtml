@@ -1,0 +1,80 @@
+﻿@model HuntControl.WebUI.Models.CaseViewModel
+
+@if (Model.CaseArchiveServicesList.Any())
+{
+    <div class="card-box p-0 m-t-20 m-b-20">
+        <div class="input-group">
+            <span class="input-group-btn">
+                <button type="button" class="btn waves-effect waves-light btn-link p-l-20-important"><i class="fa fa-search"></i></button>
+            </span>
+            <input type="text" id="searchTextCases" class="text-dark no-border-input" placeholder="Поиск обращений"><ul class="typeahead dropdown-menu"></ul><ul class="typeahead dropdown-menu"></ul>
+        </div>
+        <div class="table-responsive">
+            <table id="casesTable" class="table table-hover" style="margin-top: 0 !important">
+                <thead >
+                    <tr class="font-bold">
+                        <td>ФИО</td>
+                        <td>Дата</td>
+                        <td></td>
+                        <td>Статус</td>
+                        <td>Срок</td>
+                        <td class="hidden">5</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.CaseArchiveServicesList.OrderByDescending(s => s.out_date_enter))
+                    {
+                    <tr onclick="window.open('@Url.Action("Main", "Case", new {infoId = item.out_data_services_info_id})')">
+                        <td class="vertical-middle p-l-20-important">
+                            <span class="font-600">@Html.DisplayFor(m => item.out_customer_name)</span><br />
+                            <span class="font-600">@Html.DisplayFor(m => item.out_service_name)</span><br />
+                            <span>#@Html.DisplayFor(m => item.out_data_services_info_id)</span>  <span class="label @(item.out_status_name == "Просрочено" ? "label-danger" : item.out_status_name == "На исполнении" ? "label-warning" : "label-success" )">@Html.DisplayFor(m => item.out_status_name)</span>
+                            <span class="visible-xs m-t-5">
+                                <span class="text-muted">Принято: <span class="font-600 @(item.out_count_day < 0 ? "text-danger" : "text-custom")">@Html.DisplayFor(m => item.out_count_day)</span></span>
+                                <span class="text-muted">Общий срок: <span class="font-600 @(item.out_count_day_total < 0 ? "text-danger" : "text-custom")">@Html.DisplayFor(m => item.out_count_day_total)</span></span>
+                            </span>
+                        </td>
+                        <td class="visible-lg">
+                            от <span class="font-bold">@Html.DisplayFor(m => item.out_date_enter)</span>
+                        </td>
+                        <td class="visible-lg">
+                            <span class="text-clip-cust font-13">@Html.DisplayFor(m => item.out_employees_fio)</span><br />
+                            <span class="text-muted font-13">Принял</span><br />
+                            <span class="text-clip-cust font-13">@Html.DisplayFor(m => item.out_employees_fio_execution)</span><br />
+                            <span class="text-muted font-13">Исполнитель</span><br />
+                        </td>
+                        <td class="vertical-middle text-center visible-lg">
+                            <span class="h1 font-600 @(item.out_count_day < 0 ? "text-danger" : "text-custom")">@(item.out_count_day?.ToString() ?? "-")</span><br />
+                            <span class="text-muted">@(item.out_stage_name)</span>
+                        </td>
+                        <td class="vertical-middle text-center visible-lg">
+                            <span class="h1 font-600 @(item.out_count_day_total < 0 ? "text-danger" : "text-custom")">@Html.DisplayFor(m => item.out_count_day_total)</span><br />
+                            <span class="text-muted">Общий срок</span>
+                        </td>
+                        <td class="vertical-middle text-center p-r-20-important">
+                            <span class="h1 font-600 text-custom"><i class="ion-chevron-right"></i></span>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <link href="~/Content/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+    <script src="~/Content/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Content/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script>
+        $(document).ready(function () {
+            var oTable = $('#casesTable').DataTable({ dom: 't<"row m-t-10 p-l-20-important p-b-10 m-r-15"<"col-sm-4"i><"col-sm-8"p>>' });
+            $('#searchTextCases').keyup(function () {
+                oTable.search($(this).val()).draw();
+            });
+        });
+    </script>
+}
+else
+{
+    <div class="alert alert-warning">
+        <span style="color: #00545c;"><strong><i class="icon-info"></i></strong> По данному запросу ничего не найдено.</span>
+    </div>
+}

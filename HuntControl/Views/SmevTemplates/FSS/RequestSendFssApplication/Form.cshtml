@@ -1,0 +1,394 @@
+﻿@model WebAIS.StoreProcedure.SModel.case_customer_root_get_smev
+
+<div class="modal-card-head wrap-flex">
+    <nav class="breadcrumb m-b-0">
+        <div class="container">
+            <div class="row-flex">
+                <div class="col-flex"><div class="breadcrumb-item complete">Запрос</div></div>
+                <div class="col-flex"><div class="breadcrumb-item active">Данные</div></div>
+                <div class="col-flex"><div class="breadcrumb-item">Ответ</div></div>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="modal-card-body">
+    <div class="form-vertical smev-request" id="smev-fss-tabs">
+        <ul class="tab-horizontal">
+            <li><a href="#smev-fss-tab-1">Данные заявителя</a></li>
+            <li onclick="getFileSmevDocument()"><a href="#smev-fss-tab-2">Документы</a></li>
+        </ul>
+        <form id="_fssForm">
+            <input name="data_services_id" type="hidden" class="data_services_id" />
+            <input name="id" type="hidden" value="@Model.id" class="smev_request_id" />
+            <div id="smev-fss-tab-1" class="form-content smev-request">
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="inn">Отделение ФСС</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <select class="select2" id="FssDivisionCode" name="FssDivisionCode" style="display: none;"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="col-flex is-offset-2 is-3">
+                        <label for="inn">Тип заявителя</label>
+                    </div>
+                    <div class="col-flex is-5">
+                        <div class="form-control">
+                            <select class="select" id="customer_type" name="customer_type" style="display: none;">
+                                <option value="_FL">Физическое лицо или ИП</option>
+                                <option value="_UL">Юридическое лицо</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="_FL" class="__customer-type">
+                    <div class="row-flex">
+                        <div class="col-flex is-offset-2 is-3">
+                            <label for="LastName">Фамилия</label>
+                        </div>
+                        <div class="col-flex is-5">
+                            <div class="form-control">
+                                <input class="input capitalize" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="physical_fio_LastName" name="physical.fio.LastName" placeholder="Фамилия" type="text" value="@Model.out_customer_name.Split(' ')[0]">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row-flex">
+                        <div class="col-flex is-offset-2 is-3">
+                            <label for="FirstName">Имя</label>
+                        </div>
+                        <div class="col-flex is-5">
+                            <div class="form-control">
+                                <input class="input capitalize" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="physical_fio_FirstName" name="physical.fio.FirstName" placeholder="Имя" type="text" value="@(Model.out_customer_name.Split(' ').Length >= 2 ? Model.out_customer_name.Split(' ')[1]:"")">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row-flex">
+                        <div class="col-flex is-offset-2 is-3">
+                            <label for="SecondName">Отчество</label>
+                        </div>
+                        <div class="col-flex is-5">
+                            <div class="form-control">
+                                <input class="input capitalize" data-val="true" data-val-length="" data-validation-allowing="-" id="physical_fio_SecondName" name="physical.fio.SecondName" placeholder="Отчество" type="text" value="@(Model.out_customer_name.Split(' ').Length >= 3 ? Model.out_customer_name.Split(' ')[2]:"")">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row-flex">
+                        <div class="col-flex is-offset-2 is-3">
+                            <label for="BirthDate">Дата рождения</label>
+                        </div>
+                        <div class="col-flex is-5">
+                            <div class="form-control has-addons">
+                                <input class="input" type="text" name="physical.BirthDate" id="physical_BirthDate" value="@Model.out_document_birth_date" placeholder="__.__.____" data-inputmask="'mask': '99.99.9999'"
+                                       data-validation="date" data-validation-format="dd.mm.yyyy"
+                                       data-input-datetimepicker="" data-input-datetimepicker-options='{"timepicker":false,"format":"d.m.Y","scrollMonth":false,"scrollInput":false}' />
+                                <span class="icon" style="top:0px;"><i class="ion-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row-flex nomargin-bottom">
+                        <h2 class="col-flex is-offset-5 form-title">Удостоверение личности</h2>
+                    </div>
+
+                    <div class="row-flex">
+                        <div class="col-flex is-offset-2 is-3">
+                            <label for="inn">Тип документа</label>
+                        </div>
+                        <div class="col-flex is-5">
+                            <div class="form-control">
+                                <select class="select" id="physical_DocumentName" name="physical.DocumentName" style="display: none;">
+                                    <option value="Паспорт гражданина Российской Федерации">Паспорт гражданина РФ</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row-flex">
+                        <div class="col-flex is-offset-2 is-3">
+                            <label for="LastName">Серия</label>
+                        </div>
+                        <div class="col-flex is-5">
+                            <div class="form-control">
+                                <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="physical_DocumentSeries" name="physical.DocumentSeries" placeholder="Серия" type="text" value="@Model.out_document_serial" data-inputmask="'mask': '9999'">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row-flex">
+                        <div class="col-flex is-offset-2 is-3">
+                            <label for="LastName">Номер</label>
+                        </div>
+                        <div class="col-flex is-5">
+                            <div class="form-control">
+                                <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="physical_DocumentNumber" name="physical.DocumentNumber" placeholder="Номер" type="text" value="@Model.out_document_number" data-inputmask="'mask': '999999'">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="_UL" class="__customer-type" style="display:none;">
+                    <div class="row-flex">
+                        <div class="col-flex is-offset-2 is-3">
+                            <label for="LastName">Наименование юридического лица</label>
+                        </div>
+                        <div class="col-flex is-5">
+                            <div class="form-control">
+                                <input class="input capitalize" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="legal_OrgName" name="legal.OrgName" placeholder="Наименование" type="text" value="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row-flex">
+                        <div class="col-flex is-offset-2 is-3">
+                            <label for="LastName">ИНН</label>
+                        </div>
+                        <div class="col-flex is-5">
+                            <div class="form-control">
+                                <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="legal_Inn" name="legal.Inn" placeholder="Инн" type="text" value="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row-flex">
+                        <div class="col-flex is-offset-2 is-3">
+                            <label for="LastName">КПП</label>
+                        </div>
+                        <div class="col-flex is-5">
+                            <div class="form-control">
+                                <input class="input" data-val="true" data-val-length="" data-val-length-max="100" data-validation="required" data-validation-allowing="-" id="legal_Kpp" name="legal.Kpp" placeholder="Кпп" type="text" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="smev-fss-tab-2" class="form-content smev-request" style="min-height: 250px;">
+                <div class="row-flex">
+                    <div class="col-flex is-12">
+                        <table class="route-table table-prices smev-doc-files">
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="form-content smev-response" style="display:none;"></div>
+</div>
+<div class="modal-card-foot">
+    <div class="content-footer__action row-flex-right">
+        <button type="button" class="btn btn-danger attach-smev-response" style="display: none;">
+            <span>Прикрепить к услуге</span>
+            <span class="icon">
+                <i class="ion ion-ios-upload-outline"></i>
+            </span>
+        </button>
+        <button type="button" class="btn btn-danger is-form-send smev-send-data" data-url-smev="Smev_RequestSendFssApplication">
+            <span>Далее</span>
+            <span class="icon">
+                <i class="ion ion-ios-arrow-forward"></i>
+            </span>
+        </button>
+    </div>
+</div>
+<script>
+
+</script>
+<script>
+    flag = true;
+    var attachmentTypes;
+    $(document).ready(function () {
+        $('#smev-fss-tabs .select').niceSelect();
+        Dictionary('FssDivisionCode', 'FssDivisionCodes');
+        FssUlEnabled($('.smev_request_id').val());
+        FssAttachmentTypes($('.smev_request_id').val());
+        var modal = $('#modal_smev_card_content');
+        modal.find("input:hidden.data_services_id").val($("#tab-services").find(".r-tabs-state-custom-active").data("serviceId"));
+    });
+    function _submitForm() {
+        $('#smev_fss_form').submit();
+    };
+    $(document).on('change', 'select.select2DOC', function (event) {
+        var $select = $(this);
+        var $option = $select.find('option:selected').val();
+        var row = $select.closest('tr');
+        if ($option == '') {
+            row.removeClass('active');
+        } else {
+            row.addClass('active');
+        }
+    });
+    function getFileSmevDocument() {
+        var _table = $('#smev-fss-tab-2').find(".smev-doc-files");
+        _table.empty();
+        $.post(
+            'jsonTableDocumentSmev', {
+                id: $("#tab-services").find(".r-tabs-state-custom-active").data("serviceId")
+            },
+            function (items) {
+                if (items.length > 0) {
+                    var j = 0;
+                    items.forEach(function (item, i, arr) {
+                        var tr = '<tr>' +
+                            '<td>' + ++j + '</td>' +
+                            '<td style="max-width: 430px;" class="text-clip-cust">' + item.out_name + ' </td>' +
+                            '<td>' + (item.out_file_size / 1024).toFixed(2) + ' кБ</td>' +
+                            '<td clss="non-click">' +
+                            '<div class="form-control">' +
+                            '<select type="select too-long" class="select2DOC" data-value="' + item.out_id + '" name="attachments">' +
+                            '</select>' +
+                            '</div>' +
+                            '</td>' +
+                            '<td>' +
+                            '<button type="button" data-toggle="modal" data-target="#modal_pic" data-type="' + item.out_file_ext + '" data-pic="' + item.out_id + '" style="font-size: 22px;margin-right: 10px;line-height: 22px;"><i class="ion ion-eye"></i></button>' +
+                            '</td>' +
+                            '</tr>';
+                        _table.append(tr);
+                    });
+                    $.each($('.select2DOC'), function () {
+                        var $this = $(this);
+                        var $value = $this.data('value');
+                        $this.append('<option value="">Выберите тип</option>');
+                        attachmentTypes.forEach(function (item, i, arr) {
+                            var option = '<option value="' + $value + '|' + item.Key + '">' + item.Value + '</option>';
+                            $this.append(option);
+                        });
+                    });
+                    $('.select2DOC').niceSelect();
+                }
+                else {
+                    var option = '<tr><td> Документы отсутствуют. Отсканируйте или загрузите документы перед выполнением СМЭВ запроса. </td></tr>';
+                    _table.append(option);
+                }
+            },
+            'json'
+        );
+    };
+    if (typeof ('#modal_smev_card_content') != 'undefined') {
+        $("#smev-fss-tabs .select2").select2({
+            placeholder: "",
+            theme: "classic",
+            language: "ru"
+        });
+        $('input[data-inputmask]').inputmask();
+        $.datetimepicker.setLocale('ru');
+        $.each($('[data-input-datetimepicker]'), function () {
+            var $this = $(this);
+            var options = $this.data('input-datetimepicker-options');
+            var avalible_time = $this.data('input-datetimepicker-time');
+
+            if (typeof avalible_time != 'undefined') {
+                options['allowTimes'] = avalible_time.split(',');
+            }
+
+            $this.datetimepicker(options);
+        });
+    };
+    if (typeof ('#_fssForm') != 'undefined') {
+        $.validate({
+            form : '#registration',
+            lang: 'ru',
+            modules: 'date, security',
+            borderColorOnError: '#e44d32',
+            dateFormat: 'dd-mm-yyyy',
+            addValidClassOnAll: true,
+            validateHiddenInputs: true
+        });
+    };
+    function Dictionary(input_name, type) {
+        var input = $("#" + input_name);
+        $.ajax({
+            url: '/Smev/Smev_GetDictionary',
+            type: 'POST',
+            data: { type: type },
+            success: function (items) {
+                if (items != 'undefined') {
+                    input.empty();
+                    items.Dictionary.forEach(function (item, i, arr) {
+                        input.append('<option value=' + item.Key + '>' + item.Value + '</option>');
+                    });
+                    input.val(items.DefaultKey).niceSelect('update');
+                    input.change();
+                }
+            }
+        });
+    };
+    function FssUlEnabled(id) {
+        $.ajax({
+            url: '/Smev/GetFssApplicantUlEnabled',
+            type: 'POST',
+            data: { id: id },
+            success: function (bl) {
+                if (!bl) {
+                    $('#customer_type').attr('disabled', bl).niceSelect('update');
+                }
+            }
+        });
+    };
+    function FssAttachmentTypes(id) {
+        $.ajax({
+            url: '/Smev/GetFssAttachmentTypes',
+            type: 'POST',
+            data: { id: id },
+            success: function (items) {
+                if (items != 'undefined') {
+                    attachmentTypes = items;
+                }
+            }
+        });
+    };
+    function _checkFSSDoc() {
+        var bl = false;
+        var $form = $('#modal_smev_card_content').find('form');
+        var $sl = $form.find('.smev-doc-files tr.active');
+        if (typeof ('#modal_smev_card_content') != 'undefined') {
+            if ($sl.length > 0 && $sl.val() != 'undefined') {
+                bl = true;
+            }
+            else {
+                bl = false;
+            }
+        };
+        return bl;
+    }
+    function _checkFSSform() {
+        var bl = false;
+        var _q = $('#customer_type').val();
+        if (typeof ('#modal_smev_card_content') != 'undefined') {
+            $.each($('#' + _q + ' [data-validation]'), function () {
+                var $this = $(this);
+                if ($this.val() != '') {
+                    bl = true;
+                }
+                else {
+                    bl = false;
+                }
+            });
+        };
+        return bl;
+    };
+    $('#smev-fss-tabs').responsiveTabs({ startCollapsed: 'accordion' });
+    $("#customer_type").change(function () {
+        $('.__customer-type').hide();
+        $('#' + $(this).val()).show();
+    });
+    $('.smev-send-data').on('click', function (e) {
+        console.log("_checkFSSform" + _checkFSSform());
+        console.log(flag);
+        if (_checkFSSform() && flag) {
+            event.stopPropagation();
+            var btn = $(this);
+            var url = $(this).data('urlSmev');
+            smevSendData(url,btn);
+        }
+        else {
+            $('#modal_smev_card_content').effect("shake", 500);
+            return false;
+        }
+    });
+</script>

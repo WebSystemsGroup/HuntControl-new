@@ -1,0 +1,176 @@
+﻿<input type="hidden" id="infoid" value="@ViewBag.InfoId" />
+<input type="hidden" id="documentid" value="@ViewBag.DocumentId" />
+<div class="modal-dialog modal-lg">
+    <div class="modal-content p-0">
+        <div class="modal-body p-0">
+            <ul class="nav nav-tabs navtab-bg nav-justified">
+                <li class="active">
+                    <a href="#scanTabContainer" data-toggle="tab" aria-expanded="false">
+                        <span class="visible-xs"><i class="fa fa-home"></i></span>
+                        <span class="hidden-xs">Сканировать</span>
+                    </a>
+                </li>
+                <li class="">
+                    <a href="#uploadTabContainer" data-toggle="tab" aria-expanded="true">
+                        <span class="visible-xs"><i class="fa fa-user"></i></span>
+                        <span class="hidden-xs">Загрузить</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="scanTabContainer">
+                    <div id="scanContainer"></div>
+                    <hr />
+                    <div class="text-right">
+                        <button type="button" class="btn btn-cancel waves-effect waves-light" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Закрыть</button>
+                        <button type="button" id="saveScanDocuments" class="btn btn-success waves-effect waves-light m-l-5"> Сохранить <i class="fa fa-check m-l-5"></i></button>
+                    </div>
+                </div>
+                <div class="tab-pane" id="uploadTabContainer">
+                    <div class="form-group clearfix">
+                        <div class="col-sm-12">
+                            <input type="file" name="file" id="filerInput">
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="text-right">
+                        <button type="button" class="btn btn-cancel waves-effect waves-light" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*<div class="modal-footer" style="padding: 15px;">
+            <button type="button" class="btn btn-cancel waves-effect waves-light" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Закрыть</button>
+            <button type="submit" form="AddCustomerForm" class="btn btn-success waves-effect waves-light"> Сохранить <i class="fa fa-check m-l-5"></i></button>
+        </div>*@
+    </div>
+</div>
+
+<script src="~/Content/plugins/select2/js/select2.full.min.js"></script>
+<script src="~/Content/plugins/jquery.filer/js/jquery.filer.min.js"></script>
+<script>
+    createScanContainer('scanContainer',
+        '@Url.Action("SaveScanImage", "ScanImage")',
+        '@Url.Action("DeleteScanImage", "ScanImage")',
+        '@Url.Action("GetFtpModel", "ScanImage")',
+        {
+            data_services_table_id: $('.case-services-documents-list2 .r-tabs-state-active').data('documentId'),
+            data_services_info_id: $('.case-services-documents-list2 .r-tabs-state-active').data('infoId'),
+            fileName: 'scan@(DateTime.Now.ToString("dd-MM-yyyyTmm-ss"))'
+        });
+
+    //<a class="jFiler-input-choose-btn btn btn-default waves-effect waves-light">Выберите файл</a> добавить в changeInput при необходимости размещения кнопки выбора файла
+    $("#filerInput").filer({
+        changeInput: '<div class="jFiler-input-dragDrop" style="cursor: pointer;"><div class="jFiler-input-inner"><div class="jFiler-input-icon"><i class="icon-jfi-cloud-up-o"></i></div><div class="jFiler-input-text"><h3>Перетащите сюда файл для загрузки</h3> </div></div></div>',
+        showThumbs: true,
+        theme: "dragdropbox",
+        templates: {
+            box: '<ul class="jFiler-items-list jFiler-items-grid"></ul>',
+            item: '<li class="jFiler-item">\
+                        <div class="jFiler-item-container">\
+                            <div class="jFiler-item-inner">\
+                                <div class="jFiler-item-thumb">\
+                                    <div class="jFiler-item-status"></div>\
+                                    <div class="jFiler-item-info">\
+                                        <span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name | limitTo: 25}}</b></span>\
+                                        <span class="jFiler-item-others">{{fi-size2}}</span>\
+                                    </div>\
+                                    {{fi-image}}\
+                                </div>\
+                                <div class="jFiler-item-assets jFiler-row">\
+                                    <ul class="list-inline pull-left">\
+                                        <li>{{fi-progressBar}}</li>\
+                                    </ul>\
+                                    <ul class="list-inline pull-right">\
+                                        <li><a class="icon-jfi-trash jFiler-item-trash-action"></a></li>\
+                                    </ul>\
+                                </div>\
+                            </div>\
+                        </div>\
+                    </li>',
+            itemAppend: '<li class="jFiler-item">\
+                            <div class="jFiler-item-container">\
+                                <div class="jFiler-item-inner">\
+                                    <div class="jFiler-item-thumb">\
+                                        <div class="jFiler-item-status"></div>\
+                                        <div class="jFiler-item-info">\
+                                            <span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name | limitTo: 25}}</b></span>\
+                                            <span class="jFiler-item-others">{{fi-size2}}</span>\
+                                        </div>\
+                                        {{fi-image}}\
+                                    </div>\
+                                    <div class="jFiler-item-assets jFiler-row">\
+                                        <ul class="list-inline pull-left">\
+                                            <li><span class="jFiler-item-others">{{fi-icon}}</span></li>\
+                                        </ul>\
+                                        <ul class="list-inline pull-right">\
+                                            <li><a class="icon-jfi-trash jFiler-item-trash-action"></a></li>\
+                                        </ul>\
+                                    </div>\
+                                </div>\
+                            </div>\
+                        </li>',
+            progressBar: '<div class="bar"></div>',
+            itemAppendToEnd: false,
+            removeConfirmation: true,
+            _selectors: {
+                list: '.jFiler-items-list',
+                item: '.jFiler-item',
+                progressBar: '.bar',
+                remove: '.jFiler-item-trash-action'
+            }
+        },
+        uploadFile: {
+            
+            url: '@Url.Action("SubmitDocumentFileUpload","Case")',
+            type: 'POST',
+            data: { documentId: $('#documentid').val(), infoId: $('#infoid').val() },
+            enctype: 'multipart/form-data',
+            beforeSend: function () { },
+            success: function (data, el) {
+                el.data('fileId', data);
+                var parent = el.find(".jFiler-jProgressBar").parent();
+                el.find(".jFiler-jProgressBar").fadeOut("slow", function () {
+                    $("<div class=\"jFiler-item-others text-success\"><i class=\"icon-jfi-check-circle\"></i> Успешно</div>").hide().appendTo(parent).fadeIn("slow");
+                    console.log($('ul#documentList li.r-tabs-state-active').data('documentId'));
+                });
+                refreshDocumentFiles();
+            },
+            error: function (el) {
+                var parent = el.find(".jFiler-jProgressBar").parent();
+                el.find(".jFiler-jProgressBar").fadeOut("slow", function () {
+                    $("<div class=\"jFiler-item-others text-error\"><i class=\"icon-jfi-minus-circle\"></i> Ошибка</div>").hide().appendTo(parent).fadeIn("slow");
+                    console.log($('ul#documentList li.r-tabs-state-active').data);
+                });
+            }
+        },
+        onRemove: function (itemEl, file, id, listEl, boxEl, newInputEl, inputEl) {
+            $.ajax({
+                url: '@Url.Action("SubmitDocumentFileDelete", "Case")',
+                type: 'POST',
+                async:false,
+                data: { documentFileId: itemEl.data('fileId') },
+                success: function (data) {
+                    return true;
+                },
+                error: function (data) {
+                    return false;
+                }
+            });
+
+        },
+        captions: {
+            button: "Выберите файл",
+            feedback: "Выберите файлы для загрузки",
+            feedback2: "файлы были выбраны",
+            drop: "Перетащите файл сюда, чтобы загрузить",
+            removeConfirmation: "Вы действительно хотите удалить этот файл?",
+            errors: {
+                filesLimit: "Разрешается загружать только {{fi-limit}} файла.",
+                filesType: "Разрешается загружать только изображения.",
+                filesSize: "{{fi-name}} слишком велико! Загрузите файл до {{fi-maxSize}} МБ.",
+                filesSizeAll: "Файлы, которые вы выбрали, слишком велики! Загрузите файлы до {{fi-maxSize}} МБ."
+            }
+        }
+    });
+</script>
