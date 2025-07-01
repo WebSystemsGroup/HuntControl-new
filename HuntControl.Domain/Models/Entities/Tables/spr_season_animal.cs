@@ -26,17 +26,9 @@ namespace HuntControl.Domain.Concrete
         [StringLength(70)]
         public string employees_fio_add { get; set; }
 
-        [StringLength(70)]
-        public string employees_fio_modify { get; set; }
-
         public bool is_remove { get; set; }
 
         public DateTime date_add { get; set; }
-
-        [StringLength(255)]
-        public string commentt_modify { get; set; }
-
-        public DateTime? date_modify { get; set; }
 
         public virtual spr_animal spr_animal { get; set; }
 

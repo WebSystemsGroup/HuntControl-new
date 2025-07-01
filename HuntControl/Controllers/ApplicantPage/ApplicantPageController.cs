@@ -171,81 +171,88 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
         [HttpPost]
         public ActionResult SubmitCustomerEditSave(data_customer customer, HttpPostedFileBase uploadFile)
         {
-            ModelState["employees_fio"].Errors.Clear();
-
-            if (ModelState.IsValid)
+            try
             {
-                if (customer.id == Guid.Empty)
+                ModelState["employees_fio"].Errors.Clear();
+
+                if (ModelState.IsValid)
                 {
-                    customer.employees_fio = UserName;
+                    if (customer.id == Guid.Empty)
+                    {
+                        customer.employees_fio = UserName;
+                        if (uploadFile != null)
+                        {
+                            customer.file_name = Path.GetFileNameWithoutExtension(uploadFile.FileName);
+                            customer.file_ext = Path.GetExtension(uploadFile.FileName);
+                        }
+                        repository.Insert(customer);
+                    }
+                    else
+                    {
+                        var editModel = repository.DataCustomers.SingleOrDefault(dc => dc.id == customer.id);
+                        editModel.actual_address = customer.actual_address;
+                        editModel.customer_name = customer.customer_name;
+                        editModel.doc_serial = customer.doc_serial;
+                        editModel.doc_number = customer.doc_number;
+                        editModel.doc_code = customer.doc_code;
+                        editModel.doc_issue_body = customer.doc_issue_body;
+                        editModel.doc_issue_date = customer.doc_issue_date;
+                        editModel.customer_name = customer.customer_name;
+                        editModel.customer_sex = customer.customer_sex;
+                        editModel.doc_birth_date = customer.doc_birth_date;
+                        editModel.doc_birth_place = customer.doc_birth_place;
+                        editModel.legal_address = customer.legal_address;
+                        editModel.actual_address = customer.actual_address;
+                        editModel.customer_snils = customer.customer_snils;
+                        editModel.phone_number1 = customer.phone_number1;
+                        editModel.phone_number2 = customer.phone_number2;
+                        editModel.social_organization_info = customer.social_organization_info;
+                        editModel.social_job_position = customer.social_job_position;
+                        editModel.social_incapable = customer.social_incapable;
+                        editModel.social_pensioner = customer.social_pensioner;
+                        editModel.e_mail = customer.e_mail;
+
+                        editModel.employees_fio_modifi = UserName;
+                        if (uploadFile != null)
+                        {
+                            editModel.file_name = Path.GetFileNameWithoutExtension(uploadFile.FileName);
+                            editModel.file_ext = Path.GetExtension(uploadFile.FileName);
+                        }
+                        repository.Update(editModel);
+                    }
+                    var settings = repository.SprSettings.ToList();
+                    var ftpModel =
+                        new
+                        {
+                            ftpServer = settings.SingleOrDefault(ss => ss.param_name == "ftp_server")?.param_value,
+                            ftpFolder = settings.SingleOrDefault(ss => ss.param_name == "ftp_folder")?.param_value,
+                            ftpLogin = settings.SingleOrDefault(ss => ss.param_name == "ftp_user")?.param_value,
+                            ftpPass =
+                                CRPassword.Encrypt(
+                                    settings.SingleOrDefault(ss => ss.param_name == "ftp_password")?.param_value),
+                        };
+
+                    FtpFileModel ftp = new FtpFileModel();
+
+
                     if (uploadFile != null)
                     {
-                        customer.file_name = Path.GetFileNameWithoutExtension(uploadFile.FileName);
-                        customer.file_ext = Path.GetExtension(uploadFile.FileName);
+                        ftp.RemoveFile(ftpModel.ftpServer, ftpModel.ftpLogin, ftpModel.ftpPass, ftpModel.ftpFolder, customer.id + customer.file_ext, "Individual_photos");
+                        //считаем загруженный файл в массив
+                        byte[] fileArray = new byte[uploadFile.ContentLength];
+                        uploadFile.InputStream.Read(fileArray, 0, uploadFile.ContentLength);
+                        ftp.FileSave(fileArray, ftpModel.ftpServer, ftpModel.ftpLogin, ftpModel.ftpPass, ftpModel.ftpFolder,
+                            customer.id + Path.GetExtension(uploadFile.FileName), "Individual_photos");
                     }
-                    repository.Insert(customer);
+
+                    return RedirectToAction("PartialIndividualPage", new { customerId = customer.id });
                 }
-                else
-                {
-                    var editModel = repository.DataCustomers.SingleOrDefault(dc => dc.id == customer.id);
-                    editModel.actual_address = customer.actual_address;
-                    editModel.customer_name = customer.customer_name;
-                    editModel.doc_serial = customer.doc_serial;
-                    editModel.doc_number = customer.doc_number;
-                    editModel.doc_code = customer.doc_code;
-                    editModel.doc_issue_body = customer.doc_issue_body;
-                    editModel.doc_issue_date = customer.doc_issue_date;
-                    editModel.customer_name = customer.customer_name;
-                    editModel.customer_sex = customer.customer_sex;
-                    editModel.doc_birth_date = customer.doc_birth_date;
-                    editModel.doc_birth_place = customer.doc_birth_place;
-                    editModel.legal_address = customer.legal_address;
-                    editModel.actual_address = customer.actual_address;
-                    editModel.customer_snils = customer.customer_snils;
-                    editModel.phone_number1 = customer.phone_number1;
-                    editModel.phone_number2 = customer.phone_number2;
-                    editModel.social_organization_info = customer.social_organization_info;
-                    editModel.social_job_position = customer.social_job_position;
-                    editModel.social_incapable = customer.social_incapable;
-                    editModel.social_pensioner = customer.social_pensioner;
-                    editModel.e_mail = customer .e_mail;
-
-                    editModel.employees_fio_modifi = UserName;
-                    if (uploadFile != null)
-                    {
-                        editModel.file_name = Path.GetFileNameWithoutExtension(uploadFile.FileName);
-                        editModel.file_ext = Path.GetExtension(uploadFile.FileName);
-                    }
-                    repository.Update(editModel);
-                }
-                var settings = repository.SprSettings.ToList();
-                var ftpModel =
-                    new
-                    {
-                        ftpServer = settings.SingleOrDefault(ss => ss.param_name == "ftp_server")?.param_value,
-                        ftpFolder = settings.SingleOrDefault(ss => ss.param_name == "ftp_folder")?.param_value,
-                        ftpLogin = settings.SingleOrDefault(ss => ss.param_name == "ftp_user")?.param_value,
-                        ftpPass =
-                            CRPassword.Encrypt(
-                                settings.SingleOrDefault(ss => ss.param_name == "ftp_password")?.param_value),
-                    };
-
-                FtpFileModel ftp = new FtpFileModel();
-
-
-                if (uploadFile != null)
-                {
-                    ftp.RemoveFile(ftpModel.ftpServer, ftpModel.ftpLogin, ftpModel.ftpPass, ftpModel.ftpFolder, customer.id + customer.file_ext, "Individual_photos");
-                    //считаем загруженный файл в массив
-                    byte[] fileArray = new byte[uploadFile.ContentLength];
-                    uploadFile.InputStream.Read(fileArray, 0, uploadFile.ContentLength);
-                    ftp.FileSave(fileArray, ftpModel.ftpServer, ftpModel.ftpLogin, ftpModel.ftpPass, ftpModel.ftpFolder,
-                        customer.id + Path.GetExtension(uploadFile.FileName), "Individual_photos");
-                }
-
-                return RedirectToAction("PartialIndividualPage", new { customerId = customer.id });
+                throw new Exception("Ошибка валидации!");
             }
-            throw new Exception("Ошибка валидации!");
+            catch (Exception ex)
+            {
+                return PartialView(ex);
+            }
         }
 
         /// <summary>
@@ -1506,7 +1513,7 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
                                 out_doc_issue_body = "ТП УФМС России по Респ. Дагестан в Хунзахском районе от",
                                 out_doc_issue_date = new DateTime(2013, 10, 18),
                                 out_hunting_type_name = "спортивная и любительская охота",
-                                out_group_type_name = "1 (одна) особь половозрастного дикого кабана, за исключением самок с приплодом текущего года",
+                                out_season_name = "1 (одна) особь половозрастного дикого кабана, за исключением самок с приплодом текущего года",
                                 out_date_start = new DateTime(2021, 6, 1),
                                 out_date_stop = new DateTime(2021, 9, 30),
                                 out_hunting_farm_name = "Общедоступные охотничьи угодья Дербентского, Табасаранского, Магарамкентского, Ахтынского, Курахского, Хивского, Селеман-Стальского, Рутульского районов",
