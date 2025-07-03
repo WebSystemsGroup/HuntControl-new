@@ -427,7 +427,7 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
             ViewBag.EmployeesAutorised = repository.SprSettings.Where(w => w.param_name == "employees_authorized").First();
             ViewBag.NameOrganization = repository.SprSettings.Where(w => w.param_name == "name_small_organization").First();
             ViewBag.SerialHuntingLic = repository.SprSettings.Where(w => w.param_name == "serial_hunting_lic").First();
-            return PartialView("HuntingLic/PartialModalAddHunti ngLic", new data_customer_hunting_lic { employees_fio = Membership.GetUser(User.Identity.Name)?.UserName ?? " ", data_customer_id = customerId });
+            return PartialView("HuntingLic/PartialModalAddHuntingLic", new data_customer_hunting_lic { employees_fio = Membership.GetUser(User.Identity.Name)?.UserName ?? " ", data_customer_id = customerId });
         }
 
         /// <summary>
