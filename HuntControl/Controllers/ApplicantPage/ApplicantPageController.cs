@@ -507,17 +507,19 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
         {
             DateTime realDate = DateTime.Now.AddMonths(-6);
             var huntingFarmSeasons = repository.SprHuntingFarmSeasons
-                .Where(hfa =>
-                    hfa.spr_hunting_farm_id == huntingFarmId && hfa.date_stop > realDate && hfa.is_remove != true)
-                .Include(i => i.spr_season)
-                .Include(i => i.spr_hunting_farm_season_forms)
-                .Select(s => new
-                {
-                    id = new { s.id, s.spr_season_id },
-                    text = s.spr_season.season_name,
-                    s.date_start,
-                    s.date_stop
-                });
+                .Where(s => s.spr_hunting_farm_id == huntingFarmId &&
+                           s.date_stop > realDate &&
+                           s.is_remove != true)
+                .Join(repository.SprSeasons,
+                    s => s.spr_season_id,
+                    season => season.id,
+                    (s, season) => new
+                    {
+                        id = new { s.id, s.spr_season_id },
+                        text = season.season_name,
+                        date_start = s.date_start,
+                        date_stop = s.date_stop
+                    });
             // var huntingFarmGroupTypes = repository.FuncHuntingFarmActiveGroupTypeSelect(huntingFarmId).Select(s => new { id = new { s.out_spr_hunting_farm_season_id, s.out_spr_season_id }, text = s.out_season_name }).ToList();
             return Json(huntingFarmSeasons, JsonRequestBehavior.AllowGet);
         }
@@ -528,7 +530,12 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
         /// <returns>частичное представление модального окна</returns>
         public ActionResult GetHuntingFarmHuntingTypes(Guid huntingFarmSeasonId)
         {
-            var huntingTypes = repository.FuncHuntingFarmActiveHuntingTypeSelect(huntingFarmSeasonId).Select(s => new { id = s.out_spr_hunting_type_id, text = s.out_type_name }).ToList();
+            var huntingTypes = repository.SprHuntingTypes
+            .OrderBy(s => s.type_name)
+            .Select(s => new {
+                id = s.id,
+                text = s.type_name
+            }).ToList();
             return Json(huntingTypes, JsonRequestBehavior.AllowGet);
         }
 
@@ -542,6 +549,36 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
             return PartialView("HuntingLic/HuntingLicPerm/PartialTableAnimalLimits", animals);
         }
 
+        public ActionResult GetSeasonDates(Guid? seasonId)
+        {
+            if (seasonId == null || seasonId.Value == Guid.Empty)
+            {
+                return Json(new
+                {
+                    startDate = "",
+                    endDate = ""
+                }, JsonRequestBehavior.AllowGet);
+            }
+
+            var season = repository.SprHuntingFarmSeasons
+                .FirstOrDefault(s => s.id == seasonId.Value);
+
+            if (season != null)
+            {
+                return Json(new
+                {
+                    startDate = season.date_start.ToString("yyyy-MM-dd"),
+                    endDate = season.date_stop.ToString("yyyy-MM-dd")
+                }, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new
+            {
+                startDate = "",
+                endDate = ""
+            }, JsonRequestBehavior.AllowGet);
+        }
+
         /// <summary>
         /// Добавление разрешения на охоту
         /// </summary>
@@ -549,15 +586,41 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
         [HttpPost]
         public ActionResult PartialModalAddHuntingLicPerm(Guid customerId)
         {
-            var huntingFarms = repository.FuncHuntingFarmActiveSeasonSelect(User.Identity.Name);
-            var huntingLics = repository.FuncCustomerHuntingLicenseSelect(customerId);
+            var huntingFarms = repository.SprHuntingFarmSeasons
+            .Where(s2 => s2.date_stop >= DateTime.Now)
+            .Join(repository.SprHuntingFarms,
+                s2 => s2.spr_hunting_farm_id,
+                s1 => s1.id,
+                (s2, s1) => new {
+                    out_spr_hunting_farm_id = s1.id,
+                    out_hunting_farm_name = s1.hunting_farm_name
+                })
+            .Distinct()
+            .OrderBy(x => x.out_hunting_farm_name)
+            .ToList();
+
+            var huntingLics = repository.DataCustomerHuntingLics
+            .Where(d => d.data_customer_id == customerId && d.cancelled_date == null)
+            .Select(d => new {
+                out_data_customer_hunting_lic = d.id,
+                out_serial_number_license = d.serial_license + " " + d.number_license
+            }).ToList();
 
             var a = huntingFarms.ToList();
+
+            var methodRemoves = repository.SprMethodRemoves
+            .Where(mr => mr.is_remove != true)
+            .OrderBy(mr => mr.method_name)
+            .Select(mr => new {
+                id = mr.id,
+                text = mr.method_name
+            })
+            .ToList();
 
             ViewBag.HuntingLics = new SelectList(huntingLics, "out_data_customer_hunting_lic", "out_serial_number_license", huntingLics?.FirstOrDefault().out_data_customer_hunting_lic);
             ViewBag.HuntingFarms = new SelectList(huntingFarms.OrderBy(s => s.out_hunting_farm_name), "out_spr_hunting_farm_id", "out_hunting_farm_name");
             ViewBag.HuntingTypes = new SelectList(repository.SprHuntingTypes.Where(ht => ht.is_remove != true).ToList().OrderBy(s => s.type_name), "id", "type_name");
-            ViewBag.MethodRemoves = new SelectList(repository.SprMethodRemoves.Where(mr => mr.is_remove != true).ToList().OrderBy(s => s.method_name), "id", "method_name");
+            ViewBag.MethodRemoves = new SelectList(methodRemoves, "id", "text");
             var employee = repository.SprEmployees.SingleOrDefault(s => s.id == new Guid("fb1889e5-385c-421b-9811-7c9a14150e1c"));//Гебеков Курбан Начальник Управления
             var jobPos = repository.SprEmployees.Include(i => i.spr_employees_job_pos).Where(w => w.id == employee.id).Select(s => new { s.spr_employees_job_pos.job_pos_name }).FirstOrDefault()?.job_pos_name;
 
@@ -589,6 +652,12 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
             {
                 if (huntingLicPerm.id == Guid.Empty && animalLimits != null && animalLimits.Any(a => a.out_spr_animal_id != null))
                 {
+                    var season = repository.SprHuntingFarmSeasons
+                    .FirstOrDefault(s => s.id == huntingLicPerm.spr_hunting_farm_season_id);
+                    // Заполняем date_start и date_stop из сезона
+                    huntingLicPerm.date_start = huntingLicPerm.date_start;
+                    huntingLicPerm.date_stop = huntingLicPerm.date_stop;
+
                     repository.Insert(huntingLicPerm);
                     foreach (var animalLimitModel in animalLimits)
                     {

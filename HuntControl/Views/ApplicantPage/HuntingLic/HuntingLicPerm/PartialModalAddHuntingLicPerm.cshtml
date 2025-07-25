@@ -36,7 +36,7 @@
                     data.forEach(function (el, i) {
                         var dStart = moment(el.date_start).format('DD.MM.YYYY');
                         var dStop = moment(el.date_stop).format('DD.MM.YYYY');
-                   
+
                         $("#season_id").append('<option value="' + i++ + '" + data-spr-season-id="' + el.id.spr_season_id + '" data-hunting-farm-season-id="' + el.id.id + '">' + el.text + " (" + dStart + " - " + dStop + ")" + '</option>');
                     });
                     $("#season_id").select2().prop("disabled", false).val('').trigger('change');
@@ -47,7 +47,7 @@
             $('#hunting_farm_arr_id option').prop('disabled',false);
             $('#hunting_farm_arr_id').find('option').each(function(){
                 if ($(this).attr('value') === $this.val()){
-                    $(this).prop('disabled',true);               
+                    $(this).prop('disabled',true);
                 }
             });
             $('#hunting_farm_arr_id').select2("destroy").select2();
@@ -81,6 +81,16 @@
             });
         } else {
             $('#spr_hunting_type_id').prop("disabled", true).val('').trigger('change');
+        }
+    });
+
+    $('#season_id').change(function() {
+    var seasonId = $(this).val();
+        if (seasonId) {
+            $.get('@Url.Action("GetSeasonDates", "ApplicantPage")', { seasonId: seasonId }, function(data) {
+                $('#date_start').val(data.startDate);
+                $('#date_stop').val(data.endDate);
+            });
         }
     });
 
@@ -132,6 +142,8 @@
             <div style="height: 400px; overflow-x: hidden">
                 @using (Ajax.BeginForm("SubmitHuntingLicPermSave", "ApplicantPage", Model, new AjaxOptions { OnSuccess = "$('#myModal').modal('hide'); successAdd(); $('a[href=#huntingLicPermsTabContainer]').trigger('click');" }, new { @id = "AddHuntingLicPermForm", @class = "form-horizontal" }))
                 {
+                    @Html.HiddenFor(model => model.date_start)
+                    @Html.HiddenFor(model => model.date_stop)
                     @Html.HiddenFor(model => model.spr_hunting_farm_season_id)
                     @Html.HiddenFor(model => model.spr_season_id)
                     <div class="row p-l-r-10">

@@ -19,6 +19,10 @@ namespace HuntControl.Domain.Concrete
 
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime? out_date_given { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        public DateTime? out_date_start { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        public DateTime? out_date_stop { get; set; }
 
         public decimal? out_tariff { get; set; }
         public decimal? out_charge { get; set; }

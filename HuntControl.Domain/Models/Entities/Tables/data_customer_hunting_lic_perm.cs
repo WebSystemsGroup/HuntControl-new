@@ -94,6 +94,14 @@ namespace HuntControl.Domain.Concrete
         [Display(Name = "Сезон")]
         public Guid? spr_hunting_farm_season_id { get; set; }
 
+        [Display(Name = "Дата начала сезона")]
+        [DisplayFormat(DataFormatString = "{0:dd'.'MM'.'yyyy}")]
+        public DateTime? date_start { get; set; }
+
+        [Display(Name = "Дата окончания сезона")]
+        [DisplayFormat(DataFormatString = "{0:dd'.'MM'.'yyyy}")]
+        public DateTime? date_stop { get; set; }
+
         public virtual data_customer_hunting_lic data_customer_hunting_lic { get; set; }
 
         public virtual spr_hunting_type spr_hunting_type { get; set; }

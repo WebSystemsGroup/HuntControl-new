@@ -25,6 +25,8 @@
                     <th class="number-row p-l-20-important">№</th>
                     <th>Бланк</th>
                     <th>Охотугодье</th>
+                    <th>Дата начала</th>
+                    <th>Дата окончания</th>
                     <th>Дата выдачи</th>
                     <th class="text-right p-r-20-important">
                         Действия
@@ -45,6 +47,12 @@
                         <td>
                             @Html.DisplayFor(m => item.out_hunting_farm_name)<br />
                             <small class="text-muted">@Html.DisplayFor(m => item.out_season_name)</small>
+                        </td>
+                        <td class="vertical-middle-important">
+                            @Html.DisplayFor(m => item.out_date_start)
+                        </td>
+                        <td class="vertical-middle-important">
+                            @Html.DisplayFor(m => item.out_date_stop)
                         </td>
                         <td class="vertical-middle-important">
                             @Html.DisplayFor(m => item.out_date_given)

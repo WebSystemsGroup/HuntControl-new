@@ -123,6 +123,9 @@ namespace HuntControl.Domain.Concrete
         {
             NpgsqlParameter param1 = new NpgsqlParameter("@in_data_customer_id", customerId);
             return this.Database.SqlQuery<CustomerHuntingLicenseSelectResult>("SELECT * FROM customer_hunting_license_select(@in_data_customer_id)", param1).ToArray();
+
+            //return this.Database.SqlQuery<CustomerHuntingLicenseSelectResult>(@"SELECT d.id AS out_data_customer_hunting_lic, d.serial_license || ' ' || d.number_license AS out_serial_number_license FROM data_customer_hunting_lic d 
+            //WHERE d.data_customer_id = @in_data_customer_id AND d.cancelled_date IS NULL", param1).ToArray();
         }
 
         /// <summary>
@@ -134,6 +137,8 @@ namespace HuntControl.Domain.Concrete
             {
                 NpgsqlParameter param1 = new NpgsqlParameter("@in_employees_login", employeeLogin);
                 var a = this.Database.SqlQuery<HuntingFarmActiveSeasonSelectResult>("SELECT * FROM hunting_farm_active_season_select(@in_employees_login)", param1).ToArray();
+                //var a = this.Database.SqlQuery<HuntingFarmActiveSeasonSelectResult>("SELECT DISTINCT  s1.id AS out_spr_hunting_farm_id, s1.hunting_farm_name AS out_hunting_farm_name" +
+                //    " FROM spr_hunting_farm s1, spr_hunting_farm_season s2 WHERE s1.id = s2.spr_hunting_farm_id AND s2.date_stop >= CURRENT_DATE ORDER BY s1.hunting_farm_name", param1).ToArray();
                 return a;
             }
             catch(Exception ex)
@@ -158,6 +163,9 @@ namespace HuntControl.Domain.Concrete
         {
             NpgsqlParameter param1 = new NpgsqlParameter("@in_spr_hunting_farm_season_id", huntingFarmSeasonId);
             return this.Database.SqlQuery<HuntingFarmActiveHuntingTypeSelectResult>("SELECT * FROM hunting_farm_active_hunting_type_select(@in_spr_hunting_farm_season_id)", param1).ToArray();
+
+            //return this.Database.SqlQuery<HuntingFarmActiveHuntingTypeSelectResult>("SELECT s.id AS out_spr_hunting_type_id, s.type_name AS out_type_name FROM spr_hunting_type s ORDER BY s.type_name",
+            //    param1).ToArray();
         }
 
         /// <summary>
@@ -187,6 +195,8 @@ namespace HuntControl.Domain.Concrete
             NpgsqlParameter param1 = new NpgsqlParameter("@in_spr_hunting_farm_season_id", huntingFarmSeasonId);
             NpgsqlParameter param2 = new NpgsqlParameter("@in_spr_hunting_type_id", huntingTypeId);
             return this.Database.SqlQuery<HuntingLimitAnimalSelectResult>("SELECT * FROM hunting_limit_animal_select(@in_spr_hunting_farm_season_id, @in_spr_hunting_type_id)", param1, param2).ToArray();
+
+            //return this.Database.SqlQuery<HuntingLimitAnimalSelectResult>("SELECT s.id, s.season_name, ss.date_start, ss.date_stop FROM spr_season s, spr_season_open ss WHERE s.id = ss.spr_season_id AND ss.date_stop >= CURRENT_DATE ORDER BY s.season_name, ss.date_start;", param1, param2).ToArray();
         }
 
         /// <summary>
