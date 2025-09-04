@@ -63,11 +63,13 @@
     table {
         width: 100%;
         border-collapse: collapse;
+        height: 50px !important;
     }
     td {
         vertical-align: bottom;
-        border:none!important;
-        min-height:14pt!important;
+        border: none !important;
+        min-height: 14pt !important;
+        height: 20px !important;
     } 
 
 </style>
@@ -79,80 +81,101 @@
                     Министерство природных
                     ресурсов и экологии Республики Дагестан
                 </div>
-
-                <div style="padding-left:60%">
-                    Начальнику Управления охраны
-                    объектов животного мира и
-                    особо охраняемых природных
-                    территорий
-                </div>
-                <div style="padding-left:60%">
-                    @(Model.out_head_services)
-                </div>
+                @*<div style="padding-left:60%">
+                Начальнику Управления охраны
+                объектов животного мира и
+                особо охраняемых природных
+                территорий
+            </div>
+            <div style="padding-left:60%">
+                @(Model.out_head_services)
+            </div>*@
             </div>
 
             <div style="text-align: center; margin-top: 15px;">
-                ЗАЯВЛЕНИЕ  <br />НА
-                ПОЛУЧЕНИЕ РАЗРЕШЕНИЯ НА ДОБЫЧУ ОХОТНИЧЬИХ РЕСУРСОВ В ЦЕЛЯХ ЛЮБИТЕЛЬСКОЙ И
-                СПОРТИВНОЙ ОХОТЫ НА ОБЩЕДОСТУПНЫХ ОХОТНИЧЬИХ УГОДЬЯХ РЕСПУБЛИКИ ДАГЕСТАН
+                ЗАЯВЛЕНИЕ  <br />О
+                ВЫДАЧЕ РАЗРЕШЕНИЯ НА ДОБЫЧУ ОХОТНИЧЬИХ РЕСУРСОВ В ЦЕЛЯХ ЛЮБИТЕЛЬСКОЙ И
+                СПОРТИВНОЙ ОХОТЫ НА ТЕРРИТОРИИ ОБЩЕДОСТУПНЫХ ОХОТНИЧЬИХ УГОДЬИЙ РЕСПУБЛИКИ ДАГЕСТАН
             </div>
             <br />
-            <table >
-                <tr><td width="100px"><strong>Заявитель</strong></td><td class="bb">@(Model.out_customer_name)</td></tr>
-                <tr><td width="100px"></td><td class="text-center fs-11">(фамилия, имя, отчество)</td></tr>
+            <table>
+                <tr><td width="100px"><strong>Заявитель</strong></td><td class="bb">@(Model.out_customer_name), @(Model.out_customer_inn)</td></tr>
+                <tr><td width="100px"></td><td class="text-center fs-11">фамилия, имя, отчество (при наличии) заявителя, его идентификационный номер налогоплательщика (при наличии)</td></tr>
             </table>
-            <table >
-                <tr><td width="150px"><strong>Адрес заявителя</strong></td><td class="bb">@(Model.out_address)</td></tr>
+            <table>
+                <tr><td width="68%"><strong>Почтовый адрес и адрес электронной почты (при наличии)</strong></td><td class="bb"></td></tr>
+                <tr><td class="bb" colspan="2">@(Model.out_address), @(Model.out_customer_e_mail)</td></tr>
             </table>
-            <table >
-                <tr><td width="170px"><strong>Паспортные данные</strong></td><td class="bb">@(Model.out_doc_serial) @(Model.out_doc_number)</td></tr>
-                <tr><td class="bb" colspan="2">@(Model.out_doc_issue_body)</td></tr>
-                <tr><td class="bb" colspan="2">@(Model.out_doc_issue_date?.ToShortDateString())</td></tr>
-                <tr><td class="text-center fs-11" colspan="2">(номер, серия паспорта, кем и когда выдан)</td></tr>
+            <table>
+                <tr><td width="170px"><strong>СНИЛС (при наличии)</strong></td><td class="bb">@(Model.out_customer_snils)</td></tr>
             </table>
-            <table >
-                <tr><td width="60%px"><strong>Только для штатных работников охотпользователей </strong></td><td class="bb"></td></tr>
-                <tr><td width="60%px"></td><td class="text-center fs-11">(наименование и организационно-</td></tr>
-                <tr><td class="bb" colspan="2">@(Model.out_social_organization_info) &nbsp;</td></tr>
-                <tr><td class="text-center fs-11" colspan="2">правовая форма, номер контактного телефона, почтовый адрес юридического лица,</td></tr>
-                <tr><td class="bb" colspan="2">@(Model.out_phone_number1) @(Model.out_phone_number2)</td></tr>
-                <tr><td class="text-center fs-11" colspan="2">работником которого является заявитель)</td></tr>
-                <tr><td class="bb" colspan="2">&nbsp;</td></tr>
-            </table>
-            <table >
+            @*<table >
+            <tr><td width="170px"><strong>Паспортные данные</strong></td><td class="bb">@(Model.out_doc_serial) @(Model.out_doc_number)</td></tr>
+            <tr><td class="bb" colspan="2">@(Model.out_doc_issue_body)</td></tr>
+            <tr><td class="bb" colspan="2">@(Model.out_doc_issue_date?.ToShortDateString())</td></tr>
+            <tr><td class="text-center fs-11" colspan="2">(номер, серия паспорта, кем и когда выдан)</td></tr>
+        </table>*@
+            @*<table>
+            <tr><td width="60%px"><strong>Только для штатных работников охотпользователей </strong></td><td class="bb"></td></tr>
+            <tr><td width="60%px"></td><td class="text-center fs-11">(наименование и организационно-</td></tr>
+            <tr><td class="bb" colspan="2">@(Model.out_social_organization_info) &nbsp;</td></tr>
+            <tr><td class="text-center fs-11" colspan="2">правовая форма, номер контактного телефона, почтовый адрес юридического лица,</td></tr>
+            <tr><td class="bb" colspan="2">@(Model.out_phone_number1) @(Model.out_phone_number2)</td></tr>
+            <tr><td class="text-center fs-11" colspan="2">работником которого является заявитель)</td></tr>
+            <tr><td class="bb" colspan="2">&nbsp;</td></tr>
+        </table>*@
+            <table>
                 <tr><td width="60%"><strong>Вид охот, который предполагается осуществлять:</strong></td><td>@(Model.out_hunting_type_name)</td></tr>
             </table>
-            <table >
+            <table>
                 <tr><td width="70%"><strong>Сведения о добываемых охотничьих ресурсах и их количестве: </strong></td><td class="bb"></td></tr>
                 <tr><td class="bb" colspan="2">@(Model.out_season_name)</td></tr>
             </table>
-            <table >
-                <tr><td width="100px"><strong>Сроки охоты:</strong></td><td class="bb">с @(Model.out_date_start?.ToShortDateString()) по @(Model.out_date_stop?.ToShortDateString())</td></tr>
+            <table>
+                <tr><td width="200px"><strong>Преполагаемые сроки охоты</strong></td><td class="bb">с @(Model.out_date_start?.ToShortDateString()) по @(Model.out_date_stop?.ToShortDateString())</td></tr>
+                <tr><td class="text-center fs-11" colspan="2">(В заявлении на получение разрешения в отношении копытных животных и медведей, отнесенных к охотничьим ресурсам, в качестве предполагаемых сроков охоты указывается не более двух непрерывных временных периодов, общая продолжительность которых составляет не болле 30 календарных дней)</td></tr>
             </table>
-            <table >
+            <table>
                 <tr><td width="150px"><strong>Район, место охоты: </strong></td><td class="bb">@(Model.out_hunting_farm_name)</td></tr>
-                <tr><td width="150px"></td><td class="text-center fs-11">(наименование районов РД общедоступных охотугодий)</td></tr>
+                <tr><td class="text-center fs-11" colspan="2">(наименование охотничьих угодий или особо охраняемой природной территории)</td></tr>
             </table>
-            <table >
+            <table>
                 <tr><td width="70%"><strong>Дата выдачи охотничьего билета и его учетные серия и номер </strong></td><td class="bb"></td></tr>
                 <tr><td class="bb" colspan="2">@($"{Model.out_hunting_lic_issue_date?.ToShortDateString()} {Model.out_hunting_lic_serial} {Model.out_hunting_lic_number}")</td></tr>
             </table>
-            <table >
+            <table>
+                <tr><td width="100%"><strong>Способ получения разрешения или уведомления об отказе в выдаче разрешения</strong></td></tr>
+                <tr><td class="text-center fs-11" colspan="2">(лично либо его представителем; по почте письмом с уведомлением о вручении и описью вложения; в электронном виде с использованием информационно-телекоммуникационной сети «Интернет» при заполнении заявлений посредством Госуслуг, а также с использованием МФЦ)</td></tr>
+                <tr><td class="bb" colspan="2">@(Model.out_method_name)</td></tr>
+            </table>
+            <table>
                 <tr><td width="150px"><strong>Иные сведения</strong></td><td class="bb">установленный сбор - @(Model.out_charge_)</td></tr>
                 <tr><td width="150px"></td><td class="text-center fs-11">(сведения об уплате установленного сбора за пользование животным миром</td></tr>
                 <tr><td class="bb" colspan="2">госпошлина - @(Model.out_tariff_)</td></tr>
                 <tr><td class="text-center fs-11" colspan="2">и госпошлины за разрешение на добычу)</td></tr>
             </table>
-            <table >
-                <tr><td width="50%"></td><td class="bb" width="24%"></td><td width="10px" class="text-center">/</td><td class="bb" width="24%">@($"{customerName[0]} {(customerName.Length > 1 ? customerName[1].Substring(0,1) : "")}  {(customerName.Length > 2 ? customerName[2].Substring(0, 1) : "")}")</td></tr>
-                <tr><td width="50%"></td><td class="text-center fs-11">подпись заявителя</td><td width="10px"></td><td class="text-center fs-11">ФИО</td></tr>
-            </table>
-            <table >
-                <tr><td width="45%" class="bb text-center">@(Model.out_job_pos_name)</td><td width="50px"></td><td class="bb" width="24%"></td><td width="10px" class="text-center">/</td><td class="bb" width="24%">@($"{employeeName[0]} {(employeeName.Length > 1 ? employeeName[1][0] : ' ')}  {(employeeName.Length > 2 ? employeeName[2][0] : ' ')}")</td></tr>
-                <tr><td width="45%" class="text-center fs-11">Должность, принявшего заявление</td><td></td><td class="text-center fs-11">подпись</td><td width="10px"></td><td class="text-center fs-11">ФИО</td></tr>
-            </table>
-            <table >
-                <tr><td width="10px">"</td><td width="20px" class="bb"></td><td width="10px">"</td><td width="100px" class="bb"></td><td width="10px">20</td><td width="10px" class="bb"></td><td width="10px">г.</td><td width="55%"></td></tr>
+            <div class="fs-11 text-center" style="margin-top: 20px">Заявление подписывается заявителем или его представителем (уполномоченным или законным)</div>
+            <table style="margin-top: 25px">
+                <tr>
+                    <td width="10px">"</td>
+                    <td width="20px" class="bb"></td>
+                    <td width="10px">"</td>
+                    <td width="50px" class="bb"></td>
+                    <td width="10px">20</td>
+                    <td width="10px" class="bb"></td>
+                    <td width="10px">г.</td>
+                    <td width="50px"></td>
+                    <td class="bb" width="24%"></td>
+                    <td width="10px" class="text-center">/</td>
+                    <td class="bb" width="24%">@($"{customerName[0]} {(customerName.Length > 1 ? customerName[1].Substring(0,1) : "")}  {(customerName.Length > 2 ? customerName[2].Substring(0, 1) : "")}")</td>
+                </tr>
+                <tr>
+                    <td colspan="7"></td>
+                    <td></td>
+                    <td class="text-center fs-11">Подпись</td>
+                    <td></td>
+                    <td class="text-center fs-11">ФИО</td>
+                </tr>
             </table>
         </div>
     </div>

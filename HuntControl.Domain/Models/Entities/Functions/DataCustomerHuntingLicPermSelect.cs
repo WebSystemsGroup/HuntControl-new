@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HuntControl.Domain.Concrete
 {
-   public partial class DataCustomerInfoGet
+   public partial class DataCustomerHuntingLicPermSelect
     {
         public string out_fio_given { get; set; }
         public string out_hunting_type_name { get; set; }
@@ -45,5 +45,6 @@ namespace HuntControl.Domain.Concrete
         public Guid? out_spr_hunting_farm_id { get; set; }
         public Guid? out_data_customer_hunting_lic_perm_id { get; set; }
         public int? out_spr_season_id { get; set; }
+        //public int? out_s_form_type_id { get; set; }
     }
 }

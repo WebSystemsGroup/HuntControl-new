@@ -773,6 +773,18 @@ namespace HuntControl.WebUI.Controllers.Case
             return PartialView("Print/Case/Statement/PartialPrintStatement", model);
         }
 
+        public ActionResult PartialPrintStatementCancellation(Guid serviceId, string infoId)
+        {
+            ViewBag.InfoId = infoId;
+            StatementModel model = new StatementModel
+            {
+                DataServiceCustomerList = repository.DataServicesCustomers.Where(w => w.data_services_info_id == infoId),
+                StatementDocumentSelectList = repository.FuncStatementDocumentSelect(serviceId),
+                StatementInfoGet = repository.FuncStatementInfoGet(infoId)
+            };
+            return PartialView("Print/Case/Statement/PartialPrintStatementCancellation", model);
+        }
+
         #endregion
     }
 }

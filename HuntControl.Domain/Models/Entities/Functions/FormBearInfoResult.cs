@@ -19,5 +19,9 @@ namespace HuntControl.Domain.Concrete
         public string out_animal_name { get; set; }
         public string out_organization_name { get; set; }
         public string out_region_name { get; set; }
+        public DateTime? out_date_start_1 { get; set; }
+        public DateTime? out_date_stop_1 { get; set; }
+        public DateTime? out_date_start_2 { get; set; }
+        public DateTime? out_date_stop_2 { get; set; }
     }
 }

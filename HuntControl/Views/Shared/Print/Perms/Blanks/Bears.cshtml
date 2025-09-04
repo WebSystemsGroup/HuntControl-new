@@ -65,7 +65,11 @@
     }
 
     .hunting-times-1 {
-        margin-top: 0.4cm;
+        margin-top: 1.1cm;
+    }
+
+    .hunting-times-3 {
+        margin-top: 0.1cm;
     }
 
     .hunting-times .date {
@@ -99,7 +103,7 @@
     }
 
     .hunting-type {
-        margin-top: .50cm;
+        margin-top: .20cm;
         line-height: 1;
         text-indent: 3.15cm;
     }
@@ -130,8 +134,8 @@
     }
 
     .permission-status {
-        margin-top: .45cm;
-        text-align: end;
+        margin-top: .7cm;
+        text-align: center;
         line-height: 0.5;
         margin-right: 0.6cm;
         text-indent: 4cm;
@@ -142,7 +146,7 @@
     }
 
     .hunting-ticket {
-        margin-top: .7cm;
+        margin-top: 1.4cm;
         margin-left: 3.7cm;
     }
 
@@ -170,7 +174,7 @@
     }
 
     .authorized-person {
-        margin-top: 0.60cm;
+        margin-top: 0.97cm;
         margin-left: 3.7cm;
     }
 
@@ -213,19 +217,43 @@
 </style>
 <div class="page">
     <section class="left">
-        <div class="subject">@Model.out_region_name</div>
-        <div class="organization-name">@Model.out_organization_name</div>
+        <div class="subject">@Model.out_organization_name</div>
+        @*<div class="organization-name">@Model.out_organization_name</div>*@
         <div class="bear-type">@Model.out_animal_name</div>
         <div class="hunting-times hunting-times-1">
             <div class="date">
-                <span class="day">@(Model.out_date_start?.ToString("dd"))</span>
-                <span class="month">@(Model.out_date_start?.ToString("MMMM"))</span>
-                <span class="year">@(Model.out_date_start?.ToString("yy"))</span>
+                <span class="day">@(Model.out_date_start_1?.ToString("dd"))</span>
+                <span class="month">@(Model.out_date_start_1?.ToString("MMMM"))</span>
+                <span class="year">@(Model.out_date_start_1?.ToString("yy"))</span>
             </div>
             <div class="date">
-                <span class="day">@(Model.out_date_stop?.ToString("dd"))</span>
-                <span class="month">@(Model.out_date_stop?.ToString("MMMM"))</span>
-                <span class="year">@(Model.out_date_stop?.ToString("yy"))</span>
+                <span class="day">@(Model.out_date_stop_1?.ToString("dd"))</span>
+                <span class="month">@(Model.out_date_stop_1?.ToString("MMMM"))</span>
+                <span class="year">@(Model.out_date_stop_1?.ToString("yy"))</span>
+            </div>
+        </div>
+        <div class="hunting-times hunting-times-2">
+            <div class="date">
+                <span class="day">&nbsp;</span>
+                <span class="month">&nbsp;</span>
+                <span class="year">&nbsp;</span>
+            </div>
+            <div class="date">
+                <span class="day">&nbsp;</span>
+                <span class="month">&nbsp;</span>
+                <span class="year">&nbsp;</span>
+            </div>
+        </div>
+        <div class="hunting-times hunting-times-3">
+            <div class="date">
+                <span class="day">@(Model.out_date_start_2?.ToString("dd"))</span>
+                <span class="month">@(Model.out_date_start_2?.ToString("MMMM"))</span>
+                <span class="year">@(Model.out_date_start_2?.ToString("yy"))</span>
+            </div>
+            <div class="date">
+                <span class="day">@(Model.out_date_stop_2?.ToString("dd"))</span>
+                <span class="month">@(Model.out_date_stop_2?.ToString("MMMM"))</span>
+                <span class="year">@(Model.out_date_stop_2?.ToString("yy"))</span>
             </div>
         </div>
         <div class="hunting-times hunting-times-2">
@@ -242,7 +270,7 @@
         </div>
         <div class="hunting-type">@Model.out_hunting_type_name</div>
         <p class="hunting-area-name">@Model.out_hunting_farm_name</p>
-        <p class="animal-info">@($"{Model.out_animal_name}, {Model.out_animal_sex}, {Model.out_animal_age}")</p>
+        @*<p class="animal-info">@($"{Model.out_animal_name}, {Model.out_animal_sex}, {Model.out_animal_age}")</p>*@
         <p class="permission-status">@Model.out_customer_name</p>
         <div class="hunting-ticket">
             <span class="serial">@Model.out_hunting_lic_serial</span>
@@ -263,19 +291,43 @@
         <div class="authorized-person-signature">&nbsp;</div>
     </section>
     <section class="center">
-        <div class="subject">@Model.out_region_name</div>
-        <div class="organization-name">@Model.out_organization_name</div>
+        <div class="subject">@Model.out_organization_name</div>
+        @*<div class="organization-name">@Model.out_organization_name</div>*@
         <div class="bear-type">@Model.out_animal_name</div>
         <div class="hunting-times hunting-times-1">
             <div class="date">
-                <span class="day">@(Model.out_date_start?.ToString("dd"))</span>
-                <span class="month">@(Model.out_date_start?.ToString("MMMM"))</span>
-                <span class="year">@(Model.out_date_start?.ToString("yy"))</span>
+                <span class="day">@(Model.out_date_start_1?.ToString("dd"))</span>
+                <span class="month">@(Model.out_date_start_1?.ToString("MMMM"))</span>
+                <span class="year">@(Model.out_date_start_1?.ToString("yy"))</span>
             </div>
             <div class="date">
-                <span class="day">@(Model.out_date_stop?.ToString("dd"))</span>
-                <span class="month">@(Model.out_date_stop?.ToString("MMMM"))</span>
-                <span class="year">@(Model.out_date_stop?.ToString("yy"))</span>
+                <span class="day">@(Model.out_date_stop_1?.ToString("dd"))</span>
+                <span class="month">@(Model.out_date_stop_1?.ToString("MMMM"))</span>
+                <span class="year">@(Model.out_date_stop_1?.ToString("yy"))</span>
+            </div>
+        </div>
+        <div class="hunting-times hunting-times-2">
+            <div class="date">
+                <span class="day">&nbsp;</span>
+                <span class="month">&nbsp;</span>
+                <span class="year">&nbsp;</span>
+            </div>
+            <div class="date">
+                <span class="day">&nbsp;</span>
+                <span class="month">&nbsp;</span>
+                <span class="year">&nbsp;</span>
+            </div>
+        </div>
+        <div class="hunting-times hunting-times-3">
+            <div class="date">
+                <span class="day">@(Model.out_date_start_2?.ToString("dd"))</span>
+                <span class="month">@(Model.out_date_start_2?.ToString("MMMM"))</span>
+                <span class="year">@(Model.out_date_start_2?.ToString("yy"))</span>
+            </div>
+            <div class="date">
+                <span class="day">@(Model.out_date_stop_2?.ToString("dd"))</span>
+                <span class="month">@(Model.out_date_stop_2?.ToString("MMMM"))</span>
+                <span class="year">@(Model.out_date_stop_2?.ToString("yy"))</span>
             </div>
         </div>
         <div class="hunting-times hunting-times-2">
@@ -292,7 +344,7 @@
         </div>
         <div class="hunting-type">@Model.out_hunting_type_name</div>
         <p class="hunting-area-name">@Model.out_hunting_farm_name</p>
-        <p class="animal-info">@($"{Model.out_animal_name}, {Model.out_animal_sex}, {Model.out_animal_age}")</p>
+        @*<p class="animal-info">@($"{Model.out_animal_name}, {Model.out_animal_sex}, {Model.out_animal_age}")</p>*@
         <p class="permission-status">@Model.out_customer_name</p>
         <div class="hunting-ticket">
             <span class="serial">@Model.out_hunting_lic_serial</span>

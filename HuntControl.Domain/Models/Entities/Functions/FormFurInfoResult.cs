@@ -13,5 +13,7 @@ namespace HuntControl.Domain.Concrete
         public string out_fio_given { get; set; }
         public string out_organization_name { get; set; }
         public string out_region_name { get; set; }
+        public string out_hunting_type_name { get; set; }
+        public string out_transport_name { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace HuntControl.WebUI.Models
 {
     public class ApplicantPageViewModel
     {
-        public IEnumerable<DataCustomerInfoGet> dataCustomerInfoGetsList { get; set; }
+        public IEnumerable<DataCustomerHuntingLicPermSelect> dataCustomerInfoGetsList { get; set; }
         public IEnumerable<CustomerSelectResult> CustomerSelectList { get; set; }
         public IEnumerable<CustomerViolationsSelectResult> ViolationList { get; set; }
         public IEnumerable<data_customer> CustomerList { get; set; }

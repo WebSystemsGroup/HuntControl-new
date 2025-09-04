@@ -8,6 +8,10 @@
     $(document).ready(function () {
         jQuery("#AddHuntingLicPermForm").validate().settings.ignore = ".bs-select-hidden";
         $('#date_given').datepicker({ format: 'dd.mm.yyyy', autoclose: true, language: 'ru' });
+        $('#date_start_1').datepicker({ format: 'dd.mm.yyyy', autoclose: true, language: 'ru' });
+        $('#date_stop_1').datepicker({ format: 'dd.mm.yyyy', autoclose: true, language: 'ru' });
+        $('#date_start_2').datepicker({ format: 'dd.mm.yyyy', autoclose: true, language: 'ru' });
+        $('#date_stop_2').datepicker({ format: 'dd.mm.yyyy', autoclose: true, language: 'ru' });
         $(".select2").select2();
         $(".select2.empty").val('').trigger('change');
         $("select:not('disabled')").on("select2:close", function (e) {
@@ -167,22 +171,22 @@
                                 <div class="form-group form-group-sm">
                                     <label class="col-md-4 control-label text-right" for="hunting_farm_arr_id">Дополнительные охотугодья</label>
                                     <div class="col-md-6">
-                                        @Html.DropDownList("hunting_farm_arr_id", ViewBag.HuntingFarms as SelectList, new { @class = "form-control select2 input-sm empty", @data_placeholder = "Охотугодье", @Name = "hunting_farm_arr_id", @Id= "hunting_farm_arr_id", @multiple = "multiple" })
+                                        @Html.DropDownList("hunting_farm_arr_id", ViewBag.HuntingFarms as SelectList, new { @class = "form-control select2 input-sm empty", @data_placeholder = "Охотугодье", @Name = "hunting_farm_arr_id", @Id = "hunting_farm_arr_id", @multiple = "multiple" })
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group form-group-sm">
                                 <label class="col-md-4 control-label text-right" for="spr_season_id">Сезон</label>
                                 <div class="col-md-6">
-                                    @Html.DropDownListFor(model => model.spr_season_id, new SelectList(new List<SelectListItem>(), "Value", "Text"), new { @class = "form-control select2 input-sm empty", @disabled = "disabled", @data_placeholder = "Выберите сезон", @Name = "season_id", @Id= "season_id" })
+                                    @Html.DropDownListFor(model => model.spr_season_id, new SelectList(new List<SelectListItem>(), "Value", "Text"), new { @class = "form-control select2 input-sm empty", @disabled = "disabled", @data_placeholder = "Выберите сезон", @Name = "season_id", @Id = "season_id" })
                                 </div>
                             </div>
                             @*<div class="form-group form-group-sm">
-                        @Html.LabelFor(model => model.spr_season_id, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
-                        <div class="col-md-6">
-                            @Html.DropDownListFor(model => model.spr_season_id, new SelectList(new List<SelectListItem>(), "Value", "Text"), new { @class = "form-control select2 input-sm empty", @disabled = "disabled", @data_placeholder = "Выберите сезон" })
-                        </div>
-                    </div>*@
+                                @Html.LabelFor(model => model.spr_season_id, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                <div class="col-md-6">
+                                    @Html.DropDownListFor(model => model.spr_season_id, new SelectList(new List<SelectListItem>(), "Value", "Text"), new { @class = "form-control select2 input-sm empty", @disabled = "disabled", @data_placeholder = "Выберите сезон" })
+                                </div>
+                            </div>*@
                             <div class="form-group form-group-sm">
                                 @Html.LabelFor(model => model.spr_hunting_type_id, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
                                 <div class="col-md-6">
@@ -249,6 +253,42 @@
                                 @Html.LabelFor(model => model.charge_, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
                                 <div class="col-md-3">
                                     @Html.TextBoxFor(model => model.charge_, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.charge_) } })
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group form-group-sm">
+                                    <label class="col-md-4 control-label text-right">Сроки охоты</label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">с</span>
+                                            @Html.TextBox("date_start_1", DateTime.Now, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.date_start_1) }, { "data-type", "date" } })
+                                            <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+
+                                            <span class="input-group-addon">по</span>
+                                            @Html.TextBox("date_stop_1", DateTime.Now, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.date_stop_1) }, { "data-type", "date" } })
+                                            <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-sm">
+                                    <label class="col-md-4 control-label text-right"></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">с</span>
+                                            @Html.TextBox("date_start_2", DateTime.Now, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.date_start_2) }, { "data-type", "date" } })
+                                            <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+
+                                            <span class="input-group-addon">по</span>
+                                            @Html.TextBox("date_stop_2", DateTime.Now, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.date_stop_2) }, { "data-type", "date" } })
+                                            <span class="input-group-addon bg-custom b-0 text-white"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                @Html.LabelFor(model => model.transport_name, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(model => model.transport_name, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.transport_name) } })
                                 </div>
                             </div>
                             <div class="row">

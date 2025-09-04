@@ -80,7 +80,7 @@
   <ItemGroup>
     <Compile Include="Abstract\IRepository.cs" />
     <Compile Include="Models\Entities\Functions\CustomerHuntingSeason.cs" />
-    <Compile Include="Models\Entities\Functions\DataCustomerInfoGet.cs" />
+    <Compile Include="Models\Entities\Functions\DataCustomerHuntingLicPermSelect.cs" />
     <Compile Include="Models\Entities\Functions\EpguVisitTimeSelectResult.cs" />
     <Compile Include="Models\Entities\Functions\HuntingCustomerInfoGetResultDto.cs" />
     <Compile Include="Models\Entities\Functions\SeasonHuntingFarmAccountingResult.cs" />

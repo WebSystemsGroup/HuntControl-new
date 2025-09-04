@@ -67,6 +67,8 @@
     table {
         width: 100%;
         border-collapse: collapse;
+        line-height: 1.10 !important; /* Уменьшаем межстрочный интервал */
+        height: 20px !important; /* Фиксированная высота строк */
     }
 
     td {
@@ -81,33 +83,39 @@
     <div class=WordSection1>
         <!-- page 1 start-->
         <div class="page page-1">
+            <div class="fs-10" style="padding-left:57%; text-align: end">
+                В соответствии с приказом Минприроды
+                России от 24.09.2024 г.  № 579
+                «Об утверждении порядка выдачи и аннулирования
+                охотничьего билета, формы охотничьего билета»
+            </div>
             <div style="line-height:1.0; font-weight:bold">
-                <div style="padding-left:60%">
+                <div style="padding-left:60%; margin-top: 5px">
                     Министерство природных
                     ресурсов и экологии Республики Дагестан
                 </div>
-                <div style="padding-left:60%">
-                    Начальнику Управления охраны 
-                    объектов животного мира и 
-                    особо охраняемых природных 
-                    территорий
-                </div>
-                <div style="padding-left:60%">
-                    Гаджиханов С.Я.
-                </div>
+                @*<div style="padding-left:60%">
+                Начальнику Управления охраны
+                объектов животного мира и
+                особо охраняемых природных
+                территорий
             </div>
-            <div style="font-size: 18px; text-align: center; margin-top: 15px;">
+            <div style="padding-left:60%">
+                Гаджиханов С.Я.
+            </div>*@
+            </div>
+            <div style="font-size: 18px; text-align: center; margin: 5px 0;">
                 Заявление  <br />
-                о получении    охотничьего билета единого федерального образца
+                о выдаче охотничьего билета
             </div>
             <table>
                 <tr><td width="200px">1.Фамилия, имя, отчество</td><td class="bb">@Model.StatementInfoGet.out_customer_name</td></tr>
                 <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
             </table>
-            <table>
-                <tr><td class="bb">&nbsp;</td><td class="bb">&nbsp;</td></tr>
-                <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
-            </table>
+            @*<table>
+            <tr><td class="bb">&nbsp;</td><td class="bb">&nbsp;</td></tr>
+            <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+        </table>*@
             <table>
                 <tr><td width="230px">2.Число, месяц, год рождения</td><td class="bb">@(((DateTime)Model.StatementInfoGet.out_document_birth_date).ToString("dd.MM.yyyy")) </td></tr>
                 <tr><td width="65px"></td><td class="text-center fs-11">&nbsp;</td></tr>
@@ -117,7 +125,7 @@
                 <tr><td width="50px"></td><td class="text-center fs-11">&nbsp;</td></tr>
             </table>
             <table>
-                <tr><td width="150px">4.Почтовый адрес</td><td class="bb">@Model.StatementInfoGet.out_customer_address</td></tr>
+                <tr><td width="140px">4.Почтовый адрес</td><td class="bb">@Model.StatementInfoGet.out_customer_address</td></tr>
                 <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
             </table>
             <table>
@@ -125,44 +133,133 @@
                 <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
             </table>
             <table>
-                <tr><td width="330px">6.Адрес электронной почты(при наличии)</td><td class="bb"> @Model.StatementInfoGet.out_customer_email</td></tr>
+                <tr><td width="300px">6.Адрес электронной почты<small class="fs-11">(при наличии)</small></td><td class="bb"> @Model.StatementInfoGet.out_customer_email</td></tr>
+                <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+            </table>
+            @*<table>
+            <tr><td class="bb">&nbsp;</td><td class="bb">&nbsp;</td></tr>
+            <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+        </table>
+        <table>
+            <tr><td class="bb">&nbsp;</td><td class="bb">&nbsp;</td></tr>
+            <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+        </table>*@
+            <table>
+                <tr><td width="630px">7.Данные основного документа, удостоверяющего личность (данные паспорта РФ)</td>@*<td class="bb">&nbsp;</td>*@</tr>
                 <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
             </table>
             <table>
-                <tr><td class="bb">&nbsp;</td><td class="bb">&nbsp;</td></tr>
+                <tr><td width="60px">Паспорт</td><td class="bb text-center">@Model.StatementInfoGet.out_document_serial  @Model.StatementInfoGet.out_document_number</td><td width="60px">выдан</td><td class="bb text-center">@(((DateTime)Model.StatementInfoGet.out_document_issue_date).ToString("dd.MM.yyyy")) </td></tr>
+                <tr><td width="10px"></td><td class="text-center fs-11">(серия, номер)</td><td></td><td class="text-center fs-11">(кем и когда)</td></tr>
+            </table>
+            <table>
+                <tr><td class="bb">&nbsp;</td><td class="bb">@Model.StatementInfoGet.out_document_issue_body</td></tr>
                 <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
             </table>
             <table>
-                <tr><td class="bb">&nbsp;</td><td class="bb">&nbsp;</td></tr>
-                <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+                <tr><td class="bb">&nbsp;</td><td class="bb">@*место регистрации*@</td></tr>
+                <tr><td width="60px"></td><td class="text-center fs-11">место регистрации</td></tr>
+            </table>
+            @*<div style="font-size: 16px;text-align:left; margin-top: 15px;">
+            Прошу выдать мне охотничий билет единого федерального образца. <br />
+            С требованиями охотничьего минимума ознакомлен. <br />
+            Непогашенной или неснятой судимости за совершение умышленного преступления не имею.
+            </div>*@
+            <table>
+                <tr><td width="800px">8.Данные документа, подтверждающего регистрацию заявителя по месту пребывание</td></tr>
+                <tr><td class="fs-11" colspan="2">(в случае направления заявление о выдаче охотничьего билета в уполномоченный орган по месту пребывания заявителя)</td></tr>
+                <tr><td class="bb">&nbsp;</td><td class="bb">@*место ДАные*@</td></tr>
+            </table>
+            @*<table>
+            <tr><td width="220px">месту пребывания заявителя)</td><td class="bb"></td></tr>
+            <tr><td width="10px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+        </table>*@
+            <table style="margin: 15px 0;">
+                <tr><td width="510px">9.Страховой номер индивидуального лицевого счета заявителя <small class="fs-11">(при наличии)</small></td><td class="bb">@(Model.StatementInfoGet.out_customer_snils)</td></tr>
             </table>
             <table>
-                <tr><td width="330px">7.Наличие членского билета (дата выдачи,<br> серия и номер, кем выдан)</td><td class="bb">&nbsp;</td></tr>
-                <tr><td width="60px"></td><td class="text-center fs-11">&nbsp;</td></tr>
+                <tr><td width="800px">10.Наименование исполнительного органа субъекта Российской Федерации, осуществившего проведение проверки у заявителя знаний, входящих в охотминимум <div class="fs-11">(в случае подачи заявления о выдаче охотничьего билета физическим лицом, указанным в части 1 статьи 21.1 Федерального закона от 24 июля 2009 г. N 209-ФЗ)</div></td></tr>
+                <tr><td class="bb">&nbsp;</td><td class="bb">@*ДАнные*@</td></tr>
             </table>
-            <table>
-                <tr><td class="bb">&nbsp;</td><td class="bb">&nbsp;</td></tr>
-                <tr><td width="60%px"></td><td class="text-center fs-11">&nbsp;</td></tr>
-            </table>
-            <div style="font-size: 16px;text-align:left; margin-top: 15px;">
-                Прошу выдать мне охотничий билет единого федерального образца. <br />
-                С требованиями охотничьего минимума ознакомлен. <br />
-                Непогашенной или неснятой судимости за совершение умышленного преступления не имею.
+            <div style="font-size: 16px; text-align: left; margin-top: 10px;">
+                11.Дополнительные сведения <small class="fs-11">(указываются на усмотрение заявителя):</small>
             </div>
-            <div style=" font-size: 16px;text-align:left; margin-top: 15px;">
-                Приложения:
+            <table>
+                <tr><td width="300px">а)сведения о национальности заявителя</td><td class="bb">@*ДАныее*@</td></tr>
+            </table>
+            <table>
+                <tr><td width="540px">б)сведения об осуществлении охоты в качестве основы своего существования</td><td class="bb">@*ДАнные*@</td></tr>
+            </table>
+            <table>
+                <tr><td width="900px">в)необходимость проставления отметки: «Охота в целях обеспечения ведения традиционного образа жизни и осуществления традиционной хозяйственной деятельности» <small class="fs-11">(в случае отнесения лица к перечню коренных малочисленных народов Севера, Сибири и Дальнего Востока Российской Федерации, утв. Распоряжением Правительства РФ от 17.04.2006 г. № 536-р.)</small> </td></tr>
+            </table>
+            <table>
+                <tr><td width="605px">г)Информацию о необходимости получения охотничьего билета на бумажном носителе:</td><td></td></tr>
+                <tr><td> Да  Нет</td></tr>
+            </table>
+            <div style="font-size: 16px; text-align: left; margin-top: 10px;">
+                12.Способ получения охотничьего билета <small class="fs-11">(в случае если заявитель указал на необходимость получения охотничьего билета на бумажном носителе):</small>:
             </div>
+            <table>
+                <tr><td width="540px"> лично в уполномоченном органе;</td></tr>
+            </table>
+            <table>
+                <tr><td width="940px"> лично в многофункциональном центре предоставления государственных и муниципальных услуг; </td></tr>
+            </table>
+            <table>
+                <tr><td width="780px"> путем направления заказного почтового отправления с уведомлением о вручении;</td></tr>
+            </table>
+            <table style="margin-top: 10px">
+                <tr><td width="400px">13.С требованиями охотничьего минимума – ознакомлен </td><td class="bb text-center"></td><td width="60px">подпись.</td>
+            </table>
+            <div style="font-size: 16px; text-align: left; margin-top: 15px; height: 30px;">
+                14.Непогашенной или неснятой судимости за совершение умышленного преступления:
+                имею/не имею
+                <small class="fs-11">(нужное подчеркнуть)</small>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="print-content">
+    <div class=WordSection1>
+        <!-- page 1 start-->
+        <div class="page page-1">
+            <div style="font-size: 16px; text-align: left; margin-top: 15px; height: 10px;">
+                <strong>
+                    Приложения:
+                </strong>
+            </div>
+            <div style="font-size: 16px; text-align: left; margin-top: 15px; height: 10px;">
+                1. Две личные фотографии в черно-белом или цветном исполнении, соответствующая следующим требованиям:
+            </div>
+            <table style="margin-top: 35px">
+                <tr><td width="100%">а) размер 30 x 40 мм с четким изображением лица строго анфас без головного убора;</td></tr>
+            </table>
+            <table>
+                <tr><td width="100%">б) изображение лица на фотографии должно соответствовать возрасту заявителя на день подачи заявления о выдаче охотничьего билета в уполномоченный орган, глаза заявителя должны быть открытыми, а волосы не должны заслонять их;</td></tr>
+            </table>
+            <table>
+                <tr><td width="100%">в) на изображении должны быть отображены все особенности лица фотографируемого;</td></tr>
+            </table>
+            <table>
+                <tr><td width="100%">г) для лиц, постоянно носящих очки, обязательно фотографирование в очках без тонированных стекол, наличие темных очков или повязки на глазах допускается только по медицинским показаниям;</td></tr>
+            </table>
+            <table>
+                <tr><td width="100%">д) не допускается представление фотографии в форменной одежде, в верхней одежде, в шарфах, закрывающих часть подбородка, а также с отретушированным изображением в целях улучшения внешнего вида изображаемого лица или его художественной обработки;</td></tr>
+            </table>
+            <table>
+                <tr><td width="100%">е) в случае, когда религиозные убеждения заявителя не позволяют показываться перед посторонними лицами без головных уборов, представляется фотография в головных уборах, не скрывающих овал лица;</td></tr>
+            </table>
+            <table>
+                <tr><td width="100%">ж) фон фотографии должен быть белым, ровным, без полос, пятен и изображения посторонних предметов и теней.</td></tr>
+            </table>
             <div style="font-size: 16px; text-align:left; margin-top: 15px;">
-                1. Две личные фотографии;
+                2. Копия основного документа удостоверяющего личность на __ листах <small class="fs-11">(предоставляется на усмотрение заявителя).</small>
             </div>
-            <div style="font-size: 16px; text-align:left; margin-top: 15px;">
-                2. Копия основного документа удостоверяющего личность (копия паспорта все листы)  <br />
-                на __ листах
-            </div>
-            <div style="font-size: 16px; text-align:left; margin-top: 15px;">
-                3. В случае наличия: охотничий билет или членский охотничий билет, выданные до __ <br />
-                _______ 20__ года и срок действия которых не истек
-            </div>
+            @*<div style="font-size: 16px; text-align:left; margin-top: 15px;">
+            3. В случае наличия: охотничий билет или членский охотничий билет, выданные до __ <br />
+            _______ 20__ года и срок действия которых не истек
+        </div>*@
             <br>
             <table>
                 <tr><td width="10px">@*"@DateTime.Now.Date.ToString("dd")"*@</td><td width="100px" class="bb">@*@DateTime.Now.Date.ToString("MMMMM").ToLower()*@</td><td width="10px">20</td><td width="25px" class="bb">@*@DateTime.Now.Date.ToString("yy")*@</td><td width="12px">г.</td><td width="55%"></td><td></td><td width="24%" class="text-center fs-11">_______(подпись заявителя)</td><td width="10px"></td> </tr>
@@ -174,12 +271,21 @@
             <table>
                 <tr><td width="60px"></td><td class="text-left fs-11">*Заявление заполняется разборчивым почерком</td></tr>
             </table>
+            <table>
+                <tr><td width="60px"></td><td class="text-left fs-11">*В случае подачи заявления о выдаче охотничьего билета в форме электронного документа посредством Единого портала или регионального портала личная фотография прикрепляется к нему в виде электронного файла с соблюдением следующих требований:</td></tr>
+            </table>
+            <table>
+                <tr><td width="60px"></td><td class="text-left fs-11">а) формат кодирования (записи) изображения в прикрепляемом файле - JPEG или JPEG 2000;</td></tr>
+                <tr><td width="60px"></td><td class="text-left fs-11">б) минимальное разрешение прикрепляемой фотографии не должно быть меньше 450 dpi;</td></tr>
+                <tr><td width="60px"></td><td class="text-left fs-11">в) фотография может быть выполнена в 24-битном цветовом пространстве или 8-битном монохромном (черно-белом) пространстве;</td></tr>
+                <tr><td width="60px"></td><td class="text-left fs-11">г) максимальный размер прикрепляемого файла не должен превышать 300 Кб (килобайт).</td></tr>
+            </table>
         </div>
     </div>
 </div>
 <div id="print-content">
     <div class=WordSection1>
-        <div class="page page-2">
+        <div class="page page-3">
             <div style="line-height:1.0; font-weight:bold">
                 <div style="padding-left:60%">
                     Министерство природных

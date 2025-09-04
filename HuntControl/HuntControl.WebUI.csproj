@@ -2693,6 +2693,7 @@
     <Content Include="Views\Reference\HuntingSeasons\HuntingSeasonOpen\TableSeasonOpen.cshtml" />
     <Content Include="Views\Reference\HuntingSeasons\HuntingSeasonOpen\Main.cshtml" />
     <Content Include="Views\Reference\HuntingSeasons\HuntingSeasonOpen\TableSeasonOpenAnimals.cshtml" />
+    <Content Include="Views\Shared\Print\Case\Statement\PartialPrintStatementCancellation.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

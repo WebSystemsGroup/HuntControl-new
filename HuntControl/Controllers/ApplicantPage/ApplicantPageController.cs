@@ -737,7 +737,7 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
             ViewBag.IsRemove = isRemove;
             ViewBag.CustomerId = customerId;
 
-            var huntingLicPerms = repository.FuncDataCustomerInfoGet(customerId).Where(x=>x.out_is_remove != true);
+            var huntingLicPerms = repository.FuncDataCustomerHuntingLicPermSelect(customerId).Where(x=>x.out_is_remove != true);
             ApplicantPermViewModel model = new ApplicantPermViewModel
             {
                 dataCustomerInfoGetsList = huntingLicPerms.OrderBy(x=>x.out_set_date).Skip((page - 1) * PageSize).Take(PageSize),
@@ -1599,41 +1599,33 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
                         return PartialView("Print/Perms/PartialPrintPerm", model);
                     }
                 case DataTypePerm.Blank:
-                    switch (animalGroupTypeIdentity)
+
+                    int formTypeId = repository.GetSeasonFormTypeIdByPermsId(permsId);
+
+                    switch (formTypeId)
                     {
-                        case 1:
-                        case 4:
+                        case 1: // Пушные
                             {
-                                var model = repository.FuncFormUngulateInfo(permsId);
-                                return PartialView("Print/Perms/Blanks/Ungulates", model);
+                                var model = new BlankViewModel<FormFurInfoResult>
+                                {
+                                    Model = repository.FuncFormFurInfo(permsId),
+                                };
+                                model.AnimalList = repository.FuncFormAnimalSelect(permsId);
+                                return PartialView("Print/Perms/Blanks/Furs", model);
                             }
-                        case 2:
+                        case 2: // Медведь
                             {
                                 var model = repository.FuncFormBearInfo(permsId);
                                 return PartialView("Print/Perms/Blanks/Bears", model);
                             }
-                        case 3:
+                        case 3: // Копытные
                             {
-                                if (seasonName == "Косуля")
-                                {
-                                    var model = repository.FuncFormBearInfo(permsId);
-                                    return PartialView("Print/Perms/Blanks/Bears", model);
-                                }
-                                else
-                                {
-                                    var model = new BlankViewModel<FormFurInfoResult>
-                                    {
-                                        Model = repository.FuncFormFurInfo(permsId),
-                                    };
-                                    //if (blankSide == 2)
-                                    //    return PartialView("Print/Perms/Blanks/Furs-2", model);
-                                    model.AnimalList = repository.FuncFormAnimalSelect(permsId);
-                                    return PartialView("Print/Perms/Blanks/Furs", model);
-                                }
+                                var model = repository.FuncFormUngulateInfo(permsId);
+                                return PartialView("Print/Perms/Blanks/Ungulates", model);
                             }
+                        case 4: // Птица
                         default:
                             {
-                                //var model = repository.FuncFormBirdInfo(permsId);
                                 var model = new BlankViewModel<FormBirdInfoResult>
                                 {
                                     Model = repository.FuncFormBirdInfo(permsId),
@@ -1644,6 +1636,7 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
                                     animal.out_limit_day = animal.out_limit_day == "-" ? "б/о" : animal.out_limit_day;
                                     animal.out_limit_season = animal.out_limit_season == "-" ? "б/о" : animal.out_limit_season;
                                 });
+
                                 // Временно
                                 if (castomerId == "93667f14-ed83-4b9c-8540-bd8297823d61")
                                 {
@@ -1664,15 +1657,12 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
                                         out_hunting_type_name = "Любительская и спортивная охота",
                                         out_organization_name = "Минприроды РД",
                                         out_region_name = "Республика Дагестан",
-                                    };  
+                                    };
                                     return PartialView("Print/Perms/Blanks/Bears", modelll);
                                 }
 
-                                //var a = FastReportPrint();
-
                                 return PartialView("Print/Perms/Blanks/Birds", model);
                             }
-
                     }
             }
             throw new Exception("Ошибка при печати!");

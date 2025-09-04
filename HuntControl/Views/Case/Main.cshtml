@@ -142,7 +142,8 @@
                     <i class="ion-printer"></i>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right">
-                    <li><a href="#" onclick="printStatement('@Url.Action("PartialPrintStatement","Case")', { serviceId: '@Model.out_data_services_id', infoId:'@ViewBag.InfoId' })">Заявление</a></li>
+                    <li><a href="#" onclick="printStatement('@Url.Action("PartialPrintStatement","Case")', { serviceId: '@Model.out_data_services_id', infoId:'@ViewBag.InfoId' })">Заявление о получении</a></li>
+                    <li><a href="#" onclick="printStatement('@Url.Action("PartialPrintStatementCancellation","Case")', { serviceId: '@Model.out_data_services_id', infoId:'@ViewBag.InfoId' })">Заявление об аннулировании</a></li>
                 </ul>
             </div>
             <div class="customer-list">

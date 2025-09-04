@@ -146,7 +146,7 @@ namespace HuntControl.Domain.Abstract
         StatementInfoGetResult FuncStatementInfoGet(string infoId);
         IEnumerable<EpguVisitTimeSelectResult> FuncEpguVisitTimeSelect();
         IEnumerable<StatementDocumentSelectResult> FuncStatementDocumentSelect(Guid serviceId);
-        IEnumerable<DataCustomerInfoGet> FuncDataCustomerInfoGet(Guid customerId);
+        IEnumerable<DataCustomerHuntingLicPermSelect> FuncDataCustomerHuntingLicPermSelect(Guid customerId);
         IEnumerable<HuntingBackAnimalSelectResult> FuncHuntingBackAnimalSelect(Guid huntingLicPermId);
         IEnumerable<CustomerSelectResult> FuncCustomerSelect(Guid customerId, string search);
         IEnumerable<CustomerHuntingLicenseSelectResult> FuncCustomerHuntingLicenseSelect(Guid customerId);
@@ -204,6 +204,7 @@ namespace HuntControl.Domain.Abstract
         FormBearInfoResult FuncFormBearInfo(Guid huntingLicPermId);
         FormBirdInfoResult FuncFormBirdInfo(Guid huntingLicPermId);
         FormFurInfoResult FuncFormFurInfo(Guid huntingLicPermId);
+        int GetSeasonFormTypeIdByPermsId(Guid permsId);
         IEnumerable<FormAnimalSelectResult> FuncFormAnimalSelect(Guid huntingLicPermId);
         IEnumerable<SeasonHuntingFarmAccountingResult> FuncSeasonHuntingFarmAccountingSelect(Guid animalId, short animalSex, short animalAge, short year);
         IEnumerable<MainCountEpguAndMfcResult> FuncMainCountEpguAndMfcSelect(int year);

@@ -149,7 +149,7 @@ namespace HuntControl.Domain.Concrete
         public StatementInfoGetResult FuncStatementInfoGet(string infoId) => context.FuncStatementInfoGet(infoId);
         public IEnumerable<EpguVisitTimeSelectResult> FuncEpguVisitTimeSelect() => context.FuncEpguVisitTimeSelect();
         public IEnumerable<StatementDocumentSelectResult> FuncStatementDocumentSelect(Guid serviceId) => context.FuncStatementDocumentSelect(serviceId);
-        public IEnumerable<DataCustomerInfoGet> FuncDataCustomerInfoGet(Guid customerId) => context.FuncDataCustomerInfoGet(customerId);
+        public IEnumerable<DataCustomerHuntingLicPermSelect> FuncDataCustomerHuntingLicPermSelect(Guid customerId) => context.FuncDataCustomerHuntingLicPermSelect(customerId);
         public IEnumerable<HuntingBackAnimalSelectResult> FuncHuntingBackAnimalSelect(Guid huntingLicPermId) => context.FuncHuntingBackAnimalSelect(huntingLicPermId);
         public IEnumerable<CustomerSelectResult> FuncCustomerSelect(Guid customerId, string search) => context.FuncCustomerSelect(customerId, search);
         public IEnumerable<CustomerHuntingLicenseSelectResult> FuncCustomerHuntingLicenseSelect(Guid customerId) => context.FuncCustomerHuntingLicenseSelect(customerId);
@@ -220,7 +220,7 @@ namespace HuntControl.Domain.Concrete
 
         public FtpSettings FuncGetFtpSettings() => context.FuncGetFtpSettings();
 
-
+        
         #endregion
 
         #region |-=|=-|-=|=-|-=|=-|-=|=-|-=|=-|-=|=-|-=|=-[  Методы CRUD таблиц  ]-=|=-|-=|=-|-=|=-|-=|=-|-=|=-|-=|=-|-=|=-|
@@ -272,6 +272,18 @@ namespace HuntControl.Domain.Concrete
         #endregion
 
         #region ////////////////////////////"Заявитель (Услуги)"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        /// <summary>
+        /// Тип бланка
+        /// </summary>
+        public int GetSeasonFormTypeIdByPermsId(Guid permsId)
+        {
+            // Предположим, что у вас есть связь между data_customer_hunting_lic_perm и spr_season
+            var query = from perm in context.data_customer_hunting_lic_perm
+                        where perm.id == permsId
+                        select perm.spr_season.s_form_type_id;
+
+            return query.FirstOrDefault();
+        }
 
         /// <summary>
         /// сохраняет изменения записей

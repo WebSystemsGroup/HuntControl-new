@@ -78,5 +78,13 @@ namespace HuntControl.Domain.Concrete
 
         [Display(Name = "Начальник")]
         public string out_head_services { get; set; }
+        [Display(Name = "СНИЛС")]
+        public string out_customer_snils { get; set; }
+        [Display(Name = "ИНН")]
+        public string out_customer_inn { get; set; }
+        [Display(Name = "Email")]
+        public string out_customer_e_mail { get; set; }
+        [Display(Name = "Способ получения")]
+        public string out_method_name { get; set; }
     }
 }

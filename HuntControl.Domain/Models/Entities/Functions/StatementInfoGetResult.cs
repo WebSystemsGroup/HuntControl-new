@@ -33,6 +33,6 @@ namespace HuntControl.Domain.Concrete
         public string out_employees_job_pos_name { get; set; }
         public string out_document_birth_place { get; set; }
         public string out_customer_address_actual { get; set; }
-
+        public string out_customer_snils { get; set; }
     }
 }

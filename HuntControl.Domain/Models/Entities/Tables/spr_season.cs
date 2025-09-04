@@ -29,6 +29,7 @@ namespace HuntControl.Domain.Concrete
 
         [StringLength(255)]
         public string commentt_modify { get; set; }
+        public int s_form_type_id { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<spr_season_animal> spr_season_animal { get; set; }

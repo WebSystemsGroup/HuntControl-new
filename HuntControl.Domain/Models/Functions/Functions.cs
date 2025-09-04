@@ -33,10 +33,10 @@ namespace HuntControl.Domain.Concrete
 
 
 
-        public virtual IEnumerable<DataCustomerInfoGet> FuncDataCustomerInfoGet(Guid customerId)
+        public virtual IEnumerable<DataCustomerHuntingLicPermSelect> FuncDataCustomerHuntingLicPermSelect(Guid customerId)
         {
             NpgsqlParameter param1 = new NpgsqlParameter("@in_data_customer_id", customerId);
-            return this.Database.SqlQuery<DataCustomerInfoGet>("SELECT * FROM data_customer_info_get(@in_data_customer_id)", param1).ToArray();
+            return this.Database.SqlQuery<DataCustomerHuntingLicPermSelect>("SELECT * FROM data_customer_hunting_lic_perm_select(@in_data_customer_id)", param1).ToArray();
         }
 
         /// <summary>
