@@ -39,6 +39,22 @@
         bottom: .9cm;
     }
 
+    .left-page2 {
+        position: absolute;
+        top: 20cm;
+        left: -1mm;
+        width: 13.5cm;
+        bottom: .9cm;
+    }
+
+    .center-page2 {
+        position: absolute;
+        top: 20cm;
+        left: 14.0cm;
+        width: 13.5cm;
+        bottom: .9cm;
+    }
+
     .right {
         position: absolute;
         top: -0.1cm;
@@ -53,7 +69,7 @@
     }
 
     .organization-name {
-        margin-top: 1.7cm;
+        margin-top: 1.5cm;
         text-align: center;
     }
 
@@ -123,7 +139,7 @@
     .hunting-area-type-transport {
         height: 1.8cm;
         margin-top: -0.8cm;
-        margin-left: .1cm;
+        margin-left: 3cm;
         margin-right: .6cm;
         margin-bottom: 0;
         text-indent: 2cm;
@@ -189,8 +205,8 @@
 
 
     .authorized-person {
-        margin-top: -0.1cm;
-        margin-left: 3.3cm;
+        margin-top: 0cm;
+        margin-left: 7cm;
     }
 
     .permission-date {
@@ -198,7 +214,7 @@
         vertical-align: bottom;
         width: 3.1cm;
         margin-top: 0.25cm;
-        margin-left: 4.15cm;
+        margin-left: 7.15cm;
     }
 
         .permission-date .day {
@@ -262,13 +278,6 @@
             </div>
             <p class="hunting-area-type-name">@Model.Model.out_hunting_type_name</p>
             @*<div class="hunting-type">@Model.out_hunting_type_name</div>*@
-            <p class="hunting-area-type-transport">@Model.Model.out_transport_name</p>
-            <div class="authorized-person">@(Model.Model.out_fio_given.Length > 20 ? Model.Model.out_fio_given.Substring(0, 20) : Model.Model.out_fio_given)</div>
-            <div class="permission-date">
-                <span class="day">@(Model.Model.out_date_given?.ToString("dd"))</span>
-                <span class="month">@(Model.Model.out_date_given?.ToString("MMMM"))</span>
-                <span class="year">@(Model.Model.out_date_given?.ToString("yy"))</span>
-            </div>
         </div>
     </section>
     <section class="center">
@@ -304,13 +313,6 @@
             </div>
             <p class="hunting-area-type-name_2">@Model.Model.out_hunting_type_name</p>
             @*<div class="hunting-type">@Model.out_hunting_type_name</div>*@
-            <p class="hunting-area-type-transport">@Model.Model.out_transport_name</p>
-            <div class="authorized-person">@(Model.Model.out_fio_given.Length > 20 ? Model.Model.out_fio_given.Substring(0, 20) : Model.Model.out_fio_given)</div>
-            <div class="permission-date">
-                <span class="day">@(Model.Model.out_date_given?.ToString("dd"))</span>
-                <span class="month">@(Model.Model.out_date_given?.ToString("MMMM"))</span>
-                <span class="year">@(Model.Model.out_date_given?.ToString("yy"))</span>
-            </div>
         </div>
     </section>
 
@@ -336,26 +338,23 @@
             <div class="authorized-person">@(Model.Model.out_fio_given.Length > 20 ? Model.Model.out_fio_given.Substring(0, 20) : Model.Model.out_fio_given)</div>
         </section>*@
 </div>
-@*<div class="page page-2">
-        <section class="right">
-            <div class="subject">@Model.Model.out_region_name</div>
-            <div class="organization-name">@Model.Model.out_organization_name</div>
-            <p class="permission-status">@Model.Model.out_customer_name</p>
-            <div class="hunting-ticket">
-                <span class="serial">@Model.Model.out_hunting_lic_serial</span>
-                <span class="number">@Model.Model.out_hunting_lic_number</span>
-            </div>
-            <div class="hunting-ticket-date">
-                <span class="day">@(Model.Model.out_hunting_lic_issue_date?.ToString("dd"))</span>
-                <span class="month">@(Model.Model.out_hunting_lic_issue_date?.ToString("MMMM"))</span>
-                <span class="year">@(Model.Model.out_hunting_lic_issue_date?.ToString("yy"))</span>
-            </div>
-            <p class="hunting-area-name">@Model.Model.out_hunting_farm_name</p>
-            <div class="permission-date">
-                <span class="day">@(Model.Model.out_date_given?.ToString("dd"))</span>
-                <span class="month">@(Model.Model.out_date_given?.ToString("MMMM"))</span>
-                <span class="year">@(Model.Model.out_date_given?.ToString("yy"))</span>
-            </div>
-            <div class="authorized-person">@(Model.Model.out_fio_given.Length > 20 ? Model.Model.out_fio_given.Substring(0,20) : Model.Model.out_fio_given)</div>
-        </section>
-    </div>*@
+<div class="page page-2">
+    <section class="left-page2">
+        <p class="hunting-area-type-transport">@Model.Model.out_transport_name</p>
+        <div class="authorized-person">@(Model.Model.out_fio_given)</div>
+        <div class="permission-date">
+            <span class="day">@(Model.Model.out_date_given?.ToString("dd"))</span>
+            <span class="month">@(Model.Model.out_date_given?.ToString("MMMM"))</span>
+            <span class="year">@(Model.Model.out_date_given?.ToString("yy"))</span>
+        </div>
+    </section>
+    <section class="center-page2">
+        <p class="hunting-area-type-transport">@Model.Model.out_transport_name</p>
+        <div class="authorized-person">@(Model.Model.out_fio_given)</div>
+        <div class="permission-date">
+            <span class="day">@(Model.Model.out_date_given?.ToString("dd"))</span>
+            <span class="month">@(Model.Model.out_date_given?.ToString("MMMM"))</span>
+            <span class="year">@(Model.Model.out_date_given?.ToString("yy"))</span>
+        </div>
+    </section>
+</div>
