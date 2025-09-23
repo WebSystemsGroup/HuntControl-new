@@ -931,11 +931,11 @@ namespace HuntControl.WebUI.Controllers
         [HttpPost]
         public ActionResult EditSeasonOpenAnimal(Guid seasonOpenAnimalId)
         {
+
             var model = repository.SprSeasonOpenAnimals
             .Include(soa => soa.spr_animal)
-            .Include(soa => soa.spr_season_open) // Важно: загружаем связанную сущность
+            .Include(soa => soa.spr_season_open)
             .SingleOrDefault(soa => soa.id == seasonOpenAnimalId);
-
             ViewBag.Animal = new SelectList(repository.SprAnimals.OrderBy(s => s.animal_name), "id", "animal_name");
             return PartialView("HuntingSeasons/HuntingSeasonOpen/EditSeasonOpenAnimal", model);
         }
