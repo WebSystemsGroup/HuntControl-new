@@ -41,7 +41,7 @@
                         var dStart = moment(el.date_start).format('DD.MM.YYYY');
                         var dStop = moment(el.date_stop).format('DD.MM.YYYY');
 
-                        $("#season_id").append('<option value="' + i++ + '" + data-spr-season-id="' + el.id.spr_season_id + '" data-hunting-farm-season-id="' + el.id.id + '">' + el.text + " (" + dStart + " - " + dStop + ")" + '</option>');
+                        $("#season_id").append('<option value="' + el.season_open_id + '" data-spr-season-id="' + el.season_id + '" data-hunting-farm-season-id="' + el.season_open_id + '">' + el.season_name + " (" + dStart + " - " + dStop + ")" + '</option>');
                     });
                     $("#season_id").select2().prop("disabled", false).val('').trigger('change');
                 }

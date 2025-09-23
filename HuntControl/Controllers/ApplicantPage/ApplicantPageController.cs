@@ -287,7 +287,9 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
             ModelState["data_customer_hunting_lic.reestr_date"]?.Errors.Clear();
             ModelState["data_customer_hunting_lic.employees_authorized"]?.Errors.Clear();
             ModelState["data_customer_hunting_lic.issue_body"]?.Errors.Clear();
-            
+            //ModelState["data_services_customer.document_place_stay_number"]?.Errors.Clear();
+            //ModelState["data_services_customer.document_place_stay_date"]?.Errors.Clear();
+            //ModelState["data_services_customer.document_place_stay_issue_body"]?.Errors.Clear();
             if (ModelState.IsValid)
             {
                 if (testModel.data_customer.id == Guid.Empty)
@@ -353,7 +355,25 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
                 {
                     testModel.data_customer_hunting_lic = null;
                 }
-                
+
+                //if (testModel.data_services_customer != null)
+                //{
+                //    data_services_customer huntingLic = new data_services_customer
+                //    {
+                //        data_services_id = testModel.data_customer.id,
+                //        document_place_stay_number = testModel.data_services_customer.document_place_stay_number,
+                //        document_place_stay_date = testModel.data_services_customer.document_place_stay_date,
+                //        document_place_stay_issue_body = testModel.data_services_customer.document_place_stay_issue_body,
+                //        spr_employees_id = repository.SprEmployees.SingleOrDefault(s => s.employees_login == User.Identity.Name).id,
+                //        employees_fio = UserName
+                //    };
+                //    repository.Insert(huntingLic);
+                //}
+                //else
+                //{
+                //    testModel.data_services_customer = null;
+                //}
+
                 var settings = repository.SprSettings.ToList();
                 var ftpModel =
                     new
@@ -505,23 +525,26 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
         /// <returns>частичное представление модального окна</returns>
         public ActionResult GetHuntingFarmGroupTypes(Guid huntingFarmId)
         {
-            DateTime realDate = DateTime.Now.AddMonths(-6);
-            var huntingFarmSeasons = repository.SprHuntingFarmSeasons
-                .Where(s => s.spr_hunting_farm_id == huntingFarmId &&
-                           s.date_stop > realDate &&
-                           s.is_remove != true)
+            var currentDate = DateTime.Now.AddMonths(-6);
+
+            var seasons = repository.SprSeasonOpens
+                .Where(so => so.date_stop >= currentDate)
                 .Join(repository.SprSeasons,
-                    s => s.spr_season_id,
-                    season => season.id,
-                    (s, season) => new
+                    so => so.spr_season_id,
+                    s => s.id,
+                    (so, s) => new
                     {
-                        id = new { s.id, s.spr_season_id },
-                        text = season.season_name,
-                        date_start = s.date_start,
-                        date_stop = s.date_stop
-                    });
-            // var huntingFarmGroupTypes = repository.FuncHuntingFarmActiveGroupTypeSelect(huntingFarmId).Select(s => new { id = new { s.out_spr_hunting_farm_season_id, s.out_spr_season_id }, text = s.out_season_name }).ToList();
-            return Json(huntingFarmSeasons, JsonRequestBehavior.AllowGet);
+                        season_id = s.id,
+                        season_open_id = so.id,
+                        season_name = s.season_name,
+                        date_start = so.date_start,
+                        date_stop = so.date_stop
+                    })
+                .OrderBy(x => x.season_name)
+                .ThenBy(x => x.date_start)
+                .ToList();
+
+            return Json(seasons, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -545,7 +568,20 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
         /// <returns>частичное представление таблицы</returns>
         public ActionResult PartialTableAnimalLimits(Guid huntingFarmSeasonId, Guid huntingTypeId)
         {
-            var animals = repository.FuncHuntingLimitAnimalSelect(huntingFarmSeasonId, huntingTypeId).ToList();
+            var animals = repository.SprSeasonOpenAnimals
+            .Where(s => s.spr_season_open_id == huntingFarmSeasonId)
+            .Join(repository.SprAnimals,
+                s => s.spr_animal_id,
+                ss => ss.id,
+                (s, ss) => new HuntingLimitAnimalSelectResult
+                {
+                    out_spr_animal_id = ss.id,
+                    out_animal_name = ss.animal_name,
+                    out_limit_day = s.norm_day,
+                    out_limit_season = s.norm_season,
+                })
+            .OrderBy(result => result.out_animal_name)
+            .ToList();
             return PartialView("HuntingLic/HuntingLicPerm/PartialTableAnimalLimits", animals);
         }
 
@@ -586,17 +622,12 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
         [HttpPost]
         public ActionResult PartialModalAddHuntingLicPerm(Guid customerId)
         {
-            var huntingFarms = repository.SprHuntingFarmSeasons
-            .Where(s2 => s2.date_stop >= DateTime.Now)
-            .Join(repository.SprHuntingFarms,
-                s2 => s2.spr_hunting_farm_id,
-                s1 => s1.id,
-                (s2, s1) => new {
-                    out_spr_hunting_farm_id = s1.id,
-                    out_hunting_farm_name = s1.hunting_farm_name
-                })
-            .Distinct()
-            .OrderBy(x => x.out_hunting_farm_name)
+            var huntingFarms = repository.SprHuntingFarms
+            .OrderBy(s => s.hunting_farm_name)
+            .Select(s => new {
+                id = s.id,
+                out_hunting_farm_name = s.hunting_farm_name
+            })
             .ToList();
 
             var huntingLics = repository.DataCustomerHuntingLics
@@ -618,10 +649,10 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
             .ToList();
 
             ViewBag.HuntingLics = new SelectList(huntingLics, "out_data_customer_hunting_lic", "out_serial_number_license", huntingLics?.FirstOrDefault().out_data_customer_hunting_lic);
-            ViewBag.HuntingFarms = new SelectList(huntingFarms.OrderBy(s => s.out_hunting_farm_name), "out_spr_hunting_farm_id", "out_hunting_farm_name");
+            ViewBag.HuntingFarms = new SelectList(huntingFarms.OrderBy(s => s.out_hunting_farm_name), "id", "out_hunting_farm_name");
             ViewBag.HuntingTypes = new SelectList(repository.SprHuntingTypes.Where(ht => ht.is_remove != true).ToList().OrderBy(s => s.type_name), "id", "type_name");
             ViewBag.MethodRemoves = new SelectList(methodRemoves, "id", "text");
-            var employee = repository.SprEmployees.SingleOrDefault(s => s.id == new Guid("fb1889e5-385c-421b-9811-7c9a14150e1c"));//Гебеков Курбан Начальник Управления
+            var employee = repository.SprEmployees.SingleOrDefault(s => s.id == new Guid("505c4cc2-3811-477b-8fd2-4850f50c178a"));//Идрисов Тимур Тагирович Начальник отдела
             var jobPos = repository.SprEmployees.Include(i => i.spr_employees_job_pos).Where(w => w.id == employee.id).Select(s => new { s.spr_employees_job_pos.job_pos_name }).FirstOrDefault()?.job_pos_name;
 
             ViewBag.SprEmployees = new SelectList(repository.SprEmployees.OrderBy(o => o.employees_fio), "id", "employees_fio");

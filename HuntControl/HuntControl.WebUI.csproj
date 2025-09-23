@@ -2694,6 +2694,9 @@
     <Content Include="Views\Reference\HuntingSeasons\HuntingSeasonOpen\Main.cshtml" />
     <Content Include="Views\Reference\HuntingSeasons\HuntingSeasonOpen\TableSeasonOpenAnimals.cshtml" />
     <Content Include="Views\Shared\Print\Case\Statement\PartialPrintStatementCancellation.cshtml" />
+    <Content Include="Views\Reference\HuntingSeasons\HuntingSeasonOpen\AddSeasonAnimalOpen.cshtml" />
+    <Content Include="Views\Reference\HuntingSeasons\HuntingSeasonOpen\EditSeasonOpenAnimal.cshtml" />
+    <Content Include="Views\Reference\Banks\PartialModalAddSeasonOpen.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

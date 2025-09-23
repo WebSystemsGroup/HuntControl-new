@@ -30,6 +30,17 @@ namespace HuntControl.Domain.Concrete
 
         public DateTime date_add { get; set; }
 
+        [Required]
+        [Column(TypeName = "date")]
+        [Display(Name = "Дата начала")]
+        [DisplayFormat(DataFormatString = "{0:dd'.'MM'.'yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime date_start { get; set; }
+
+        [Column(TypeName = "date")]
+        [Display(Name = "Дата окончания")]
+        [DisplayFormat(DataFormatString = "{0:dd'.'MM'.'yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime date_stop { get; set; }
+
         public virtual spr_animal spr_animal { get; set; }
 
         public virtual spr_season_open spr_season_open { get; set; }

@@ -1,0 +1,77 @@
+﻿@model HuntControl.Domain.Concrete.spr_season_open
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myLargeModalLabel">Добавление сезона</h4>
+        </div>
+        <div class="modal-body">
+            @using (Ajax.BeginForm("SubmitSeasonOpenSave", "Reference", Model, new AjaxOptions { UpdateTargetId = "seasonOpensContainer", OnSuccess = "$('#myModal').modal('hide'); successAdd();" }, new { @id = "AddSeasonOpenForm", @class = "form-horizontal" }))
+            {
+                @Html.HiddenFor(model => model.id)
+                @Html.HiddenFor(model => model.spr_season_id)
+
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        @Html.LabelFor(model => model.date_start, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.date_start, "{0:dd.MM.yyyy}", new { @class = "form-control datepicker", placeholder = "дд.мм.гггг", required = "required" ,Value = DateTime.Today.ToString("dd.MM.yyyy") })
+                            @Html.ValidationMessageFor(model => model.date_start)
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        @Html.LabelFor(model => model.date_stop, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.date_stop, "{0:dd.MM.yyyy}", new { @class = "form-control datepicker", placeholder = "дд.мм.гггг" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        @Html.LabelFor(model => model.tariff_, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.tariff_, new { @class = "form-control", placeholder = "0.00", type = "number", step = "0.01" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        @Html.LabelFor(model => model.charge_, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.charge_, new { @class = "form-control", placeholder = "0.00", type = "number", step = "0.01" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="row">
+                        @Html.LabelFor(model => model.commentt, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                        <div class="col-md-6">
+                            @Html.TextAreaFor(model => model.commentt, new { @class = "form-control", placeholder = "Комментарий", rows = "3" })
+                        </div>
+                    </div>
+                </div>
+                @Html.HiddenFor(model => model.employees_fio)
+                @Html.HiddenFor(model => model.set_date)
+            }
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel waves-effect waves-light" data-dismiss="modal"><i class="fa fa-times m-r-5"></i> Отмена</button>
+            <button type="submit" form="AddSeasonOpenForm" class="btn btn-success waves-effect waves-light"> Сохранить <i class="fa fa-check m-l-5"></i></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.datepicker').datepicker({
+            format: 'dd.mm.yyyy',
+            autoclose: true,
+            language: 'ru'
+        });
+    });
+</script>

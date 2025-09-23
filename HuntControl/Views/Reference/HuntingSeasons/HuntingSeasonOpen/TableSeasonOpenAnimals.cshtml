@@ -79,12 +79,12 @@
         $.ajax({
             type: 'POST',
             async: false,
-            url: '@Url.Action("EditSeasonAnimal", "Reference")',
-            data: { seasonAnimalId: seasonAnimalId },
+            url: '@Url.Action("EditSeasonOpenAnimal", "Reference")',
+            data: { seasonOpenAnimalId: seasonAnimalId },
             success: function (data) {
-                $('#collapseEditAnimalHuntingFarms').html(data);
+                $('#collapseEditSeasonOpenAnimals').html(data);
             }
         });
-        $('#collapseEditAnimalHuntingFarms').collapse('show');
+        $('#collapseEditSeasonOpenAnimals').collapse('show');
     });
 </script>

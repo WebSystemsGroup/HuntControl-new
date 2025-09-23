@@ -1,0 +1,63 @@
+﻿@model HuntControl.Domain.Concrete.spr_season_open_animal
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.custom.validate.js"></script>
+<script src="~/Content/plugins/select2/js/select2.full.min.js"></script>
+<script>
+    $(document).ready(function () {
+        jQuery("#AddSeasonOpenAnimalForm").validate().settings.ignore = ".bs-select-hidden";
+        $('#date_start').datepicker({ format: 'dd.mm.yyyy', autoclose: true, language: 'ru' });
+        $('#date_stop').datepicker({ format: 'dd.mm.yyyy', autoclose: true, language: 'ru' });
+        $(".select2").select2();
+        $("select").on("select2:close", function (e) {
+            $(this).valid();
+        });
+    });
+</script>
+@using (Ajax.BeginForm("SubmitAnimalForOpenSeasonSave", "Reference", Model, new AjaxOptions { UpdateTargetId = "seasonOpenAnimalsContainer", OnSuccess = "successAdd();$('#collapseAddSeasonAnimals').collapse('hide');" }, new { @id = "AddSeasonOpenAnimalForm", @class = "form-horizontal" }))
+{
+
+    <div class="row m-b-15">
+        <div class="col-sm-12">
+            <hr class="m-t-0" />
+        </div>
+        <div class="col-sm-6">
+            <h3 class="panel-title">Добавление животного к открытию сезона</h3>
+        </div>
+        <div class="col-sm-6 text-right">
+            <button type="button" class="btn btn-cancel waves-effect waves-light m-r-5" onclick="$('#collapseAddSeasonAnimals').collapse('hide'); $('#seasonAnimalAddBtn').show(); $('#collapseAddSeasonAnimals table tr').removeClass('warning');"><i class="fa fa-times m-r-5"></i> Отмена</button>
+            <button type="submit" class="btn btn-success waves-effect waves-light"> Сохранить <i class="fa fa-check m-l-5"></i></button>
+        </div>
+    </div>
+
+    @Html.HiddenFor(model => model.spr_season_open_id)
+
+<div class="form-group form-group-sm">
+    <div class="col-md-4">
+        @Html.Label("Животное", new { @class = "font-13" })
+        @Html.DropDownListFor(model => model.spr_animal_id, ViewBag.Animal as SelectList, "Выберите животное", new Dictionary<string, object> { { "class", "form-control select2 input-sm required" } })
+    </div>
+    <div class="col-md-4">
+        @Html.LabelFor(model => model.spr_season_open.date_start, new { @class = "font-13" })
+        @Html.TextBox("date_start", DateTime.Now, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.spr_season_open.date_start) }, { "data-type", "date" } })
+    </div>
+    <div class="col-md-4">
+        @Html.LabelFor(model => model.spr_season_open.date_stop, new { @class = "font-13" })
+        @Html.TextBox("date_stop", DateTime.Now, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.spr_season_open.date_stop) }, { "data-type", "date" } })
+    </div>
+    <div class="col-md-4 pt-5">
+        @Html.LabelFor(model => model.norm_day, new { @class = "font-13" })
+        @Html.TextBoxFor(model => model.norm_day, new { @class = "form-control", @placeholder = Html.DisplayNameFor(model => model.norm_day), @type = "number" })
+    </div>
+    <div class="col-md-4 pt-5">
+        @Html.LabelFor(model => model.norm_season, new { @class = "font-13" })
+        @Html.TextBoxFor(model => model.norm_season, new { @class = "form-control", @placeholder = Html.DisplayNameFor(model => model.norm_season), @type = "number" })
+    </div>
+</div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <hr class="m-t-0" />
+        </div>
+    </div>
+}

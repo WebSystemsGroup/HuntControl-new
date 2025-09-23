@@ -3,6 +3,14 @@
     <div class="col-sm-10">
         <h3 class="panel-title m-b-5">История открытия сезона</h3>
     </div>
+    <div class="col-sm-2">
+        <div class="text-right">
+            @using (Ajax.BeginForm("PartialModalAddSeasonOpen", "Reference", new { seasonId = ViewBag.CurrentSeasonId }, new AjaxOptions { UpdateTargetId = "myModal", OnSuccess = "$('#myModal').modal('show');" }, new { @class = "form-submit" }))
+            {
+                <button type="submit" class="btn btn-inverse waves-effect waves-light btn-sm btn-block m-b-10"> Добавить <i class="fa fa-plus m-l-5"></i></button>
+            }
+        </div>
+    </div>
 </div>
 <div class="panel panel-border panel-primary">
     <div class="panel-heading p-0">

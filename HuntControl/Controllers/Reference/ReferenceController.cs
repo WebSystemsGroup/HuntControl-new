@@ -54,6 +54,59 @@ namespace HuntControl.WebUI.Controllers
         }
 
         /// <summary>
+        /// Добавление
+        /// </summary>
+        /// <returns>частичное представление модального окна</returns>
+        [HttpPost]
+        public ActionResult PartialModalAddSeasonOpen(int seasonId)
+        {
+            return PartialView("Banks/PartialModalAddSeasonOpen", new spr_season_open { employees_fio = Membership.GetUser(User.Identity.Name)?.UserName ?? " ",spr_season_id = seasonId });
+        }
+
+        /// <summary>
+        /// Сохраняет изменнения или добавляет
+        /// </summary>
+        /// <param name="bank">объект</param>
+        /// <returns>частичное представление таблицы</returns>
+        [HttpPost]
+        public ActionResult SubmitSeasonOpenSave(spr_season_open seasonOpen)
+        {
+            if (ModelState.IsValid)
+            {
+                if (seasonOpen.id == Guid.Empty)
+                {
+                    seasonOpen.id = Guid.NewGuid();
+                    seasonOpen.set_date = DateTime.Now;
+                    repository.Insert(seasonOpen);
+                }
+                else
+                {
+                    seasonOpen.employees_fio = User.Identity.Name;
+                    repository.Update(seasonOpen);
+                }
+
+                var opens = repository.SprSeasonOpens
+                .Where(o => o.spr_season_id == seasonOpen.spr_season_id)
+                .OrderByDescending(o => o.date_start);
+
+                ReferenceViewModel model = new ReferenceViewModel
+                {
+                    SprSeasonOpens = opens,
+                    PageInfo = new PageInfo
+                    {
+                        MaxPageList = 5,
+                        CurrentPage = 1,
+                        ItemsPerPage = PageSize,
+                        TotalItems = opens.Count()
+                    }
+                };
+
+                return PartialView("HuntingSeasons/HuntingSeasonOpen/TableSeasonOpen", model);
+            }
+            throw new Exception("Ошибка валидации!");
+        }
+
+        /// <summary>
         /// Изменение
         /// </summary>
         /// <returns>частичное представление модального окна</returns>
@@ -858,6 +911,62 @@ namespace HuntControl.WebUI.Controllers
             {
                 return PartialView(ex);
             }
+        }
+
+        /// <summary>
+        /// Добавление
+        /// </summary>
+        /// <returns>частичное представление модального окна</returns>
+        [HttpPost]
+        public ActionResult AddSeasonOpenAnimal(Guid seasonOpenId)
+        {
+            ViewBag.Animal = new SelectList(repository.SprAnimals.OrderBy(s => s.animal_name), "id", "animal_name");
+            return PartialView("HuntingSeasons/HuntingSeasonOpen/AddSeasonAnimalOpen", new spr_season_open_animal { employees_fio = UserName, spr_season_open_id = seasonOpenId });
+        }
+
+        /// <summary>
+        /// Изменение
+        /// </summary>
+        /// <returns>частичное представление модального окна</returns>
+        [HttpPost]
+        public ActionResult EditSeasonOpenAnimal(Guid seasonOpenAnimalId)
+        {
+            var model = repository.SprSeasonOpenAnimals
+            .Include(soa => soa.spr_animal)
+            .Include(soa => soa.spr_season_open) // Важно: загружаем связанную сущность
+            .SingleOrDefault(soa => soa.id == seasonOpenAnimalId);
+
+            ViewBag.Animal = new SelectList(repository.SprAnimals.OrderBy(s => s.animal_name), "id", "animal_name");
+            return PartialView("HuntingSeasons/HuntingSeasonOpen/EditSeasonOpenAnimal", model);
+        }
+
+        /// <summary>
+        /// Сохраняет изменнения или добавляет
+        /// </summary>
+        /// <param name="bank">объект</param>
+        /// <returns>частичное представление таблицы</returns>
+        [HttpPost]
+        public ActionResult SubmitAnimalForOpenSeasonSave(spr_season_open_animal seasonOpenAnimal)
+        {
+
+            //seasonOpenAnimal.spr_animal = new spr_animal();
+            //seasonOpenAnimal.spr_season_open = new spr_season_open();
+
+            //seasonOpenAnimal.id = Guid.Empty;
+
+            if (ModelState.IsValid)
+            {
+                if (seasonOpenAnimal.id == Guid.Empty)
+                {
+                    repository.Insert(seasonOpenAnimal);
+                }
+                else
+                {
+                    repository.Update(seasonOpenAnimal);
+                }
+                return RedirectToAction("TableSeasonOpenAnimals", new { seasonOpenId = seasonOpenAnimal.spr_season_open_id });
+            }
+            throw new Exception("Ошибка валидации!");
         }
         #endregion
 
