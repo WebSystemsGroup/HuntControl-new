@@ -961,7 +961,14 @@ namespace HuntControl.WebUI.Controllers
                 }
                 else
                 {
-                    repository.Update(seasonOpenAnimal);
+                    try
+                    {
+                        repository.Update(seasonOpenAnimal);
+                    }
+                    catch (Exception r)
+                    {
+                        return null;
+                    }
                 }
                 return RedirectToAction("TableSeasonOpenAnimals", new { seasonOpenId = seasonOpenAnimal.spr_season_open_id });
             }

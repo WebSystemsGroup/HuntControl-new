@@ -39,7 +39,7 @@ namespace HuntControl.Domain.Concrete
         [Column(TypeName = "date")]
         [Display(Name = "Дата окончания")]
         [DisplayFormat(DataFormatString = "{0:dd'.'MM'.'yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime date_stop { get; set; }
+        public DateTime? date_stop { get; set; }
 
         public virtual spr_animal spr_animal { get; set; }
 
