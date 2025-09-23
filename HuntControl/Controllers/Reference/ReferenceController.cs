@@ -932,12 +932,11 @@ namespace HuntControl.WebUI.Controllers
         public ActionResult EditSeasonOpenAnimal(Guid seasonOpenAnimalId)
         {
 
-            var model = repository.SprSeasonOpenAnimals
-            .Include(soa => soa.spr_animal)
-            .Include(soa => soa.spr_season_open)
-            .SingleOrDefault(soa => soa.id == seasonOpenAnimalId);
+            //var model = repository.SprSeasonOpenAnimals.SingleOrDefault(soa => soa.id == seasonOpenAnimalId);
+            //.Include(soa => soa.spr_animal)
+            //.Include(soa => soa.spr_season_open)
             ViewBag.Animal = new SelectList(repository.SprAnimals.OrderBy(s => s.animal_name), "id", "animal_name");
-            return PartialView("HuntingSeasons/HuntingSeasonOpen/EditSeasonOpenAnimal", model);
+            return PartialView("HuntingSeasons/HuntingSeasonOpen/EditSeasonOpenAnimal", repository.SprSeasonOpenAnimals.SingleOrDefault(soa => soa.id == seasonOpenAnimalId));
         }
 
         /// <summary>
