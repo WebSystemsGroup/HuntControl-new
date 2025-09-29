@@ -538,7 +538,8 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
                         season_open_id = so.id,
                         season_name = s.season_name,
                         date_start = so.date_start,
-                        date_stop = so.date_stop
+                        date_stop = so.date_stop,
+                        s_form_type_id = s.s_form_type_id
                     })
                 .OrderBy(x => x.season_name)
                 .ThenBy(x => x.date_start)

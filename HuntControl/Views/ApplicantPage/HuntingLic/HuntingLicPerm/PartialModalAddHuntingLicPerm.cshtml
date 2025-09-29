@@ -17,6 +17,8 @@
         $("select:not('disabled')").on("select2:close", function (e) {
             $(this).valid();
         });
+        $('#huntingDatesContainer').hide();
+        $('#transportContainer').hide();
     });
 
     $('#data_customer_hunting_lic_id').change(function () {
@@ -41,7 +43,7 @@
                         var dStart = moment(el.date_start).format('DD.MM.YYYY');
                         var dStop = moment(el.date_stop).format('DD.MM.YYYY');
 
-                        $("#season_id").append('<option value="' + el.season_open_id + '" data-spr-season-id="' + el.season_id + '" data-hunting-farm-season-id="' + el.season_open_id + '">' + el.season_name + " (" + dStart + " - " + dStop + ")" + '</option>');
+                        $("#season_id").append('<option value="' + el.season_open_id + '" data-spr-season-id="' + el.season_id + '" data-hunting-farm-season-id="' + el.season_open_id + '" data-s-form-type-id="' + el.s_form_type_id + '">' + el.season_name + " (" + dStart + " - " + dStop + ")" + '</option>');
                     });
                     $("#season_id").select2().prop("disabled", false).val('').trigger('change');
                 }
@@ -68,9 +70,11 @@
         console.log(selected);//$(this).val() != null && $(this).val() !== '';
         var huntingFarmSeasonId = $('#season_id :selected').data('huntingFarmSeasonId');
         var seasonId = $('#season_id :selected').data('sprSeasonId');
+        var sFormTypeId = $('#season_id :selected').data('sFormTypeId');
         console.log($('#season_id :selected'), huntingFarmSeasonId);
         $('#spr_hunting_farm_season_id').val(huntingFarmSeasonId);
         $('#spr_season_id').val(seasonId);
+        toggleSeasonFields(sFormTypeId);
         if (selected) {
             $.ajax({
                 url: '@Url.Action("GetHuntingFarmHuntingTypes", "ApplicantPage")',
@@ -97,6 +101,23 @@
             });
         }
     });
+
+    function toggleSeasonFields(sFormTypeId) {
+        var huntingDatesContainer = $('#huntingDatesContainer');
+        var transportContainer = $('#transportContainer');
+
+        // Скрываем все поля сначала
+        huntingDatesContainer.hide();
+        transportContainer.hide();
+
+        // Показываем соответствующие поля в зависимости от типа сезона
+        if (sFormTypeId == 2 || sFormTypeId == 3) { // Медведи (2) или Копытные (3)
+            huntingDatesContainer.show();
+        } else if (sFormTypeId == 1) { // Пушные (1)
+            transportContainer.show();
+        }
+        // Для птиц (4) и других типов - оба поля остаются скрытыми
+    }
 
     $('#spr_method_remove_id').change(function () {
         var selected = $(this).val() != null && $(this).val() !== '';
@@ -255,7 +276,7 @@
                                     @Html.TextBoxFor(model => model.charge_, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.charge_) } })
                                 </div>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body" id="huntingDatesContainer" style="display: none;">
                                 <div class="form-group form-group-sm">
                                     <label class="col-md-4 control-label text-right">Сроки охоты</label>
                                     <div class="col-md-6">
@@ -285,7 +306,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group form-group-sm">
+                            <div class="form-group form-group-sm" id="transportContainer" style="display: none;">
                                 @Html.LabelFor(model => model.transport_name, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
                                 <div class="col-md-6">
                                     @Html.TextBoxFor(model => model.transport_name, new Dictionary<string, object> { { "class", "form-control" }, { "placeholder", Html.DisplayNameFor(model => model.transport_name) } })
