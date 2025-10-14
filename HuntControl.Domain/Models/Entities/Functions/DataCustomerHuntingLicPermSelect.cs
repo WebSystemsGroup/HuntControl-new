@@ -15,7 +15,7 @@ namespace HuntControl.Domain.Concrete
         public string out_hunting_farm_name { get; set; }
         public string out_serial_form { get; set; }
 
-        public int? out_number_form { get; set; }
+        public string out_number_form { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime? out_date_given { get; set; }

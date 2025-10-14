@@ -43,7 +43,7 @@
                         var dStart = moment(el.date_start).format('DD.MM.YYYY');
                         var dStop = moment(el.date_stop).format('DD.MM.YYYY');
 
-                        $("#season_id").append('<option value="' + el.season_open_id + '" data-spr-season-id="' + el.season_id + '" data-hunting-farm-season-id="' + el.season_open_id + '" data-s-form-type-id="' + el.s_form_type_id + '">' + el.season_name + " (" + dStart + " - " + dStop + ")" + '</option>');
+                        $("#season_id").append('<option value="' + el.season_open_id + '" data-spr-season-id="' + el.season_id + '" data-hunting-farm-season-id="' + el.season_open_id + '" data-s-form-type-id="' + el.s_form_type_id + '" ' + 'data-tariff="' + (el.tariff_ || '') + '" ' + 'data-charge="' + (el.charge_ || '') + '">' + el.season_name + " (" + dStart + " - " + dStop + ")" + '</option>');
                     });
                     $("#season_id").select2().prop("disabled", false).val('').trigger('change');
                 }
@@ -71,8 +71,12 @@
         var huntingFarmSeasonId = $('#season_id :selected').data('huntingFarmSeasonId');
         var seasonId = $('#season_id :selected').data('sprSeasonId');
         var sFormTypeId = $('#season_id :selected').data('sFormTypeId');
+        var tariff = $('#season_id :selected').data('tariff');
+        var charge = $('#season_id :selected').data('charge');
         console.log($('#season_id :selected'), huntingFarmSeasonId);
-        $('#spr_hunting_farm_season_id').val(huntingFarmSeasonId);
+        /*$('#spr_hunting_farm_season_id').val(huntingFarmSeasonId);*/
+        $('#tariff_').val(tariff || '');
+        $('#charge_').val(charge || '');
         $('#spr_season_id').val(seasonId);
         toggleSeasonFields(sFormTypeId);
         if (selected) {
@@ -169,7 +173,7 @@
                 {
                     @Html.HiddenFor(model => model.date_start)
                     @Html.HiddenFor(model => model.date_stop)
-                    @Html.HiddenFor(model => model.spr_hunting_farm_season_id)
+                    @*@Html.HiddenFor(model => model.spr_hunting_farm_season_id)*@
                     @Html.HiddenFor(model => model.spr_season_id)
                     <div class="row p-l-r-10">
                         <div class="col-lg-12">

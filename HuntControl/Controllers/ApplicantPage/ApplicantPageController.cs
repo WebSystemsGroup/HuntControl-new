@@ -539,7 +539,9 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
                         season_name = s.season_name,
                         date_start = so.date_start,
                         date_stop = so.date_stop,
-                        s_form_type_id = s.s_form_type_id
+                        s_form_type_id = s.s_form_type_id,
+                        tariff_ = s.tariff_,
+                        charge_ = s.charge_
                     })
                 .OrderBy(x => x.season_name)
                 .ThenBy(x => x.date_start)
@@ -684,11 +686,11 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
             {
                 if (huntingLicPerm.id == Guid.Empty && animalLimits != null && animalLimits.Any(a => a.out_spr_animal_id != null))
                 {
-                    var season = repository.SprHuntingFarmSeasons
-                    .FirstOrDefault(s => s.id == huntingLicPerm.spr_hunting_farm_season_id);
+                    var season = repository.SprSeasonOpens
+                    .FirstOrDefault(s => s.spr_season_id == huntingLicPerm.spr_season_id);
                     // Заполняем date_start и date_stop из сезона
-                    huntingLicPerm.date_start = huntingLicPerm.date_start;
-                    huntingLicPerm.date_stop = huntingLicPerm.date_stop;
+                    huntingLicPerm.date_start = season.date_start;
+                    huntingLicPerm.date_stop = season.date_stop;
 
                     repository.Insert(huntingLicPerm);
                     foreach (var animalLimitModel in animalLimits)
@@ -763,13 +765,66 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
             return RedirectToAction("PartialTableHuntingLicPerms", new { customerId = customerLic.data_customer_id });
             //return Json("Запись успешно удалена", JsonRequestBehavior.AllowGet);
         }
-    public ActionResult PartialTableHuntingLicPerms(Guid customerId, bool isRemove = false, int page = 1)
+        public ActionResult PartialTableHuntingLicPerms(Guid customerId, bool isRemove = false, int page = 1)
         {
             ViewBag.HuntingFarmId = repository.SprEmployees.SingleOrDefault(se => se.employees_login == User.Identity.Name);
             ViewBag.IsRemove = isRemove;
             ViewBag.CustomerId = customerId;
 
-            var huntingLicPerms = repository.FuncDataCustomerHuntingLicPermSelect(customerId).Where(x=>x.out_is_remove != true);
+            var huntingLicPerms = repository.DataCustomerHuntingLics
+            .Where(dl => dl.data_customer_id == customerId)
+            .Join(repository.DataCustomerHuntingLicPerms.Where(dp => dp.is_remove != true),
+                dl => dl.id,
+                dp => dp.data_customer_hunting_lic_id,
+                (dl, dp) => new { dl, dp })
+            .Join(repository.SprSeasons,
+                x => x.dp.spr_season_id,
+                s => s.id,
+                (x, s) => new { x.dl, x.dp, s })
+            .Join(repository.SprHuntingFarms,
+                x => x.dp.spr_hunting_farm_id,
+                sf => sf.id,
+                (x, sf) => new { x.dl, x.dp, x.s, sf })
+            .Join(repository.SprHuntingTypes,
+                x => x.dp.spr_hunting_type_id,
+                ht => ht.id,
+                (x, ht) => new DataCustomerHuntingLicPermSelect
+                {
+                    out_hunting_farm_name = x.sf.hunting_farm_name,
+                    out_season_name = x.s.season_name,
+                    out_hunting_type_name = ht.type_name,
+
+                    out_date_start = x.dp.date_start,
+                    out_date_stop = x.dp.date_stop,
+                    out_date_given = x.dp.date_given,
+                    out_set_date = x.dp.set_date,
+
+                    out_serial_form = x.dp.serial_form,
+                    out_number_form = x.dp.number_form,
+
+                    out_tariff = x.dp.tariff_,
+                    out_charge = x.dp.charge_,
+
+                    out_fio_given = x.dp.fio_given,
+                    out_employees_fio = x.dp.employees_fio,
+                    out_employees_fio_modifi = x.dp.employees_fio_modifi,
+                    out_employees_fio_remove = x.dp.employees_fio_remove,
+
+                    out_is_remove = x.dp.is_remove,
+                    out_date_remove = x.dp.date_remove,
+                    out_commentt_remove = x.dp.commentt_remove,
+
+                    out_count_animal = repository.DataCustomerHuntingLicPermAnimals
+                    .Count(dpa => dpa.data_customer_hunting_lic_perm_id == x.dp.id),
+
+                    out_count_back = repository.DataCustomerHuntingLicPermBacks
+                    .Count(dpb => dpb.data_customer_hunting_lic_perm_id == x.dp.id),
+
+                    out_data_customer_hunting_lic_perm_id = x.dp.id,
+                    out_spr_hunting_farm_id = x.dp.spr_hunting_farm_id,
+                    out_spr_season_id = x.dp.spr_season_id
+                })
+            .OrderBy(x => x.out_set_date);
             ApplicantPermViewModel model = new ApplicantPermViewModel
             {
                 dataCustomerInfoGetsList = huntingLicPerms.OrderBy(x=>x.out_set_date).Skip((page - 1) * PageSize).Take(PageSize),
