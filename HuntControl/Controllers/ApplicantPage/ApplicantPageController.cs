@@ -651,10 +651,19 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
             })
             .ToList();
 
+            var methodPerms = repository.SprMethodPerms
+            .OrderBy(mp => mp.id)
+            .Select(mp => new {
+                id = mp.id,
+                text = mp.method_name
+            })
+            .ToList();
+
             ViewBag.HuntingLics = new SelectList(huntingLics, "out_data_customer_hunting_lic", "out_serial_number_license", huntingLics?.FirstOrDefault().out_data_customer_hunting_lic);
             ViewBag.HuntingFarms = new SelectList(huntingFarms.OrderBy(s => s.out_hunting_farm_name), "id", "out_hunting_farm_name");
             ViewBag.HuntingTypes = new SelectList(repository.SprHuntingTypes.Where(ht => ht.is_remove != true).ToList().OrderBy(s => s.type_name), "id", "type_name");
             ViewBag.MethodRemoves = new SelectList(methodRemoves, "id", "text");
+            ViewBag.MethodPerms = new SelectList(methodPerms, "id", "text");
             var employee = repository.SprEmployees.SingleOrDefault(s => s.id == new Guid("505c4cc2-3811-477b-8fd2-4850f50c178a"));//Идрисов Тимур Тагирович Начальник отдела
             var jobPos = repository.SprEmployees.Include(i => i.spr_employees_job_pos).Where(w => w.id == employee.id).Select(s => new { s.spr_employees_job_pos.job_pos_name }).FirstOrDefault()?.job_pos_name;
 
@@ -708,7 +717,7 @@ namespace HuntControl.WebUI.Controllers.ApplicantPage
                             animal_sex = animalLimitModel.out_animal_sex ?? 0,
                             date_start = animalLimitModel.out_date_start ?? DateTime.Now,
                             date_stop = animalLimitModel.out_date_stop ?? DateTime.Now,
-                            spr_hunting_farm_season_id = huntingLicPerm?.spr_hunting_farm_season_id ?? Guid.Empty
+                            //spr_hunting_farm_season_id = huntingLicPerm?.spr_hunting_farm_season_id ?? Guid.Empty
                         };
                         repository.Insert(model);
                     }

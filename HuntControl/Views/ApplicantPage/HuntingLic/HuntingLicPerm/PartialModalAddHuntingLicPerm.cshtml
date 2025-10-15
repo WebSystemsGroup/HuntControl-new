@@ -178,6 +178,12 @@
                     <div class="row p-l-r-10">
                         <div class="col-lg-12">
                             <div class="form-group form-group-sm">
+                                @Html.LabelFor(model => model.spr_method_perm_id, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+                                <div class="col-md-6">
+                                    @Html.DropDownListFor(model => model.spr_method_perm_id, ViewBag.MethodPerms as SelectList, new { @class = "form-control select2 input-sm", data_placeholder = "Выберите способ получения" })
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
                                 @Html.LabelFor(model => model.data_customer_hunting_lic_id, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
                                 <div class="col-md-6">
                                     @Html.DropDownListFor(model => model.data_customer_hunting_lic_id, ViewBag.HuntingLics as SelectList, new { @class = "form-control select2 input-sm", data_placeholder = "Выберите охотбилет" })
@@ -207,11 +213,11 @@
                                 </div>
                             </div>
                             @*<div class="form-group form-group-sm">
-                                @Html.LabelFor(model => model.spr_season_id, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
-                                <div class="col-md-6">
-                                    @Html.DropDownListFor(model => model.spr_season_id, new SelectList(new List<SelectListItem>(), "Value", "Text"), new { @class = "form-control select2 input-sm empty", @disabled = "disabled", @data_placeholder = "Выберите сезон" })
-                                </div>
-                            </div>*@
+            @Html.LabelFor(model => model.spr_season_id, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
+            <div class="col-md-6">
+                @Html.DropDownListFor(model => model.spr_season_id, new SelectList(new List<SelectListItem>(), "Value", "Text"), new { @class = "form-control select2 input-sm empty", @disabled = "disabled", @data_placeholder = "Выберите сезон" })
+            </div>
+        </div>*@
                             <div class="form-group form-group-sm">
                                 @Html.LabelFor(model => model.spr_hunting_type_id, new Dictionary<string, object> { { "class", "col-md-4 control-label text-right" } })
                                 <div class="col-md-6">

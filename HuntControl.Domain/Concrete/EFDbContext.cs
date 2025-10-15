@@ -81,6 +81,7 @@ namespace HuntControl.Domain.Concrete
         public virtual DbSet<spr_hunting_lic_status> spr_hunting_lic_status { get; set; }
         public virtual DbSet<spr_hunting_type> spr_hunting_type { get; set; }
         public virtual DbSet<spr_method_remove> spr_method_remove { get; set; }
+        public virtual DbSet<spr_method_perm> spr_method_perm { get; set; }
         public virtual DbSet<spr_legal_person> spr_legal_person { get; set; }
         public virtual DbSet<spr_season> spr_season { get; set; }
         public virtual DbSet<spr_season_open> spr_season_open { get; set; }
@@ -612,6 +613,12 @@ namespace HuntControl.Domain.Concrete
                 .HasMany(e => e.data_customer_hunting_lic_perm)
                 .WithRequired(e => e.spr_method_remove)
                 .HasForeignKey(e => e.spr_method_remove_id)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<spr_method_perm>()
+                .HasMany(e => e.data_customer_hunting_lic_perm)
+                .WithRequired(e => e.spr_method_perm)
+                .HasForeignKey(e => e.spr_method_perm_id)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<spr_legal_person>()

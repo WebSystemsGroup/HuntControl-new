@@ -122,6 +122,9 @@ namespace HuntControl.Domain.Concrete
         [StringLength(255)]
         public string transport_name { get; set; }
 
+        [Display(Name = "Способ получения разрешения")]
+        public int? spr_method_perm_id { get; set; }
+
         public virtual data_customer_hunting_lic data_customer_hunting_lic { get; set; }
 
         public virtual spr_hunting_type spr_hunting_type { get; set; }
@@ -130,7 +133,9 @@ namespace HuntControl.Domain.Concrete
 
         public virtual spr_method_remove spr_method_remove { get; set; }
 
-       // public virtual spr_animal_group_type spr_animal_group_type { get; set; }
+        public virtual spr_method_perm spr_method_perm { get; set; }
+
+        // public virtual spr_animal_group_type spr_animal_group_type { get; set; }
         public virtual spr_season spr_season { get; set; }
 
 

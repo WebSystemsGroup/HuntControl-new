@@ -74,6 +74,7 @@ namespace HuntControl.Domain.Abstract
         IQueryable<spr_hunting_farm_animal> SprHuntingFarmAnimals { get; }
         IQueryable<spr_hunting_type> SprHuntingTypes { get; }
         IQueryable<spr_method_remove> SprMethodRemoves { get; }
+        IQueryable<spr_method_perm> SprMethodPerms { get; }
         IQueryable<spr_legal_person> SprLegalPersons { get; }
 
         IQueryable<spr_employees> SprEmployees { get; }

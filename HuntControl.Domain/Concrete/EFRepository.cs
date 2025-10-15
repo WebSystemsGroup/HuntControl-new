@@ -76,6 +76,7 @@ namespace HuntControl.Domain.Concrete
         public IQueryable<spr_hunting_farm_animal> SprHuntingFarmAnimals => context.spr_hunting_farm_animal;
         public IQueryable<spr_hunting_type> SprHuntingTypes => context.spr_hunting_type;
         public IQueryable<spr_method_remove> SprMethodRemoves => context.spr_method_remove;
+        public IQueryable<spr_method_perm> SprMethodPerms => context.spr_method_perm;
         public IQueryable<spr_legal_person> SprLegalPersons => context.spr_legal_person;
 
         public IQueryable<spr_employees> SprEmployees => context.spr_employees;

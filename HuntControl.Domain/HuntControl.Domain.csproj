@@ -164,6 +164,7 @@
     <Compile Include="Models\Entities\Tables\spr_animal_group.cs" />
     <Compile Include="Models\Entities\Tables\spr_animal_method_account.cs" />
     <Compile Include="Models\Entities\Tables\spr_animal_location.cs" />
+    <Compile Include="Models\Entities\Tables\spr_method_perm.cs" />
     <Compile Include="Models\Entities\Tables\spr_organization_result.cs" />
     <Compile Include="Models\Entities\Tables\spr_bailiffs_result.cs" />
     <Compile Include="Models\Entities\Tables\spr_hunting_farm_season_animal.cs" />
