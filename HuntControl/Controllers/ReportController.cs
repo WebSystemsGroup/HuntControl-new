@@ -205,24 +205,25 @@ namespace HuntControl.WebUI.Controllers
             {
                 ws.Cells["A" + index].Value = index - 19;
                 ws.Cells["B" + index].Value = report.out_customer_name;
-                ws.Cells["C" + index].Value = report.out_doc_birth_date;
+                ws.Cells["C" + index].Value = report.out_doc_birth_date.HasValue ? report.out_doc_birth_date.Value.ToShortDateString() : string.Empty;
                 ws.Cells["D" + index].Value = report.out_doc_birth_place;
                 ws.Cells["E" + index].Value = report.out_actual_address + ", " + report.out_phone_number + ", " + report.out_e_mail;
                 ws.Cells["F" + index].Value = report.out_doc_serial + " " + report.out_doc_number;
-                ws.Cells["G" + index].Value = report.out_doc_issue_date;
+                ws.Cells["G" + index].Value = report.out_doc_issue_date.HasValue ? report.out_doc_issue_date.Value.ToShortDateString() : string.Empty;
                 ws.Cells["H" + index].Value = report.out_doc_issue_body;
                 ws.Cells["I" + index].Value = report.out_social_organization_info;
                 ws.Cells["J" + index].Value = report.out_social_job_position;
                 ws.Cells["K" + index].Value = report.out_social_pensioner;
                 ws.Cells["L" + index].Value = report.out_social_incapable;
-                ws.Cells["M" + index].Value = report.out_issue_date;
+                ws.Cells["M" + index].Value = report.out_issue_date.HasValue ? report.out_issue_date.Value.ToShortDateString() : string.Empty;
                 ws.Cells["N" + index].Value = report.out_serial_license + " " + report.out_number_license;
-                ws.Cells["O" + index].Value = report.out_reestr_date;
-                ws.Cells["P" + index].Value = report.out_cancelled_date;
+                ws.Cells["O" + index].Value = report.out_reestr_date.HasValue ? report.out_reestr_date.Value.ToShortDateString() : string.Empty;
+                ws.Cells["P" + index].Value = report.out_cancelled_date.HasValue ? report.out_cancelled_date.Value.ToShortDateString() : string.Empty;
                 ws.Cells["Q" + index].Value = report.out_cancelled_ground;
                 ws.Cells["R" + index].Value = "-";
                 ws.Cells["S" + index].Value = "-";
                 ws.Cells["T" + index].Value = "-";
+                ws.Cells["U" + index].Value = report.out_snils;
                 ws.InsertRow(++index, 1, 20);
             }
 

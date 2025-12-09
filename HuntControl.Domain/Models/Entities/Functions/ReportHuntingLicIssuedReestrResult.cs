@@ -79,5 +79,8 @@ namespace HuntControl.Domain.Concrete
         [Display(Name = "Ôèç ëèöî")]
         public Guid out_data_customer_id { get; set; }
 
+        [Display(Name = "ÑÍÈËÑ")]
+        public string out_snils { get; set; }
+
     }
 }

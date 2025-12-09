@@ -16,6 +16,7 @@
                     <th>@Html.DisplayNameFor(model => model.out_actual_address)</th>
                     <th>@Html.DisplayNameFor(model => model.out_serial_license)</th>
                     <th>@Html.DisplayNameFor(model => model.out_number_license)</th>
+                    <th>@Html.DisplayNameFor(model => model.out_snils)</th>
                     <th class="p-r-20-important">@Html.DisplayNameFor(model => model.out_issue_date)</th>
                     <th class="p-r-20-important"></th>
                 </tr>
@@ -29,6 +30,7 @@
                         <td>@Html.DisplayFor(model => item.out_actual_address)</td>
                         <td>@Html.DisplayFor(model => item.out_serial_license)</td>
                         <td>@Html.DisplayFor(model => item.out_number_license)</td>
+                        <td>@Html.DisplayFor(model => item.out_snils)</td>
                         <td class="p-r-20-important">@Html.DisplayFor(model => item.out_issue_date)</td>
                         <td class="p-r-20-important">
                             <button class="btn btn-link btn-sm" onclick="window.open('@Url.Action("Main","ApplicantPage")#@item.out_data_customer_id')"> ФЛ <i class="ion-chevron-right m-l-5"></i></button>

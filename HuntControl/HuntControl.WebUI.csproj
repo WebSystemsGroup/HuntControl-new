@@ -2176,7 +2176,6 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="Connected Services\SmevService\SmevRouter.wsdl" />
-    <Content Include="Content\excel\report\reestr_hunt_lic_issued_ex.xlsx" />
     <Content Include="Content\excel\violations\fssp.docx" />
     <Content Include="Content\excel\violations\ov_materials.docx" />
     <Content Include="Content\excel\violations\ov_opredelenie.docx" />
@@ -2197,6 +2196,7 @@
     <Content Include="Content\reports\Birds.frx" />
     <Content Include="Content\libs\jstree\ajax_children.json" />
     <Content Include="Content\libs\jstree\ajax_roots.json" />
+    <Content Include="Content\excel\report\reestr_hunt_lic_issued_ex.xlsx" />
     <None Include="Properties\PublishProfiles\192.168.34.129.pubxml" />
     <None Include="Properties\PublishProfiles\192.168.35.5.pubxml" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
